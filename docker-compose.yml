@@ -8,7 +8,7 @@ services:
     image: ent_infoconnect:v1
     container_name: ent_infoConnect
     ports:
-      - "8001:8000"
+      - "8002:8000"
     command: python manage.py runserver 0.0.0.0:8000
     depends_on:
       - db
@@ -42,7 +42,7 @@ services:
     depends_on:
       - web
     ports:
-      - '8002:80'
+      - '8003:80'
     networks:
       - reseau
 
