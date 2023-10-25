@@ -1,0 +1,67 @@
+	####*********************** doc de docker @tamensorelle **********************###########
+
+CREATION IMGES ET RUN
+
+	creation d'image en arrire plan: docker-compose up -d
+	
+	docker run --name mon_bd_postgres -e POSTGRES_PASSWORD=votre_mot_de_passe -d postgres:latest
+
+	documention d'une img: docker logs nom_img
+
+	restar : docker-compose down
+
+	creer une img d'un service speci: docker-compose build nom_serv
+
+Gérez le conteneur 
+	arrêter le conteneur : docker stop mon-conteneur
+
+	redémarrer le conteneur: docker start mon-conteneur
+
+	supprimer le conteneur : docker rm mon-conteneur
+
+
+PUSH AND PULL
+	Authentification Docker (si nécessaire): docker login
+	
+	Tag de votre image Docker (dans le cas où vous avez construit une image Docker) : docker tag nomImage votre-utilisateur/nom-de-projet:tag(mettez le nom que vous voulez voir apparaitre dans le hub)
+
+	Poussez votre image Docker taggée vers un registre:  docker push votre-utilisateur/nom-de-projet:tag(le tag que vous avez mis en haut)
+
+	Téléchargez une image Docker à partir d'un registre: docker pull mon-image:latest
+
+	Exécutez un conteneur à partir de l'image téléchargée : docker run --name mon-conteneur -d mon-image:latest
+
+
+
+RESTAURER UNE IMAGE SUR UN AUTRE SYSTEME
+
+	Pour enregistrer une image Docker dans un fichier tar: docker save -o nomfichier.tar nomimage:version
+
+	Pour restaurer l'image Docker enregistrée à partir du fichier tar: docker load -i nomfichier.tar
+
+	Après la restauration de l'image, exécutez un conteneur à partir de cette image : docker run -it monimage:tag
+
+
+MIGRATION DES DONNEES VERS CONTENEURS
+
+	Sauvegardez votre base de données PostgreSQL: pg_dump -U votre_utilisateur -d votre_base_de_donnees -f chemin_vers_sauvegarde.sql
+
+	Accédez à la bash du conteneur de la base de données: docker exec -it bdpharmacie /bin/bash
+
+	À l'intérieur du conteneur de la base de données, créez un répertoire pour stocker la sauvegarde:  mkdir /backup
+
+	Copiez la sauvegarde de votre base de données depuis votre système hôte vers le répertoire que vous venez de créer à l'intérieur du conteneur de la base de données: docker cp chemin_vers_sauvegarde.sql bdpharmacie:/backup/sauvegarde.sql
+
+	Restaurez la base de données à partir de la sauvegarde: docker exec -it bdpharmacie psql -U votre_utilisateur -d formul -a -f /backup/sauvegarde.sql
+
+	copiez les donnees du conteneurs vers le volume: docker cp bdpharmacie:/chemin/vers/donnees /var/lib/docker/volumes/mon_volume/_data/
+
+
+	migration: docker-compose run web python manage.py migrate
+			docker-compose run web python manage.py makemigrations formul
+			docker-compose run web python manage.py migrate
+
+PARTAGE LES DONNEES BD AVEC DIFF USE
+	Ils créent un volume Docker en utilisant la commande: docker volume create nom_du_volume
+
+	exécutent un conteneur basé sur votre image Docker, en montant le volume qu'ils ont créé dans le conteneur avec la commande: docker run -d --name nom_du_conteneur -v nom_du_volume:/chemin_dans_le_conteneur votrenom/votre-image:tag.

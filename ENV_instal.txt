@@ -1,0 +1,17 @@
+pip install virtualenv
+
+virtualenv nomenv
+
+pip install django
+
+django-admin startproject nomproj
+
+python manage.py startapp nomapk
+
+pip freeze > requirements.txt
+
+pip install -r requirements.txt
+
+GENERER LE MODEL DJANGO EN USE LA BD
+
+	python manage.py inspectdb
