@@ -5,7 +5,7 @@ services:
     build: 
       context: ./ 
       dockerfile: Dockerfile
-    image: ent_infoConnect:v1
+    image: ent_infoconnect:v1
     container_name: ent_infoConnect
     ports:
       - "8001:8000"
