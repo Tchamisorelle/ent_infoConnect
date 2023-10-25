@@ -84,7 +84,7 @@ DATABASES = {
         'NAME': config('DATA_BASE'),
         'USER': config('USER'),
         'PASSWORD': config('PASSWORD'),
-        'HOST': 'localhost',
+        'HOST': 'db',
         'PORT': '5432',
                # Port de votre instance MongoDB
     }

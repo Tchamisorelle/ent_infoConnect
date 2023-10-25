@@ -15,7 +15,7 @@ services:
     volumes:
       - postgres_data:/app  
     networks:
-      - mynetwork
+      - reseau
     env_file:
       - .env
     # Utilisez le nom du réseau personnalisé ici
