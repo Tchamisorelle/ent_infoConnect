@@ -28,7 +28,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     volumes:
-      - postgres_data:/var/lib/postgresql/data 
+      - postgres_data:/var/lib/postgresql/data_infoconnect
     networks:
       - reseau
      # Utilisez le nom du réseau personnalisé ici
