@@ -1,99 +1,1431 @@
--- Création de la table "etudiant"
-CREATE TABLE public.etudiant (
-    matricule VARCHAR(10) PRIMARY KEY,
-    nom VARCHAR(255),
-    prenom VARCHAR(255),
-    email VARCHAR(255),
-    sexe CHAR(1),
-    mot_de_passe VARCHAR(255),
-    filiere VARCHAR(255),
-    niveau CHAR(2),
-    statut VARCHAR(255)
-);
+--
+-- PostgreSQL database dump
+--
 
--- Création de la table "enseignant"
-CREATE TABLE public.enseignant (
-    matricule_en VARCHAR(20) PRIMARY KEY,
-    nom VARCHAR(255),
-    prenom VARCHAR(255),
-    email VARCHAR(255),
-    sexe CHAR(1),
-    mot_de_passe_ensei VARCHAR(255)
-);
+-- Dumped from database version 14.6
+-- Dumped by pg_dump version 14.6
 
--- Création de la table "document"
-CREATE TABLE public.document (
-    id_doc INT AUTO_INCREMENT PRIMARY KEY,
-    titre VARCHAR(255),
-    date_doc DATE,
-    type_doc VARCHAR(255),
-    matricule VARCHAR(10),
-    matricule_en VARCHAR(20),
-    FOREIGN KEY (matricule) REFERENCES etudiant(matricule),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en)
-);
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
 
--- Création de la table "annonce"
-CREATE TABLE public.annonce (
-    id_ann INT AUTO_INCREMENT PRIMARY KEY,
-    texte TEXT,
-    date_pub DATE,
-    categorie VARCHAR(255),
-    titre VARCHAR(255),
-    matricule VARCHAR(10),
-    matricule_en VARCHAR(20),
-    FOREIGN KEY (matricule) REFERENCES etudiant(matricule),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en)
-);
+SET default_tablespace = '';
 
--- Création de la table "note"
-CREATE TABLE public.note (
-    id_note INT AUTO_INCREMENT PRIMARY KEY,
-    examen VARCHAR(255),
-    valeur DECIMAL(5, 2),
-    date_fin DATE,
-    date_deb DATE,
-    matricule VARCHAR(10),
-    matricule_en VARCHAR(20),
-    code_ue VARCHAR(10),
-    FOREIGN KEY (matricule) REFERENCES etudiant(matricule),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en),
-    FOREIGN KEY (code_ue) REFERENCES ue(code_ue)
-);
+SET default_table_access_method = heap;
 
--- Création de la table "ue"
-CREATE TABLE public.ue (
-    code_ue VARCHAR(10) PRIMARY KEY,
-    nom VARCHAR(255),
-    credit INT,
-    matricule_en VARCHAR(20),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en)
-);
+--
+-- Name: agenda; Type: TABLE; Schema: public; Owner: postgres
+--
 
--- Création de la table "agenda"
 CREATE TABLE public.agenda (
-    id_ag INT AUTO_INCREMENT PRIMARY KEY,
-    titre VARCHAR(255),
-    date_deb_ag DATETIME,
-    date_fin DATETIME,
-    note VARCHAR(255),
-    matricule VARCHAR(10),
-    matricule_en VARCHAR(20),
-    FOREIGN KEY (matricule) REFERENCES etudiant(matricule),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en)
+    id_ag integer NOT NULL,
+    titre character varying(255),
+    date_deb_ag date,
+    date_fin date,
+    note character varying(255),
+    matricule character varying(10),
+    matricule_en character varying(20)
 );
 
--- Création de la table "profil_etu"
-CREATE TABLE public.profil_etu (
-    id_prof INT AUTO_INCREMENT PRIMARY KEY,
-    mgp DECIMAL(5, 2),
-    matricule VARCHAR(10),
-    FOREIGN KEY (matricule) REFERENCES etudiant(matricule)
+
+ALTER TABLE public.agenda OWNER TO postgres;
+
+--
+-- Name: agenda_id_ag_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.agenda_id_ag_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.agenda_id_ag_seq OWNER TO postgres;
+
+--
+-- Name: agenda_id_ag_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.agenda_id_ag_seq OWNED BY public.agenda.id_ag;
+
+
+--
+-- Name: annonce; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.annonce (
+    id_ann integer NOT NULL,
+    texte text,
+    date_pub date,
+    categorie character varying(255),
+    titre character varying(255),
+    matricule character varying(10),
+    matricule_en character varying(20)
 );
 
--- Création de la table "profil_ens"
+
+ALTER TABLE public.annonce OWNER TO postgres;
+
+--
+-- Name: annonce_id_ann_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.annonce_id_ann_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.annonce_id_ann_seq OWNER TO postgres;
+
+--
+-- Name: annonce_id_ann_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.annonce_id_ann_seq OWNED BY public.annonce.id_ann;
+
+
+--
+-- Name: auth_group; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group (
+    id integer NOT NULL,
+    name character varying(150) NOT NULL
+);
+
+
+ALTER TABLE public.auth_group OWNER TO postgres;
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_group ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_group_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: auth_group_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_group_permissions (
+    id bigint NOT NULL,
+    group_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_group_permissions OWNER TO postgres;
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_group_permissions ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_group_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: auth_permission; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_permission (
+    id integer NOT NULL,
+    name character varying(255) NOT NULL,
+    content_type_id integer NOT NULL,
+    codename character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.auth_permission OWNER TO postgres;
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_permission ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_permission_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: auth_user; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user (
+    id integer NOT NULL,
+    password character varying(128) NOT NULL,
+    last_login timestamp with time zone,
+    is_superuser boolean NOT NULL,
+    username character varying(150) NOT NULL,
+    first_name character varying(150) NOT NULL,
+    last_name character varying(150) NOT NULL,
+    email character varying(254) NOT NULL,
+    is_staff boolean NOT NULL,
+    is_active boolean NOT NULL,
+    date_joined timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.auth_user OWNER TO postgres;
+
+--
+-- Name: auth_user_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_groups (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    group_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_groups OWNER TO postgres;
+
+--
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_user_groups ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_user_groups_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: auth_user_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_user ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_user_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: auth_user_user_permissions; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.auth_user_user_permissions (
+    id bigint NOT NULL,
+    user_id integer NOT NULL,
+    permission_id integer NOT NULL
+);
+
+
+ALTER TABLE public.auth_user_user_permissions OWNER TO postgres;
+
+--
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.auth_user_user_permissions ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.auth_user_user_permissions_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: django_admin_log; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_admin_log (
+    id integer NOT NULL,
+    action_time timestamp with time zone NOT NULL,
+    object_id text,
+    object_repr character varying(200) NOT NULL,
+    action_flag smallint NOT NULL,
+    change_message text NOT NULL,
+    content_type_id integer,
+    user_id integer NOT NULL,
+    CONSTRAINT django_admin_log_action_flag_check CHECK ((action_flag >= 0))
+);
+
+
+ALTER TABLE public.django_admin_log OWNER TO postgres;
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.django_admin_log ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.django_admin_log_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: django_content_type; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_content_type (
+    id integer NOT NULL,
+    app_label character varying(100) NOT NULL,
+    model character varying(100) NOT NULL
+);
+
+
+ALTER TABLE public.django_content_type OWNER TO postgres;
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.django_content_type ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.django_content_type_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: django_migrations; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_migrations (
+    id bigint NOT NULL,
+    app character varying(255) NOT NULL,
+    name character varying(255) NOT NULL,
+    applied timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_migrations OWNER TO postgres;
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+ALTER TABLE public.django_migrations ALTER COLUMN id ADD GENERATED BY DEFAULT AS IDENTITY (
+    SEQUENCE NAME public.django_migrations_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1
+);
+
+
+--
+-- Name: django_session; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.django_session (
+    session_key character varying(40) NOT NULL,
+    session_data text NOT NULL,
+    expire_date timestamp with time zone NOT NULL
+);
+
+
+ALTER TABLE public.django_session OWNER TO postgres;
+
+--
+-- Name: document; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.document (
+    id_doc integer NOT NULL,
+    titre character varying(255),
+    date_doc date,
+    type_doc character varying(255),
+    matricule character varying(10),
+    matricule_en character varying(20)
+);
+
+
+ALTER TABLE public.document OWNER TO postgres;
+
+--
+-- Name: document_id_doc_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.document_id_doc_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.document_id_doc_seq OWNER TO postgres;
+
+--
+-- Name: document_id_doc_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.document_id_doc_seq OWNED BY public.document.id_doc;
+
+
+--
+-- Name: enseignant; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.enseignant (
+    matricule_en character varying(20) NOT NULL,
+    nom character varying(255),
+    prenom character varying(255),
+    email character varying(255),
+    sexe character(1),
+    mot_de_passe_ensei character varying(255)
+);
+
+
+ALTER TABLE public.enseignant OWNER TO postgres;
+
+--
+-- Name: etudiant; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.etudiant (
+    matricule character varying(10) NOT NULL,
+    nom character varying(255),
+    prenom character varying(255),
+    email character varying(255),
+    sexe character(1),
+    mot_de_passe character varying(255),
+    filiere character varying(255),
+    niveau character(2),
+    statut character varying(255)
+);
+
+
+ALTER TABLE public.etudiant OWNER TO postgres;
+
+--
+-- Name: note; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.note (
+    id_note integer NOT NULL,
+    examen character varying(255),
+    valeur numeric(5,2),
+    date_fin date,
+    date_deb date,
+    matricule character varying(10),
+    matricule_en character varying(20),
+    code_ue character varying(10)
+);
+
+
+ALTER TABLE public.note OWNER TO postgres;
+
+--
+-- Name: note_id_note_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.note_id_note_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.note_id_note_seq OWNER TO postgres;
+
+--
+-- Name: note_id_note_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.note_id_note_seq OWNED BY public.note.id_note;
+
+
+--
+-- Name: profil_ens; Type: TABLE; Schema: public; Owner: postgres
+--
+
 CREATE TABLE public.profil_ens (
-    id_pr_en INT AUTO_INCREMENT PRIMARY KEY,
-    matricule_en VARCHAR(20),
-    FOREIGN KEY (matricule_en) REFERENCES enseignant(matricule_en)
+    id_pr_en integer NOT NULL,
+    matricule_en character varying(20)
 );
+
+
+ALTER TABLE public.profil_ens OWNER TO postgres;
+
+--
+-- Name: profil_ens_id_pr_en_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.profil_ens_id_pr_en_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.profil_ens_id_pr_en_seq OWNER TO postgres;
+
+--
+-- Name: profil_ens_id_pr_en_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.profil_ens_id_pr_en_seq OWNED BY public.profil_ens.id_pr_en;
+
+
+--
+-- Name: profil_etu; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.profil_etu (
+    id_prof integer NOT NULL,
+    mgp numeric(5,2),
+    matricule character varying(10)
+);
+
+
+ALTER TABLE public.profil_etu OWNER TO postgres;
+
+--
+-- Name: profil_etu_id_prof_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.profil_etu_id_prof_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER TABLE public.profil_etu_id_prof_seq OWNER TO postgres;
+
+--
+-- Name: profil_etu_id_prof_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.profil_etu_id_prof_seq OWNED BY public.profil_etu.id_prof;
+
+
+--
+-- Name: ue; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.ue (
+    code_ue character varying(10) NOT NULL,
+    nom character varying(255),
+    credit integer,
+    matricule_en character varying(20)
+);
+
+
+ALTER TABLE public.ue OWNER TO postgres;
+
+--
+-- Name: agenda id_ag; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.agenda ALTER COLUMN id_ag SET DEFAULT nextval('public.agenda_id_ag_seq'::regclass);
+
+
+--
+-- Name: annonce id_ann; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.annonce ALTER COLUMN id_ann SET DEFAULT nextval('public.annonce_id_ann_seq'::regclass);
+
+
+--
+-- Name: document id_doc; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.document ALTER COLUMN id_doc SET DEFAULT nextval('public.document_id_doc_seq'::regclass);
+
+
+--
+-- Name: note id_note; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.note ALTER COLUMN id_note SET DEFAULT nextval('public.note_id_note_seq'::regclass);
+
+
+--
+-- Name: profil_ens id_pr_en; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_ens ALTER COLUMN id_pr_en SET DEFAULT nextval('public.profil_ens_id_pr_en_seq'::regclass);
+
+
+--
+-- Name: profil_etu id_prof; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_etu ALTER COLUMN id_prof SET DEFAULT nextval('public.profil_etu_id_prof_seq'::regclass);
+
+
+--
+-- Data for Name: agenda; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.agenda (id_ag, titre, date_deb_ag, date_fin, note, matricule, matricule_en) FROM stdin;
+\.
+
+
+--
+-- Data for Name: annonce; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.annonce (id_ann, texte, date_pub, categorie, titre, matricule, matricule_en) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group (id, name) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_group_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_group_permissions (id, group_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_permission; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_permission (id, name, content_type_id, codename) FROM stdin;
+1	Can add log entry	1	add_logentry
+2	Can change log entry	1	change_logentry
+3	Can delete log entry	1	delete_logentry
+4	Can view log entry	1	view_logentry
+5	Can add permission	2	add_permission
+6	Can change permission	2	change_permission
+7	Can delete permission	2	delete_permission
+8	Can view permission	2	view_permission
+9	Can add group	3	add_group
+10	Can change group	3	change_group
+11	Can delete group	3	delete_group
+12	Can view group	3	view_group
+13	Can add user	4	add_user
+14	Can change user	4	change_user
+15	Can delete user	4	delete_user
+16	Can view user	4	view_user
+17	Can add content type	5	add_contenttype
+18	Can change content type	5	change_contenttype
+19	Can delete content type	5	delete_contenttype
+20	Can view content type	5	view_contenttype
+21	Can add session	6	add_session
+22	Can change session	6	change_session
+23	Can delete session	6	delete_session
+24	Can view session	6	view_session
+25	Can add agenda	7	add_agenda
+26	Can change agenda	7	change_agenda
+27	Can delete agenda	7	delete_agenda
+28	Can view agenda	7	view_agenda
+29	Can add annonce	8	add_annonce
+30	Can change annonce	8	change_annonce
+31	Can delete annonce	8	delete_annonce
+32	Can view annonce	8	view_annonce
+33	Can add document	9	add_document
+34	Can change document	9	change_document
+35	Can delete document	9	delete_document
+36	Can view document	9	view_document
+37	Can add enseignant	10	add_enseignant
+38	Can change enseignant	10	change_enseignant
+39	Can delete enseignant	10	delete_enseignant
+40	Can view enseignant	10	view_enseignant
+41	Can add etudiant	11	add_etudiant
+42	Can change etudiant	11	change_etudiant
+43	Can delete etudiant	11	delete_etudiant
+44	Can view etudiant	11	view_etudiant
+45	Can add note	12	add_note
+46	Can change note	12	change_note
+47	Can delete note	12	delete_note
+48	Can view note	12	view_note
+49	Can add profil ens	13	add_profilens
+50	Can change profil ens	13	change_profilens
+51	Can delete profil ens	13	delete_profilens
+52	Can view profil ens	13	view_profilens
+53	Can add profil etu	14	add_profiletu
+54	Can change profil etu	14	change_profiletu
+55	Can delete profil etu	14	delete_profiletu
+56	Can view profil etu	14	view_profiletu
+57	Can add ue	15	add_ue
+58	Can change ue	15	change_ue
+59	Can delete ue	15	delete_ue
+60	Can view ue	15	view_ue
+\.
+
+
+--
+-- Data for Name: auth_user; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user (id, password, last_login, is_superuser, username, first_name, last_name, email, is_staff, is_active, date_joined) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_user_groups; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_groups (id, user_id, group_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: auth_user_user_permissions; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.auth_user_user_permissions (id, user_id, permission_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_admin_log; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_admin_log (id, action_time, object_id, object_repr, action_flag, change_message, content_type_id, user_id) FROM stdin;
+\.
+
+
+--
+-- Data for Name: django_content_type; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_content_type (id, app_label, model) FROM stdin;
+1	admin	logentry
+2	auth	permission
+3	auth	group
+4	auth	user
+5	contenttypes	contenttype
+6	sessions	session
+7	ent_infoConnect	agenda
+8	ent_infoConnect	annonce
+9	ent_infoConnect	document
+10	ent_infoConnect	enseignant
+11	ent_infoConnect	etudiant
+12	ent_infoConnect	note
+13	ent_infoConnect	profilens
+14	ent_infoConnect	profiletu
+15	ent_infoConnect	ue
+\.
+
+
+--
+-- Data for Name: django_migrations; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_migrations (id, app, name, applied) FROM stdin;
+1	contenttypes	0001_initial	2023-10-25 12:17:32.619912+01
+2	auth	0001_initial	2023-10-25 12:17:32.769338+01
+3	admin	0001_initial	2023-10-25 12:17:32.807607+01
+4	admin	0002_logentry_remove_auto_add	2023-10-25 12:17:32.817544+01
+5	admin	0003_logentry_add_action_flag_choices	2023-10-25 12:17:32.825811+01
+6	contenttypes	0002_remove_content_type_name	2023-10-25 12:17:32.846011+01
+7	auth	0002_alter_permission_name_max_length	2023-10-25 12:17:32.85365+01
+8	auth	0003_alter_user_email_max_length	2023-10-25 12:17:32.865123+01
+9	auth	0004_alter_user_username_opts	2023-10-25 12:17:32.878592+01
+10	auth	0005_alter_user_last_login_null	2023-10-25 12:17:32.889815+01
+11	auth	0006_require_contenttypes_0002	2023-10-25 12:17:32.894125+01
+12	auth	0007_alter_validators_add_error_messages	2023-10-25 12:17:32.898241+01
+13	auth	0008_alter_user_username_max_length	2023-10-25 12:17:32.928715+01
+14	auth	0009_alter_user_last_name_max_length	2023-10-25 12:17:32.940925+01
+15	auth	0010_alter_group_name_max_length	2023-10-25 12:17:32.951331+01
+16	auth	0011_update_proxy_permissions	2023-10-25 12:17:32.960206+01
+17	auth	0012_alter_user_first_name_max_length	2023-10-25 12:17:32.9677+01
+18	ent_infoConnect	0001_initial	2023-10-25 12:17:32.97557+01
+19	sessions	0001_initial	2023-10-25 12:17:32.995718+01
+\.
+
+
+--
+-- Data for Name: django_session; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.django_session (session_key, session_data, expire_date) FROM stdin;
+\.
+
+
+--
+-- Data for Name: document; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.document (id_doc, titre, date_doc, type_doc, matricule, matricule_en) FROM stdin;
+\.
+
+
+--
+-- Data for Name: enseignant; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.enseignant (matricule_en, nom, prenom, email, sexe, mot_de_passe_ensei) FROM stdin;
+\.
+
+
+--
+-- Data for Name: etudiant; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.etudiant (matricule, nom, prenom, email, sexe, mot_de_passe, filiere, niveau, statut) FROM stdin;
+\.
+
+
+--
+-- Data for Name: note; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.note (id_note, examen, valeur, date_fin, date_deb, matricule, matricule_en, code_ue) FROM stdin;
+\.
+
+
+--
+-- Data for Name: profil_ens; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.profil_ens (id_pr_en, matricule_en) FROM stdin;
+\.
+
+
+--
+-- Data for Name: profil_etu; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.profil_etu (id_prof, mgp, matricule) FROM stdin;
+\.
+
+
+--
+-- Data for Name: ue; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+COPY public.ue (code_ue, nom, credit, matricule_en) FROM stdin;
+\.
+
+
+--
+-- Name: agenda_id_ag_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.agenda_id_ag_seq', 1, false);
+
+
+--
+-- Name: annonce_id_ann_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.annonce_id_ann_seq', 1, false);
+
+
+--
+-- Name: auth_group_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_id_seq', 1, false);
+
+
+--
+-- Name: auth_group_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_group_permissions_id_seq', 1, false);
+
+
+--
+-- Name: auth_permission_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_permission_id_seq', 60, true);
+
+
+--
+-- Name: auth_user_groups_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_groups_id_seq', 1, false);
+
+
+--
+-- Name: auth_user_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_id_seq', 1, false);
+
+
+--
+-- Name: auth_user_user_permissions_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.auth_user_user_permissions_id_seq', 1, false);
+
+
+--
+-- Name: django_admin_log_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_admin_log_id_seq', 1, false);
+
+
+--
+-- Name: django_content_type_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_content_type_id_seq', 15, true);
+
+
+--
+-- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 19, true);
+
+
+--
+-- Name: document_id_doc_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.document_id_doc_seq', 1, false);
+
+
+--
+-- Name: note_id_note_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.note_id_note_seq', 1, false);
+
+
+--
+-- Name: profil_ens_id_pr_en_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.profil_ens_id_pr_en_seq', 1, false);
+
+
+--
+-- Name: profil_etu_id_prof_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.profil_etu_id_prof_seq', 1, false);
+
+
+--
+-- Name: agenda agenda_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.agenda
+    ADD CONSTRAINT agenda_pkey PRIMARY KEY (id_ag);
+
+
+--
+-- Name: annonce annonce_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.annonce
+    ADD CONSTRAINT annonce_pkey PRIMARY KEY (id_ann);
+
+
+--
+-- Name: auth_group auth_group_name_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_name_key UNIQUE (name);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_permission_id_0cd325b0_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_permission_id_0cd325b0_uniq UNIQUE (group_id, permission_id);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_group auth_group_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group
+    ADD CONSTRAINT auth_group_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_codename_01ab375a_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_codename_01ab375a_uniq UNIQUE (content_type_id, codename);
+
+
+--
+-- Name: auth_permission auth_permission_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_groups auth_user_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_groups auth_user_groups_user_id_group_id_94350c0c_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_group_id_94350c0c_uniq UNIQUE (user_id, group_id);
+
+
+--
+-- Name: auth_user auth_user_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_permission_id_14a6b632_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_permission_id_14a6b632_uniq UNIQUE (user_id, permission_id);
+
+
+--
+-- Name: auth_user auth_user_username_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user
+    ADD CONSTRAINT auth_user_username_key UNIQUE (username);
+
+
+--
+-- Name: django_admin_log django_admin_log_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_content_type django_content_type_app_label_model_76bd3d3b_uniq; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_app_label_model_76bd3d3b_uniq UNIQUE (app_label, model);
+
+
+--
+-- Name: django_content_type django_content_type_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_content_type
+    ADD CONSTRAINT django_content_type_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_migrations django_migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_migrations
+    ADD CONSTRAINT django_migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: django_session django_session_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_session
+    ADD CONSTRAINT django_session_pkey PRIMARY KEY (session_key);
+
+
+--
+-- Name: document document_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.document
+    ADD CONSTRAINT document_pkey PRIMARY KEY (id_doc);
+
+
+--
+-- Name: enseignant enseignant_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.enseignant
+    ADD CONSTRAINT enseignant_pkey PRIMARY KEY (matricule_en);
+
+
+--
+-- Name: etudiant etudiant_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.etudiant
+    ADD CONSTRAINT etudiant_pkey PRIMARY KEY (matricule);
+
+
+--
+-- Name: note note_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.note
+    ADD CONSTRAINT note_pkey PRIMARY KEY (id_note);
+
+
+--
+-- Name: profil_ens profil_ens_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_ens
+    ADD CONSTRAINT profil_ens_pkey PRIMARY KEY (id_pr_en);
+
+
+--
+-- Name: profil_etu profil_etu_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_etu
+    ADD CONSTRAINT profil_etu_pkey PRIMARY KEY (id_prof);
+
+
+--
+-- Name: ue ue_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ue
+    ADD CONSTRAINT ue_pkey PRIMARY KEY (code_ue);
+
+
+--
+-- Name: auth_group_name_a6ea08ec_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_name_a6ea08ec_like ON public.auth_group USING btree (name varchar_pattern_ops);
+
+
+--
+-- Name: auth_group_permissions_group_id_b120cbf9; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_group_id_b120cbf9 ON public.auth_group_permissions USING btree (group_id);
+
+
+--
+-- Name: auth_group_permissions_permission_id_84c5c92e; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_group_permissions_permission_id_84c5c92e ON public.auth_group_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_permission_content_type_id_2f476e4b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_permission_content_type_id_2f476e4b ON public.auth_permission USING btree (content_type_id);
+
+
+--
+-- Name: auth_user_groups_group_id_97559544; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_group_id_97559544 ON public.auth_user_groups USING btree (group_id);
+
+
+--
+-- Name: auth_user_groups_user_id_6a12ed8b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_groups_user_id_6a12ed8b ON public.auth_user_groups USING btree (user_id);
+
+
+--
+-- Name: auth_user_user_permissions_permission_id_1fbb5f2c; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_permission_id_1fbb5f2c ON public.auth_user_user_permissions USING btree (permission_id);
+
+
+--
+-- Name: auth_user_user_permissions_user_id_a95ead1b; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_user_permissions_user_id_a95ead1b ON public.auth_user_user_permissions USING btree (user_id);
+
+
+--
+-- Name: auth_user_username_6821ab7c_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX auth_user_username_6821ab7c_like ON public.auth_user USING btree (username varchar_pattern_ops);
+
+
+--
+-- Name: django_admin_log_content_type_id_c4bce8eb; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_content_type_id_c4bce8eb ON public.django_admin_log USING btree (content_type_id);
+
+
+--
+-- Name: django_admin_log_user_id_c564eba6; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_admin_log_user_id_c564eba6 ON public.django_admin_log USING btree (user_id);
+
+
+--
+-- Name: django_session_expire_date_a5c62663; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_expire_date_a5c62663 ON public.django_session USING btree (expire_date);
+
+
+--
+-- Name: django_session_session_key_c0390e0f_like; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX django_session_session_key_c0390e0f_like ON public.django_session USING btree (session_key varchar_pattern_ops);
+
+
+--
+-- Name: agenda agenda_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.agenda
+    ADD CONSTRAINT agenda_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- Name: agenda agenda_matricule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.agenda
+    ADD CONSTRAINT agenda_matricule_fkey FOREIGN KEY (matricule) REFERENCES public.etudiant(matricule);
+
+
+--
+-- Name: annonce annonce_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.annonce
+    ADD CONSTRAINT annonce_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- Name: annonce annonce_matricule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.annonce
+    ADD CONSTRAINT annonce_matricule_fkey FOREIGN KEY (matricule) REFERENCES public.etudiant(matricule);
+
+
+--
+-- Name: auth_group_permissions auth_group_permissio_permission_id_84c5c92e_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissio_permission_id_84c5c92e_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_group_permissions auth_group_permissions_group_id_b120cbf9_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_group_permissions
+    ADD CONSTRAINT auth_group_permissions_group_id_b120cbf9_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_permission auth_permission_content_type_id_2f476e4b_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_permission
+    ADD CONSTRAINT auth_permission_content_type_id_2f476e4b_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_groups auth_user_groups_group_id_97559544_fk_auth_group_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_group_id_97559544_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES public.auth_group(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_groups auth_user_groups_user_id_6a12ed8b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_groups
+    ADD CONSTRAINT auth_user_groups_user_id_6a12ed8b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permi_permission_id_1fbb5f2c_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES public.auth_permission(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: auth_user_user_permissions auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.auth_user_user_permissions
+    ADD CONSTRAINT auth_user_user_permissions_user_id_a95ead1b_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_content_type_id_c4bce8eb_fk_django_co; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_content_type_id_c4bce8eb_fk_django_co FOREIGN KEY (content_type_id) REFERENCES public.django_content_type(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: django_admin_log django_admin_log_user_id_c564eba6_fk_auth_user_id; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.django_admin_log
+    ADD CONSTRAINT django_admin_log_user_id_c564eba6_fk_auth_user_id FOREIGN KEY (user_id) REFERENCES public.auth_user(id) DEFERRABLE INITIALLY DEFERRED;
+
+
+--
+-- Name: document document_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.document
+    ADD CONSTRAINT document_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- Name: document document_matricule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.document
+    ADD CONSTRAINT document_matricule_fkey FOREIGN KEY (matricule) REFERENCES public.etudiant(matricule);
+
+
+--
+-- Name: note note_code_ue_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.note
+    ADD CONSTRAINT note_code_ue_fkey FOREIGN KEY (code_ue) REFERENCES public.ue(code_ue);
+
+
+--
+-- Name: note note_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.note
+    ADD CONSTRAINT note_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- Name: note note_matricule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.note
+    ADD CONSTRAINT note_matricule_fkey FOREIGN KEY (matricule) REFERENCES public.etudiant(matricule);
+
+
+--
+-- Name: profil_ens profil_ens_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_ens
+    ADD CONSTRAINT profil_ens_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- Name: profil_etu profil_etu_matricule_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.profil_etu
+    ADD CONSTRAINT profil_etu_matricule_fkey FOREIGN KEY (matricule) REFERENCES public.etudiant(matricule);
+
+
+--
+-- Name: ue ue_matricule_en_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.ue
+    ADD CONSTRAINT ue_matricule_en_fkey FOREIGN KEY (matricule_en) REFERENCES public.enseignant(matricule_en);
+
+
+--
+-- PostgreSQL database dump complete
+--
+
