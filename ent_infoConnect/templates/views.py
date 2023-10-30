@@ -47,6 +47,6 @@ def user_login(request):
     return render(request, 'connexion.html', {'error_message': error_message})
 
 def register(request):
-    return render(request, 'form.html')
+    return render(request, 'inscription.html')
 def rmail(request):
-    return render(request, 'email.html')
+    return render(request, 'renit_pwd.html')

@@ -1,0 +1,81 @@
+.btn-link {
+    font-size: small;
+    color: blue;
+    text-decoration: none;
+}
+
+.btn-link:hover {
+    text-decoration: underline;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.modal-content{
+    display: inline;
+    justify-content: center;
+    align-items: center;
+    margin:0px;
+   
+
+}
+
+.container {
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    max-width: 100px;
+    margin: 50%;
+}
+
+#togglePassword {
+    cursor: pointer;
+    position: absolute;
+    right: 25px;
+    top: 49%;
+    transform: translateY(-50%);
+    color: blue;
+    /* Couleur de l'icône */
+    display: none;
+    transition: color 0.3s;
+}
+
+#togglePassword:hover {
+    color: blue;
+    /* Couleur de l'icône au survol */
+}
+input{
+    border: 1px solid #0056b3;
+}
+.form-group {
+    position: relative;
+    margin-bottom: 5px;
+  }
+
+  .input-label {
+    position: relative;
+    top: 0;
+    left: 0;
+    right: 0;
+    transition: transform 0.3s, font-size 0.3s;
+    transform-origin: left top;
+  }
+
+  .input-field {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid blue;
+    border-radius: 5px;
+  }
+
+  .input-field:focus+.input-label,
+  .input-field:not(:placeholder-shown)+.input-label {
+    transform: translateY(-70px) scale(1);
+  }
