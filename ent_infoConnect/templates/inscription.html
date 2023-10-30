@@ -1,0 +1,250 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <!-- <script src="{% static 'formu_dyn_angul/main.32cc88bc64577c0f.js' %}"></script>
+    <script src="{% static 'formu_dyn_angul/runtime.9748a2f51a84292a.js' %}"></script>
+    <script src="{% static 'formu_dyn_angul/polyfills.d3c2fcb960358ef2.js' %}"></script>
+    <script src="{% static 'formu_dyn_angul/styles.ef46db3751d8e999.js' %}"></script> -->
+    <!-- <link rel="stylesheet" href="../static/style.css"> -->
+
+    <title>Formulaire d'inscription</title>
+    <style>
+        #password-info {
+            font-size: 12px;
+            color: #b50f0f !important;
+            margin-top: 5px;
+        }
+
+        /* Style pour le bouton */
+        /* #togglePassword {
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 55%;
+            transform: translateY(-50%);
+            color: #007bff;
+            /* Couleur de l'icône 
+            transition: color 0.3s;
+            display: none;
+        }
+
+        #togglePassword:hover {
+            color: #0056b3;
+            /* Couleur de l'icône au survol 
+        } */
+
+        .input-group-text {
+            background-color: transparent;
+            border: none;
+            color: #6c757d;
+            /* Couleur du texte de l'icône */
+        }
+
+        /* Style pour le texte placeholder */
+        #password::placeholder {
+            color: #6c757d;
+            /* Couleur du texte placeholder */
+            font-style: italic;
+            /* Vous pouvez appliquer un style italic au texte placeholder si vous le souhaitez */
+        }
+    </style>
+</head>
+
+
+<body style="background-color: #f4f4f498;" >
+
+    
+    <div class="container">
+        <div class="modal animate__animated animate__swing show" tabindex="-1"
+            aria-labelledby="swinganimationModalLabel" aria-hidden="true" style="display: block;">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header justify-content-center">
+                        <h5 class="modal-title " id="myModalLabel">INSCRIPTION</h5>
+
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'sign-up' %}">
+                            {% csrf_token %}
+                            {% if error_message == "Les mots de passe ne correspondent pas" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_message }}
+                            </div>
+                            {% elif error_message == "Le mot de passe doit contenir au moins 8 caractères" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_message }}
+                            </div>
+                            {% elif error_message == "Le mot de passe doit contenir au moins un chiffre" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_message }}
+                            </div>
+                            {% elif error_message == "Le mot de passe doit contenir au moins un caractère spécial" %}
+                            <div class="alert alert-danger" role="alert">
+                                {{ error_message }}
+                            </div>
+                            {% endif %}
+
+                            <fieldset id="sect1">
+                                <legend class="text-sm">Information personnelle</legend>
+                                <div class="mb-3">
+                                    <label for="nom" class="form-label">Nom</label>
+                                    <input type="text" class="form-control" id="nom" name="nom" maxlength="20"
+                                        autocomplete="on" autofocus="autofocus" style="background-color: #f4f4f498;" required="required" placeholder="Nom">
+                                </div>
+                                <div class="mb-3">
+                                    <label for="prenom" class="form-label">Prénom</label>
+                                    <input type="text" class="form-control" id="prenom" name="prenom" maxlength="20"
+                                        autocomplete="on" autofocus="autofocus" required="required"
+                                        placeholder="Prénom" style="background-color: #f4f4f498;" >
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-check-label">Homme où femme?</label><br>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input" id="homme" name="sexe"
+                                            value="homme" checked="checked"  >
+                                        <label for="homme" class="form-check-label">Homme</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input type="radio" class="form-check-input" id="femme" name="sexe"
+                                            value="femme">
+                                        <label for="femme" class="form-check-label">Femme</label>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="email" class="form-label">Votre mail</label>
+                                    <input type="email" placeholder="votre e-mail" class="form-control" id="email"
+                                        name="mail" style="background-color: #f4f4f498;"  required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password" class="form-label">Entrer mot de passe</label>
+                                    <div class="input-group">
+                                        <!-- Utilisez une classe d'input-group Bootstrap pour l'icône et le champ -->
+                                        <i class="fas fa-eye-slash input-group-text" id="togglePassword"></i>
+                                        <input type="password" placeholder="Password" class="form-control" id="password"
+                                            name="password" style="background-color: #f4f4f498;"  required>
+                                    </div>
+                                    <div id="password_info" class="text-muted"></div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="password_confirm" class="form-label">Confirmez le mot de passe</label>
+                                    <input type="password" placeholder="Confirmer votre e-mail" class="form-control"
+                                        id="password_confirm" name="password_confirm" required="required" style="background-color: #f4f4f498;"  required>
+
+                                </div>
+
+                            </fieldset>
+                            <fieldset id="sect2">
+                                <legend class="text-sm">Information supplémentaire</legend>
+                                <div class="mb-3">
+                                    <div class="form-group">
+                                        <label class="form-check-label">Mineur ou majeur?</label><br>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" class="form-check-input"
+                                                name="qualification_chercheur" id="qualification"  >
+                                            <label for="qualification" class="form-check-label">Mineur</label>
+                                        </div>
+                                        <div class="form-check form-check-inline">
+                                            <input type="checkbox" class="form-check-input" id="qualification_mentor"
+                                                name="qualification_mentor" checked="checked" >
+                                            <label for="qualification_mentor" class="form-check-label">Majeur</label>
+                                        </div>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="pays" class="form-label">Où habitez-vous?</label><br>
+                                        <select class="form-select" name="pays">
+                                            <optgroup label="Europe">
+                                                <option value="france">France</option>
+                                                <option value="belgique" selected="selected">Belgique</option>
+                                                <option value="allemagne">Allemagne</option>
+                                            </optgroup>
+                                            <optgroup label="Amérique">
+                                                <option value="canada">Canada</option>
+                                            </optgroup>
+                                            <optgroup label="Afrique">
+                                                <option value="cameroun">Cameroun</option>
+                                                <option value="congo">Congo</option>
+                                                <option value="algerie">Algérie</option>
+                                                <option value="tchad">Tchad</option>
+                                            </optgroup>
+                                        </select>
+                                    </div>
+                            </fieldset>
+                            <button type="submit" class="btn btn-primary">Envoyer</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("password").addEventListener("input", function () {
+            var password = this.value;
+            var infoDiv = document.getElementById("password_info");
+            var message = "";
+            infoDiv.style.color = "green";
+            if (password.length < 8) {
+                message = "Le mot de passe doit contenir au moins 8 caractères";
+                infoDiv.style.color = "green !important";
+            } else if (!/\d/.test(password)) {
+                message = "Le mot de passe doit contenir au moins un chiffre";
+            } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+                message = "Le mot de passe doit contenir au moins un caractère spécial";
+            }
+            infoDiv.style.color = "green !important";
+            infoDiv.textContent = message;
+        });
+    </script>
+    <script>
+        // Fonction pour basculer l'affichage du mot de passe
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById("password");
+            var icon = document.getElementById("togglePassword");
+
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+                icon.classList.remove("fa-eye-slash");
+                icon.classList.add("fa-eye");
+            } else {
+                passwordField.type = "password";
+                icon.classList.remove("fa-eye");
+                icon.classList.add("fa-eye-slash");
+            }
+        }
+        document.getElementById("togglePassword").addEventListener("click", togglePasswordVisibility);
+
+        // Ajoutez un écouteur d'événement pour l'événement input du champ de mot de passe
+        document.getElementById("password").addEventListener("input", function () {
+            var password = this.value;
+            var icon = document.getElementById("togglePassword");
+            if (this.value.length > 0) {
+                icon.style.display = "block"; // Afficher l'icône lorsque du texte est saisi
+                icon.style.color = "orange";
+                if (/\d/.test(password) && (/[!@#$%^&*(),.?":{}|<>]/.test(password)) && (password.length >= 8)) {
+                    icon.style.color = "green";
+                }
+                else if (!/\d/.test(password) && (!/[!@#$%^&*(),.?":{}|<>]/.test(password))) {
+                    icon.style.color = "red";
+                }
+            }
+            else {
+                icon.style.display = "none"; // Masquer l'icône lorsque le champ est vide
+            }
+
+        });
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+
+</body>
+
+</html>

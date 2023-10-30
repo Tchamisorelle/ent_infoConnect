@@ -16,7 +16,14 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+from ent_infoConnect.views import user_login, rmail, register
+from django.contrib.auth import views as auth_views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('user_login/', user_login, name='user_login'),
+    path('renit_pwd/', rmail, name='mail'),
+    path('register/', register, name='register'),
 ]
