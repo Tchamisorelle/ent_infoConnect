@@ -29,28 +29,12 @@ body {
 .container {
     background-color: #fff;
     border-radius: 10px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.158);
     padding: 20px;
     max-width: 100px;
     margin: 50%;
 }
 
-#togglePassword {
-    cursor: pointer;
-    position: absolute;
-    right: 25px;
-    top: 49%;
-    transform: translateY(-50%);
-    color: blue;
-    /* Couleur de l'icône */
-    display: none;
-    transition: color 0.3s;
-}
-
-#togglePassword:hover {
-    color: blue;
-    /* Couleur de l'icône au survol */
-}
 input{
     border: 1px solid #0056b3;
 }

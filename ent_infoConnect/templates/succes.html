@@ -1,0 +1,38 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+</head>
+<body style='background-color:  #f0f8f9'>
+
+    {% block content %}
+    <div class="container" >
+        <div class="row">
+            <div class="col-md-6 offset-md-3 mt-5">
+                <div class="card">
+                    <div class="card-body text-center">
+                        <center>
+                            <h3 style="color: blue; size: 30px; font-weight: 900; margin-bottom: 30px;margin-top:50px">infoConnect</h3>
+                          </center>
+                            
+                        <h1>Réinitialisation de Mot de Passe</h1>
+                        <div style="margin:20px">
+                        <p>Un e-mail contenant des instructions pour réinitialiser votre mot de passe a été envoyé à votre adresse e-mail enregistrée. Veuillez vérifier votre boîte de réception et suivre les instructions pour réinitialiser votre mot de passe.</p>
+                        <p>Si vous n'avez pas reçu d'e-mail, veuillez vérifier votre dossier de courrier indésirable (spam).</p>
+                        </div>
+                        <p><a href="{% url 'connexion' %}" class="btn btn-primary" style="width:600px; margin-top:20px; background-color:blue; font-size:21px;">Retourner à la page de connexion</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+
+</body>
+</html>

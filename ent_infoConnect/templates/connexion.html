@@ -14,16 +14,12 @@
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
   <title>inscription</title>
 
-  <!-- Vos balises meta, titre et autres liens CSS -->
-  <style>
-   
-  </style>
 </head>
 
 <body style="background-color: #d1d1d12a;">
   <div>
     <!-- Fenêtre modale de connexion -->
-    <div class="modal" style="display: inline; padding: 0px;">
+    <div class="modal" style="display: inline; padding: 0px; border-radius: none;">
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
           <div class="modal-header">
@@ -42,22 +38,22 @@
                 <h4 class="modal-title mx-auto" id="exampleModalLabel" style="margin-bottom: 30px;">CONNEXION</h4>
               </div>
               <div class="form-group">
-                <input type="email" class="input-field" id="email" name="email" placeholder="Votre mail">
+                <input type="email" class="input-field" id="email" name="email" placeholder="Votre mail" required>
                 <label class="input-label" for="email">Email</label>
               </div>
               <div class="form-group">
-                <input type="password" class="input-field" id="password" name="password" placeholder="Mot de passe">
+                <input type="password" class="input-field" id="password" name="password" placeholder="Mot de passe"  required>
                 <label class="input-label" for="password">Password</label>
               </div>
 
               <div class="modal-footer">
                 {% csrf_token %}
-                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnEffacer">Delete</button>
-                <button type="submit" class="btn btn-primary">Continue</button>
+                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnEffacer">Delete</button> -->
+                <button type="submit" class="btn btn-primary" style="background-color: blue; width: 350px; height: 50px;font-size: 21px;">Continue</button>
               </div>
               <div class="text-center"  style="margin-bottom: 30px;">
-                <a href="{% url 'register' %}" class="btn-link text-decoration-none">Sign up</a> |
-                <a href="{% url 'mail' %}" class="btn-link">Forgot password?</a>
+                <a href="{% url 'preinscri' %}" class="btn-link text-decoration-none">Sign up</a> |
+                <a href="{% url 'mail' %}" class="btn-link text-decoration-none">Forgot password?</a>
               </div>
             </form>
           </div>

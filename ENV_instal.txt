@@ -15,3 +15,10 @@ pip install -r requirements.txt
 GENERER LE MODEL DJANGO EN USE LA BD
 
 	python manage.py inspectdb
+
+Sauvegardez votre base de données PostgreSQL: 
+	pg_dump -U votre_utilisateur -d votre_base_de_donnees -f chemin_vers_sauvegarde.sql
+
+restaurer sauv d bd:
+
+psql -U votre_utilisateur -d votre_base_de_donnees_cible -f chemin_vers_sauvegarde.sql

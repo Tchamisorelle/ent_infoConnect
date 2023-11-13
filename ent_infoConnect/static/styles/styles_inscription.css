@@ -1,0 +1,52 @@
+#password-info {
+    font-size: 12px;
+    color: #b50f0f !important;
+    margin-top: 5px;
+}
+
+.input-field {
+    width: 100%;
+    padding: 10px;
+    border: 2px solid blue;
+    border-radius: 5px;
+  }
+
+.input-group-text {
+    background-color: transparent;
+    border: none;
+    color: #6c757d;
+    /* Couleur du texte de l'icône */
+}
+
+/* Style pour le texte placeholder */
+#password::placeholder {
+    color: #6c757d;
+    /* Couleur du texte placeholder */
+    font-style: italic;
+    /* Vous pouvez appliquer un style italic au texte placeholder si vous le souhaitez */
+}
+/* Supprimer les lignes de séparation dans le modal */
+.modal-content {
+    border: none; /* Supprime la bordure du contenu du modal */
+}
+
+/* Supprimer la bordure supérieure du header */
+.modal-header {
+    border: none;
+}
+
+/* Supprimer la bordure inférieure du footer */
+.modal-footer {
+    border: none;
+}
+.text{
+    font-size: 10px;
+    margin-bottom: 0px;
+}
+/* Ajouter une bordure basse (trait) sous le texte du fieldset */
+legend.text-sm {
+    border-bottom: 2px solid #000; /* Vous pouvez personnaliser la couleur et l'épaisseur de la bordure selon vos préférences */
+    display: inline-block; /* Pour que le texte ne soit pas sur plusieurs lignes */
+    padding: 0 10px; /* Espacement autour du texte du legend */
+}
+
