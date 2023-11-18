@@ -60,7 +60,7 @@ def user_login(request):
                 'email': email,
             }
             request.session['user_info'] = user_info
-            return redirect('interface')
+            return redirect('requete')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
@@ -68,7 +68,7 @@ def user_login(request):
                 'email': email,
             }
             request.session['user_info'] = user_info
-            return redirect('interface')
+            return redirect('requete')
         else:
             # Affichez un message d'erreur si l'authentification échoue
             error_message = "Adresse e-mail ou mot de passe incorrect"
@@ -91,6 +91,8 @@ def preinscri(request):
 def reset_password_done(request):
     return render(request, 'succes.html')
 
+def requete(request):
+    return render(request, 'requete.html')
 
 def reset_password_request(request):
     if request.method == "POST":

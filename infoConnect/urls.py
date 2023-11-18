@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from ent_infoConnect.views import user_login, rmail, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView
+from ent_infoConnect.views import user_login, rmail, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, requete
 from django.contrib.auth import views as auth_views
 
 
@@ -33,7 +33,7 @@ urlpatterns = [
     path('sign_up_en/', new_utilisateur_ensei, name='sign-up-ensei'),
     path('go/', go, name='go'),
     path('preinscription/', preinscri, name='preinscri'),
-    
+    path('requete', requete, name='requete'),
     path('reset_password_done/', reset_password_done, name='reset_password_done'),
     # path("reset-password/", reset_password_request, name="reset_password"),
     path("rest_password/<str:token>/<str:uidb64>/", CustomPasswordResetConfirmView.as_view(), name="password_reset_confirm"),
