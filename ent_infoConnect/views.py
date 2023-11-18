@@ -79,6 +79,8 @@ def user_login(request):
 
 def register(request):
     return render(request, 'inscription.html')
+def interface(request):
+    return render(request, 'interface.html')
 def register_ensei(request):
     return render(request, 'inscription_ensei.html')
 def rmail(request):
