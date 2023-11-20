@@ -60,7 +60,7 @@ def user_login(request):
                 'email': email,
             }
             request.session['user_info'] = user_info
-            return redirect('interface')
+            return redirect('requete')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
@@ -89,10 +89,22 @@ def connexion(request):
     return render(request, 'connexion.html')
 def preinscri(request):
     return render(request, 'preinscription.html')
+def annonce(request):
+    return render(request, 'connexion.html')
+def note(request):
+    return render(request, 'connexion.html')
+def requete(request):
+    return render(request, 'requete.html')
+def agenda(request):
+    return render(request, 'connexion.html')
+def document(request):
+    return render(request, 'connexion.html')
 
 def reset_password_done(request):
     return render(request, 'succes.html')
 
+# def requete(request):
+#     return render(request, 'requete.html')
 
 def reset_password_request(request):
     if request.method == "POST":
@@ -245,7 +257,16 @@ class CustomPasswordResetConfirmView(View):
             context = {"invalid_reset_link": True}
             return render(request, self.template_name, context)
 
+def user_logout(request):
+    # Déconnectez l'utilisateur
+    logout(request)
 
+    # Supprimez les données de session associées
+    if 'user_info' in request.session:
+        del request.session['user_info']
+
+    # Redirigez l'utilisateur vers la page de déconnexion ou une autre page de votre choix
+    return redirect('connexion')
 
 def reset_password_complete(request):
     return render(request, 'reset_password_complete.html')
