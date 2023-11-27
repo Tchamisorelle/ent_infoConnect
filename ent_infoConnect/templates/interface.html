@@ -91,7 +91,7 @@
         font-size: 20px;
         display: block;
         margin: 0px;
-        padding: 35px;
+        padding: 25px;
       }
       button>a{
         text-decoration: none;
@@ -380,6 +380,7 @@
         var sidebarIcons = sidebar.querySelectorAll("i");
         var sidebarButtons = sidebar.querySelectorAll("button");
     
+        //sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
         sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
     
         // Cache ou affiche le texte des boutons en fonction de la largeur de la barre latérale
@@ -387,16 +388,16 @@
             var button = sidebarSpan[i];
             button.style.display = sidebar.style.width === "270px" ? "inline" : "none";
         }
-    
+
         for (var i = 0; i < sidebarIcons.length; i++) {
             var icon = sidebarIcons[i];
             var button = sidebarButtons[i];
-    
+            
             if (sidebar.style.width === "50px") {
                 sidebar.style.width = "85px";
-                icon.classList.add("disabl-hover");
-                button.classList.add("disable-hover");
-                button.style.
+                sidebarIcons[i].classList.add("disabl-hover");
+                sidebarButtons[i].classList.add("disable-hover");
+                
             } else {
                 icon.classList.remove("disabl-hover");
                 button.classList.remove("disable-hover");
