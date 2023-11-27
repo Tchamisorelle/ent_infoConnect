@@ -1,0 +1,461 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" /> -->
+    <link rel="stylesheet" href="{% static 'styles/interface.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+      crossorigin="anonymous"
+    />
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <title>interface</title>
+    <meta name="description" content="" />
+
+    <style>
+      body {
+        margin: 0;
+        font-family: "Arial", sans-serif;
+        background-color: #84d8f10e;
+      }
+
+      header {
+        background-color: rgba(255, 255, 255, 0.979);
+        color: blue;
+        padding-top: 15px;
+        padding-bottom: 0;
+        padding-left: 15px;
+        padding-right: 15px;
+        display: flex;
+        height: 80px;
+        justify-content: space-between;
+        box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+        margin: 0;
+      }
+
+      .logo {
+        font-size: 1.5em;
+        font-weight: bold;
+      }
+
+      .search {
+        display: flex;
+        align-items: center;
+        padding-left: 0px;
+        margin-left: 40px;
+      }
+
+      .search input {
+        padding: 8px;
+        margin-right: 95px;
+        border: none;
+        font-size: 14px;
+      }
+      .search input:hover {
+        border: none;
+      }
+
+      .search button {
+        background-color: white;
+        color: #686868;
+        border: none;
+        border-radius: 5px;
+        padding: 8px 12px;
+        cursor: pointer;
+        font-size: 14px;
+      }
+
+      .container {
+        display: flex;
+        margin-top: 0px;
+      }
+
+      #sidebar {
+        width: 270px;
+        height: 857px;
+        background-color: #ffffff;
+        box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        color: #686868 ;
+        font-size: 20px;
+        display: block;
+        margin: 0px;
+        padding: 25px;
+      }
+      button>a{
+        text-decoration: none;
+        color: #686868 ;
+        padding: 10px;
+        width: 90%;
+
+      }
+      
+      button>a:hover{
+        text-decoration: none;
+        color:#ffffff;
+        
+        
+      }
+      
+      .sidebar>button {
+        display: inline;
+        width: 90%;
+        font-size: 20px;
+        text-align: left;
+        background-color: transparent;
+        border: none;
+        color: #686868;
+        cursor: pointer;
+        border-radius: 10px;
+        padding: 10px;
+        transition: background-color 0.3s;
+        text-decoration: none;
+      }
+
+      .sidebar>button:hover {
+        background-color: blue;
+        color: white;
+        border-radius: 10px;
+      }
+      
+
+      .contentt {
+        margin: 30px;
+      }
+      .container {
+        margin-left: 1070px;
+        padding-bottom: 0;
+      }
+      i {
+        font-size: 15px;
+        margin-right: 6px;
+      }
+      
+      .sidebar button i{
+        margin-right: 20px;
+      }
+      
+      .close-btn {
+        margin-left: 90px;
+        margin-right: 20px;
+        color: #686868;
+        border: 0;
+        background-color: white;
+        font-size: 20px;
+      }
+      .close-btn:hover {
+        margin-left: 90px;
+        margin-right: 20px;
+        color: #686868;
+        font-size: 20px;
+        border: 3px solid blue;
+      }
+
+      footer {
+        color: #686868;
+        padding: 25px;
+        background-color: white;
+        text-align: center;
+        position: fixed;
+        position: absolute;
+        z-index: 1000;
+        display: flex;
+        bottom: 0;
+        width: 99.9%;
+        font-size: 12px;
+        cursor: pointer;
+        margin-left: 0;
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+        margin-right: 1px;
+      }
+      .nav-item.nav-profile img {
+        width: 40px;
+        height: 40px;
+        border-radius: 100%;
+      }
+      img {
+        vertical-align: middle;
+        border-style: none;
+      }
+      .dropdown-toggle::after {
+        border-top: 0;
+      }
+      ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .sidebar button.disable-hover:hover {
+        width: 35px;
+        background-color: blue;
+        color: white;
+        
+
+      }
+      .sidebar i.disabl-hover:hover {
+        background-color: blue;
+        color: white;
+      }
+      
+    
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="logo" style="font-weight: bold; font-size: 22px; margin-left: 20px; cursor:pointer;">
+        infoConnect
+      </div>
+      <div class="search">
+        <button class="close-btn" onclick="toggleSidebar()">
+          <i class="fa-solid fa-bars" style="cursor: pointer"></i>
+        </button>
+        <button onclick="filterResults()">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <input type="text" placeholder="Rechercher..." />
+      </div>
+      <div class="container">
+        <ul>
+          <div class="nav-item nav-profile navbar-dropdown dropdown-user dropdown">
+            <a
+                class="nav-link dropdown-toggle hide-arrow"
+                href="javascript:void(0);"
+                data-bs-toggle="dropdown"
+              >
+              <div class="avatar avatar-online">
+                <img
+                src="{% static './images/R.png' %}"
+                alt="profile"
+                class="w-px-40 h-auto rounded-circle"
+              />
+              </div>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li>
+                <a class="dropdown-item" href="#">
+                  <div class="d-flex">
+                    <div class="flex-shrink-0 me-3">
+                      <div class="avatar avatar-online">
+                        <img
+                            src="{% static './images/R.png' %}"
+                            alt="profile"
+                            class="w-px-40 h-auto rounded-circle"
+                          />
+                      </div>
+                    </div>
+                    
+
+                    <div class="flex-grow-1">
+                      <span class="fw-semibold d-block">{{ request.session.user_info.last_name }}</span>
+                      <small class="text-muted">Admin</small>
+                    </div>
+                  </div>
+                </a>
+              </li>
+              <li>
+                <a class="dropdown-item" href="#">
+                  <i class="fa-solid fa-user"></i>
+                  <span class="align-middle">My Profile</span>
+                </a>
+              </li>
+            <li>
+              <div class="dropdown-divider"></div>
+            </li>
+            <li>
+              <a class="dropdown-item" href="{% url 'user_logout' %}">
+                <i class="fa-solid fa-power-off"></i>
+                <span class="align-middle">Log Out</span>
+              </a>
+            </li>
+          </div>
+        </ul>
+      </div>
+    </header>
+
+    <div class="row">
+      <div class="col-2">
+        <div class="sidebar" id="sidebar">
+          <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'note' %}"><span style="padding-right: 25px;">Dashboard</span></button></a>
+          <button><i class="fas fa-book"></i><a href="{% url 'note' %}"><span style="padding-right: 55px;">Notes</span></button></a>
+          <button><i class="fas fa-file-alt"></i><a href="{% url 'requete' %}"><span style="padding-right: 25px;">Requête</span></button></a>
+          <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}"><span style="padding-right: 35px;">Annonce</span></a></button>
+          <button><i class="fas fa-file"></i><a href="{% url 'document' %}"><span style="padding-right: 25px;">Document</span></a></button>
+          <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}"><span style="padding-right: 35px;">Agenda</span></a></button>
+        </div>
+      </div>
+      <div class="col-10">
+        <div class="contentt">
+          <div class="row">
+            <div class="col-6">
+              <h1>Bienvenue sur InfoConnect ENT</h1>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+            <div class="col-6">
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h1>Bienvenue sur InfoConnect ENT</h1>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+            <div class="col-6">
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-6">
+              <h1>Bienvenue sur InfoConnect ENT</h1>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+            <div class="col-6">
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+              <p>
+                Ceci est le contenu principal de votre page. Personnalisez-le
+                selon vos besoins.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <footer>&copy;infoConnect 2023</footer>
+
+    <script>
+      function toggleSidebar() {
+        var sidebar = document.getElementById("sidebar");
+        var sidebarSpan = sidebar.getElementsByTagName("span");
+        var sidebarIcons = sidebar.querySelectorAll("i");
+        var sidebarButtons = sidebar.querySelectorAll("button");
+    
+        //sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
+        sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
+    
+        // Cache ou affiche le texte des boutons en fonction de la largeur de la barre latérale
+        for (var i = 0; i < sidebarSpan.length; i++) {
+            var button = sidebarSpan[i];
+            button.style.display = sidebar.style.width === "270px" ? "inline" : "none";
+        }
+
+        for (var i = 0; i < sidebarIcons.length; i++) {
+            var icon = sidebarIcons[i];
+            var button = sidebarButtons[i];
+            
+            if (sidebar.style.width === "50px") {
+                sidebar.style.width = "85px";
+                sidebarIcons[i].classList.add("disabl-hover");
+                sidebarButtons[i].classList.add("disable-hover");
+                
+            } else {
+                icon.classList.remove("disabl-hover");
+                button.classList.remove("disable-hover");
+            }
+        }
+    
+        // Réduire la taille de la police en fonction de la largeur de la barre latérale
+    }
+    
+    
+
+      function filterResults() {
+        var searchValue = document
+          .querySelector(".search input")
+          .value.toLowerCase();
+        var contentItems = document.querySelectorAll(".contentt div"); // Sélectionne tous les div à l'intérieur de la section de contenu
+
+        contentItems.forEach(function (item) {
+          var textContent = item.textContent.toLowerCase();
+          if (textContent.includes(searchValue)) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      }
+
+      function showSuggestions() {
+        var searchValue = document
+          .querySelector(".search input")
+          .value.toLowerCase();
+        var contentItems = document.querySelectorAll(".contentt");
+
+        contentItems.forEach(function (item) {
+          var textContent = item.textContent.toLowerCase();
+          if (textContent.includes(searchValue)) {
+            item.style.display = "block";
+          } else {
+            item.style.display = "none";
+          }
+        });
+      }
+    </script>
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+      crossorigin="anonymous"
+    ></script>
+  </body>
+</html>
