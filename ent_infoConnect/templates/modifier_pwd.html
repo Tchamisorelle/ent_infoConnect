@@ -1,69 +1,71 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-
-<head>
+  <head>
     <title>Réinitialisation de Mot de Passe</title>
 
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
 
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
 
-        .container {
-            background-color: #fff;
-            border-radius: 5px;
-            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-            width: 600px;
-        }
+      .container {
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        padding: 20px;
+        width: 600px;
+      }
 
-        h1 {
-            text-align: center;
-            margin-bottom: 15px;
-        }
+      h1 {
+        text-align: center;
+        margin-bottom: 15px;
+      }
 
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
 
-        input[type="password"] {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 3px;
-            margin-bottom: 15px;
-        }
+      input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 3px;
+        margin-bottom: 15px;
+      }
 
-        button {
-            background-color: #007bff;
-            border: none;
-            color: #fff;
-            padding: 10px 15px;
-            border-radius: 3px;
-            cursor: pointer;
-            width: 100%;
-        }
+      button {
+        background-color: #007bff;
+        border: none;
+        color: #fff;
+        padding: 10px 15px;
+        border-radius: 3px;
+        cursor: pointer;
+        width: 100%;
+      }
 
-        #password-info {
-            font-size: 12px;
-            color: #36d3f6 important;
-            margin-top: 5px;
-        }
+      #password-info {
+        font-size: 12px;
+        color: #36d3f6 important;
+        margin-top: 5px;
+      }
 
-        /* #togglePassword {
+      /* #togglePassword {
             cursor: pointer;
             position: fixed;
             right: 36%;
@@ -75,116 +77,138 @@
             display: none;
         } */
 
-        /* #togglePassword:hover {
+      /* #togglePassword:hover {
             color: #0056b3;
             /* Couleur de l'icône au survol 
         } */
 
-        .input-group-text {
-            background-color: transparent;
-            border: none;
-            color: #6c757d;
-            /* Couleur du texte de l'icône */
-        }
+      .input-group-text {
+        background-color: transparent;
+        border: none;
+        color: #6c757d;
+        /* Couleur du texte de l'icône */
+      }
 
-        /* Style pour le texte placeholder */
-        #new_password1::placeholder {
-            color: #6c757d;
-            /* Couleur du texte placeholder */
-            font-style: italic;
-            /* Vous pouvez appliquer un style italic au texte placeholder si vous le souhaitez */
-        }
+      /* Style pour le texte placeholder */
+      #new_password1::placeholder {
+        color: #6c757d;
+        /* Couleur du texte placeholder */
+        font-style: italic;
+        /* Vous pouvez appliquer un style italic au texte placeholder si vous le souhaitez */
+      }
     </style>
-</head>
+  </head>
 
-<body style="background-color: #f4f4f498;" >
-
-    <div class="container" style='background-color:  #f0f8f9'>
-        <h2>
-            <center>Réinitialisation de Mot de Passe</center>
-        </h2>
-        {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
-            <div class="alert alert-danger" role="alert">
-                <p>{{ message }}</p>
-            </div>
-            {% endif %}
-            {% endfor %}
+  <body style="background-color: #f4f4f498">
+    <div class="container" style="background-color: #f0f8f9">
+      <h2>
+        <center>Réinitialisation de Mot de Passe</center>
+      </h2>
+      {% if messages %}
+      <div class="messages">
+        {% for message in messages %} {% if message.level ==
+        DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger" role="alert">
+          <p>{{ message }}</p>
         </div>
-        {% endif %}
-        <form method="post" action="{% url 'password_reset_confirm' token=token uidb64=uidb64%}">
-            {% csrf_token %}
-            <label for="new_password1">Nouveau mot de passe:</label>
-            <div class="input-group"> <!-- Utilisez une classe d'input-group Bootstrap pour l'icône et le champ -->
-                <i class="fas fa-eye-slash input-group-text" id="togglePassword"></i>
-                <input type="password" class="form-control" name="new_password1" id="new_password1"
-                    placeholder="password" required>
-            </div>
-            <div id="password_info" class="text-muted"></div> <!-- Div pour afficher les messages d'info -->
-            <label for="new_password2">Confirmer le nouveau mot de passe:</label>
-            <input type="password" class="form-control" name="new_password2" required>
-            <button type="submit">Réinitialiser le mot de passe</button>
-        </form>
+        {% endif %} {% endfor %}
+      </div>
+      {% endif %}
+      <form
+        method="post"
+        action="{% url 'password_reset_confirm' token=token uidb64=uidb64%}"
+      >
+        {% csrf_token %}
+        <label for="new_password1">Nouveau mot de passe:</label>
+        <div class="input-group">
+          <!-- Utilisez une classe d'input-group Bootstrap pour l'icône et le champ -->
+          <i class="fas fa-eye-slash input-group-text" id="togglePassword"></i>
+          <input
+            type="password"
+            class="form-control"
+            name="new_password1"
+            id="new_password1"
+            placeholder="password"
+            required
+          />
+        </div>
+        <div id="password_info" class="text-muted"></div>
+        <!-- Div pour afficher les messages d'info -->
+        <label for="new_password2">Confirmer le nouveau mot de passe:</label>
+        <input
+          type="password"
+          class="form-control"
+          name="new_password2"
+          required
+        />
+        <button type="submit">Réinitialiser le mot de passe</button>
+      </form>
     </div>
     <script>
-        document.getElementById("new_password1").addEventListener("input", function () {
-            var password = this.value;
-            var infoDiv = document.getElementById("password_info");
-            var message = "";
-            infoDiv.style.color = "green"
-            if (password.length < 8) {
-                message = "Le mot de passe doit contenir au moins 8 caractères";
+      document
+        .getElementById("new_password1")
+        .addEventListener("input", function () {
+          var password = this.value;
+          var infoDiv = document.getElementById("password_info");
+          var message = "";
+          infoDiv.style.color = "green";
+          if (password.length < 8) {
+            message = "Le mot de passe doit contenir au moins 8 caractères";
+          } else if (!/\d/.test(password)) {
+            message = "Le mot de passe doit contenir au moins un chiffre";
+          } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            message =
+              "Le mot de passe doit contenir au moins un caractère spécial";
+          }
 
-            } else if (!/\d/.test(password)) {
-                message = "Le mot de passe doit contenir au moins un chiffre";
-            } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
-                message = "Le mot de passe doit contenir au moins un caractère spécial";
-            }
-
-            infoDiv.textContent = message;
-
+          infoDiv.textContent = message;
         });
     </script>
     <script>
-        // Fonction pour basculer l'affichage du mot de passe
-        function togglePasswordVisibility() {
-            var passwordField = document.getElementById("new_password1");
-            var icon = document.getElementById("togglePassword");
+      // Fonction pour basculer l'affichage du mot de passe
+      function togglePasswordVisibility() {
+        var passwordField = document.getElementById("new_password1");
+        var icon = document.getElementById("togglePassword");
 
-            if (passwordField.type === "password") {
-                passwordField.type = "text";
-                icon.classList.remove("fa-eye-slash");
-                icon.classList.add("fa-eye");
-            } else {
-                passwordField.type = "password";
-                icon.classList.remove("fa-eye");
-                icon.classList.add("fa-eye-slash");
-            }
+        if (passwordField.type === "password") {
+          passwordField.type = "text";
+          icon.classList.remove("fa-eye-slash");
+          icon.classList.add("fa-eye");
+        } else {
+          passwordField.type = "password";
+          icon.classList.remove("fa-eye");
+          icon.classList.add("fa-eye-slash");
         }
-        document.getElementById("togglePassword").addEventListener("click", togglePasswordVisibility);
+      }
+      document
+        .getElementById("togglePassword")
+        .addEventListener("click", togglePasswordVisibility);
 
-        // Ajoutez un écouteur d'événement pour l'événement input du champ de mot de passe
-        document.getElementById("new_password1").addEventListener("input", function () {
-            var password = this.value;
-            var icon = document.getElementById("togglePassword");
-            if (this.value.length > 0) {
-                icon.style.display = "block"; // Afficher l'icône lorsque du texte est saisi
-                icon.style.color = "orange";
-                if (/\d/.test(password) && (/[!@#$%^&*(),.?":{}|<>]/.test(password)) && (password.length >= 8)) {
-                    icon.style.color = "green";
-                }
-                else if (!/\d/.test(password) && (!/[!@#$%^&*(),.?":{}|<>]/.test(password))) {
-                    icon.style.color = "red";
-                }
+      // Ajoutez un écouteur d'événement pour l'événement input du champ de mot de passe
+      document
+        .getElementById("new_password1")
+        .addEventListener("input", function () {
+          var password = this.value;
+          var icon = document.getElementById("togglePassword");
+          if (this.value.length > 0) {
+            icon.style.display = "block"; // Afficher l'icône lorsque du texte est saisi
+            icon.style.color = "orange";
+            if (
+              /\d/.test(password) &&
+              /[!@#$%^&*(),.?":{}|<>]/.test(password) &&
+              password.length >= 8
+            ) {
+              icon.style.color = "green";
+            } else if (
+              !/\d/.test(password) &&
+              !/[!@#$%^&*(),.?":{}|<>]/.test(password)
+            ) {
+              icon.style.color = "red";
             }
-            else {
-                icon.style.display = "none"; // Masquer l'icône lorsque le champ est vide
-            }
-
+          } else {
+            icon.style.display = "none"; // Masquer l'icône lorsque le champ est vide
+          }
         });
     </script>
-</body>
-
+  </body>
 </html>

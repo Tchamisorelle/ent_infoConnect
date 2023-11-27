@@ -33,7 +33,7 @@ from django.contrib.auth import logout
 import openpyxl
 from django.views.decorators.http import require_POST
 from django.contrib.contenttypes.models import ContentType  # Ajoutez cette ligne
-
+import pandas as pd
 # Create your views here.
 
 def user_login(request):
@@ -89,10 +89,22 @@ def connexion(request):
     return render(request, 'connexion.html')
 def preinscri(request):
     return render(request, 'preinscription.html')
+def annonce(request):
+    return render(request, 'connexion.html')
+def note(request):
+    return render(request, 'connexion.html')
+def requete(request):
+    return render(request, 'requete.html')
+def agenda(request):
+    return render(request, 'connexion.html')
+def document(request):
+    return render(request, 'connexion.html')
 
 def reset_password_done(request):
     return render(request, 'succes.html')
 
+# def requete(request):
+#     return render(request, 'requete.html')
 
 def reset_password_request(request):
     if request.method == "POST":
@@ -245,7 +257,16 @@ class CustomPasswordResetConfirmView(View):
             context = {"invalid_reset_link": True}
             return render(request, self.template_name, context)
 
+def user_logout(request):
+    # Déconnectez l'utilisateur
+    logout(request)
 
+    # Supprimez les données de session associées
+    if 'user_info' in request.session:
+        del request.session['user_info']
+
+    # Redirigez l'utilisateur vers la page de déconnexion ou une autre page de votre choix
+    return redirect('connexion')
 
 def reset_password_complete(request):
     return render(request, 'reset_password_complete.html')
@@ -276,12 +297,15 @@ def new_utilisateur(request):
             email_exists = False
 
             try:
-                workbook = openpyxl.load_workbook(excel_file)
-                sheet = workbook.active
+                sheet = "Feuil1"
+                workbook = pd.read_excel(excel_file, sheet_name=sheet)
+                
                 print("Fichier Excel ouvert avec succès")
 
-                for row in sheet.iter_rows(values_only=True):
-                    if row[4].lower() == email.lower() and row[0].lower() == matricule.lower():
+                for index, row in workbook.iterrows():
+                    mail = row["mail"].lower()
+                    matricul = row["matricule"].lower()
+                    if  mail == email.lower() and  matricul == matricule.lower():
                         email_exists = True
                         print("Adresse e-mail trouvée dans le fichier Excel")
                         break
@@ -333,12 +357,15 @@ def new_utilisateur_ensei(request):
             excel_file = r"D:\projets\projet_inf331\infoConnect\ent_infoConnect\bd_professeur.xlsx"
             email_exists = False
             try:
-                    workbook = openpyxl.load_workbook(excel_file)
-                    sheet = workbook.active
+                    sheet = "Feuil1"
+                    workbook = pd.read_excel(excel_file, sheet_name=sheet)
                     print("Fichier Excel ouvert avec succès")
 
-                    for row in sheet.iter_rows(values_only=True):
-                        if row[3].casefold() == email and row[0].casefold() == matricule_en:
+                    for index, row in workbook.iterrows():
+                        mail = row["mail"].lower()
+                        matricule = row["matricule"].lower()
+                        
+                        if mail == email.lower() and matricule == matricule_en.lower():
                             email_exists = True
                             print("Adresse e-mail trouvée dans le fichier Excel")
                             break
@@ -347,7 +374,7 @@ def new_utilisateur_ensei(request):
                 print("Erreur lors de l'ouverture du fichier Excel:", str(e))
 
             if not email_exists:
-                    error_message = 'Cet e-mail ne correspond pas à un étudiant de l\'université.'
+                    error_message = 'Cet e-mail ne correspond pas à un enseignant de l\'université.'
             else:
                     # Création d'un nouvel objet Utilisateur et enregistrement dans la base de données
                     
