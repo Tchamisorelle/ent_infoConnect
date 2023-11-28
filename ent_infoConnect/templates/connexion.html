@@ -1,82 +1,133 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{% static 'styles/styles_connexion.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>inscription</title>
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-  <link rel="stylesheet" href="{% static 'styles/styles_connexion.css' %}">
-  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <title>inscription</title>
-
-</head>
-
-<body style="background-color: #d1d1d12a;">
-  <div>
-    <!-- Fenêtre modale de connexion -->
-    <div class="modal" style="display: inline; padding: 0px; border-radius: none;">
-      <div class="modal-dialog modal-dialog-centered">
-        <div class="modal-content">
-          <div class="modal-header">
-            <center>
-              <h3 style="color: blue; size: 30px; font-weight: bold; margin-top: 50px;">infoConnect</h3>
-            </center>
-          </div>
-          <div class="modal-body">
-            {% if error_message %}
-            <div class="alert alert-danger">
-              {{ error_message }}
+  <body style="background-color: #d1d1d12a">
+    <div>
+      <!-- Fenêtre modale de connexion -->
+      <div
+        class="modal"
+        style="display: inline; padding: 0px; border-radius: none"
+      >
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <center>
+                <h3
+                  style="
+                    color: blue;
+                    size: 30px;
+                    font-weight: bold;
+                    margin-top: 50px;
+                  "
+                >
+                  infoConnect
+                </h3>
+              </center>
             </div>
-            {% endif %}
-            <form method="POST" id="form" action="{% url 'user_login' %}">
-              <div class="text-center">
-                <h4 class="modal-title mx-auto" id="exampleModalLabel" style="margin-bottom: 30px;">CONNEXION</h4>
-              </div>
-              <div class="form-group">
-                <input type="email" class="input-field" id="email" name="email" placeholder="Votre mail" required>
-                <label class="input-label" for="email">Email</label>
-              </div>
-              <div class="form-group">
-                <input type="password" class="input-field" id="password" name="password" placeholder="Mot de passe"  required>
-                <label class="input-label" for="password">Password</label>
-              </div>
+            <div class="modal-body">
+              {% if error_message %}
+              <div class="alert alert-danger">{{ error_message }}</div>
+              {% endif %}
+              <form method="POST" id="form" action="{% url 'user_login' %}">
+                <div class="text-center">
+                  <h4
+                    class="modal-title mx-auto"
+                    id="exampleModalLabel"
+                    style="margin-bottom: 30px"
+                  >
+                    CONNEXION
+                  </h4>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="email"
+                    class="input-field"
+                    id="email"
+                    name="email"
+                    placeholder="Votre mail"
+                    required
+                  />
+                  <label class="input-label" for="email">Email</label>
+                </div>
+                <div class="form-group">
+                  <input
+                    type="password"
+                    class="input-field"
+                    id="password"
+                    name="password"
+                    placeholder="Mot de passe"
+                    required
+                  />
+                  <label class="input-label" for="password">Password</label>
+                </div>
 
-              <div class="modal-footer">
-                {% csrf_token %}
-                <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnEffacer">Delete</button> -->
-                <button type="submit" class="btn btn-primary" style="background-color: blue; width: 350px; height: 50px;font-size: 21px;">Continue</button>
-              </div>
-              <div class="text-center"  style="margin-bottom: 30px;">
-                <a href="{% url 'preinscri' %}" class="btn-link text-decoration-none">Sign up</a> |
-                <a href="{% url 'mail' %}" class="btn-link text-decoration-none">Forgot password?</a>
-              </div>
-            </form>
+                <div class="modal-footer">
+                  {% csrf_token %}
+                  <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal" id="btnEffacer">Delete</button> -->
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    style="
+                      background-color: blue;
+                      width: 350px;
+                      height: 50px;
+                      font-size: 21px;
+                    "
+                  >
+                    Continue
+                  </button>
+                </div>
+                <div class="text-center" style="margin-bottom: 30px">
+                  <a
+                    href="{% url 'preinscri' %}"
+                    class="btn-link text-decoration-none"
+                    >Sign up</a
+                  >
+                  |
+                  <a
+                    href="{% url 'mail' %}"
+                    class="btn-link text-decoration-none"
+                    >Forgot password?</a
+                  >
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      var form = document.getElementById("form");
-      document.getElementById("btnEffacer").addEventListener("click", function () {
-        form.reset();
-        event.preventDefault();
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        var form = document.getElementById("form");
+        document
+          .getElementById("btnEffacer")
+          .addEventListener("click", function () {
+            form.reset();
+            event.preventDefault();
+          });
       });
-    });
-  </script>
+    </script>
 
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
-  
-  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-</body>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </body>
 </html>

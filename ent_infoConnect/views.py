@@ -60,7 +60,7 @@ def user_login(request):
                 'email': email,
             }
             request.session['user_info'] = user_info
-            return redirect('interface')
+            return redirect('dashboard')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
@@ -68,7 +68,7 @@ def user_login(request):
                 'email': email,
             }
             request.session['user_info'] = user_info
-            return redirect('interface')
+            return redirect('dashboard')
         else:
             # Affichez un message d'erreur si l'authentification échoue
             error_message = "Adresse e-mail ou mot de passe incorrect"
@@ -79,8 +79,8 @@ def user_login(request):
 
 def register(request):
     return render(request, 'inscription.html')
-def interface(request):
-    return render(request, 'interface.html')
+# def interface(request):
+#     return render(request, 'interface.html')
 def register_ensei(request):
     return render(request, 'inscription_ensei.html')
 def rmail(request):
@@ -98,6 +98,8 @@ def requete(request):
 def agenda(request):
     return render(request, 'connexion.html')
 def document(request):
+    return render(request, 'connexion.html')
+def dashboard(request):
     return render(request, 'connexion.html')
 
 def reset_password_done(request):
