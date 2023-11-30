@@ -16,9 +16,11 @@
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
         crossorigin="anonymous"
         />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{% static 'styles/styles_base.css' %}" />
 
-        <!-- {% block css %}{% endblock %} -->
+        {% block css %}{% endblock %}
         
         <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         
@@ -29,7 +31,7 @@
   <body>
     <div class="row">
         <header>
-            <div class="logo" style="font-weight: bold; font-size: 22px; margin-left: 20px; margin-top:10px; margin-right:0px; cursor:pointer; position: absolute;">
+            <div class="logo" style="font-weight: bold; font-size: 22px; margin-left: 20px; margin-top:10px; margin-right:0px; cursor:pointer; position: absolute; font-family: 'Righteous', sans-serif;">
                 infoConnect
             </div>
             <div class="search">
@@ -103,12 +105,12 @@
     <div class="row">
       <div class="col-xl-2 col-lg-2 col-md-2 col-xs-1 col-sm-1">
         <div class="sidebar" id="sidebar">
-          <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'dashboard' %}"><span style="padding-right: 25px;">Dashboard</span></button></a>
-          <button><i class="fas fa-book"></i><a href="{% url 'note' %}"><span style="padding-right: 72.6px;">Notes</span></button></a>
-          <button><i class="fas fa-file-alt"></i><a href="{% url 'requete' %}"><span style="padding-right: 48.7px;">Requête</span></button></a>
-          <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}"><span style="padding-right: 43px;">Annonce</span></a></button>
-          <button><i class="fas fa-file"></i><a href="{% url 'document' %}"><span style="padding-right: 35.6px;">Document</span></a></button>
-          <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}"><span style="padding-right: 50.7px;">Agenda</span></a></button>
+          <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'dashboard' %}" class="dashboard"><span style="padding-right: 25px;">Dashboard</span></button></a>
+          <button><i class="fas fa-book"></i><a href="{% url 'note' %}" class="note"><span style="padding-right: 72.6px;">Notes</span></button></a>
+          <button><i class="fas fa-file-alt"></i><a href="{% url 'requete' %}" class="requete"><span style="padding-right: 48.7px;">Requête</span></button></a>
+          <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}" class="annonce"><span style="padding-right: 43px;">Annonce</span></a></button>
+          <button><i class="fas fa-file"></i><a href="{% url 'document' %}" class="document"><span style="padding-right: 35.6px;">Document</span></a></button>
+          <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}" class="agenda"><span style="padding-right: 50.7px;">Agenda</span></a></button>
         </div>
       </div>
       <div class="col-xl-10 col-lg-10 col-md-10 col-xs-5 col-sm-5">
@@ -117,7 +119,7 @@
             
 
             {% block content %}{% endblock %}
-            </div>
+        </div>
         </div>
       </div>
     </div>

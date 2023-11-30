@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Enseignant, Etudiant, ResetLink
+from .models import Enseignant, Etudiant, ResetLink, Note
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
@@ -34,6 +34,8 @@ import openpyxl
 from django.views.decorators.http import require_POST
 from django.contrib.contenttypes.models import ContentType  # Ajoutez cette ligne
 import pandas as pd
+from django.http import JsonResponse
+from django.db import connection
 # Create your views here.
 
 def user_login(request):
@@ -104,6 +106,88 @@ def dashboard(request):
 
 def reset_password_done(request):
     return render(request, 'succes.html')
+
+def list_note(request):
+    
+    notes = Note.objects.values('code_ue', 'date_deb', 'date_fin')
+    notes_data = []
+    for note in notes:
+        note_data = {
+            'examen': note['code_ue'],
+            'date_deb': note['date_deb'],
+            'date_fin': note['date_fin'],
+        }
+        notes_data.append(note_data)
+        
+    return JsonResponse(notes_data, safe=False)
+
+def req_note(request):
+    if request.method == 'POST':
+        examens= request.POST.get('examens')
+        qualifications = request.POST.getlist('qualification')
+        if examens is None:
+            # Champ 'examens' non présent dans la requête, faites quelque chose en conséquence
+            messages.error(request, 'Veuillez sélectionner un examen.')
+            return redirect('requete')
+        examens.lower() 
+        
+        with connection.cursor() as cursor1:
+            cursor1.execute('''
+                SELECT
+                    e.email,
+                    e.matricule_en,
+                    et.matricule,
+                    n.code_ue,
+                    et.email, et.nom, et.prenom
+                FROM
+                    Enseignant e
+                LEFT JOIN note n ON e.matricule_en = n.matricule_en
+                LEFT JOIN Etudiant et ON et.matricule = n.matricule
+                WHERE
+                    n.code_ue = %s
+            ''', [examens])
+            
+            results = cursor1.fetchall()
+            print('resulat', results)
+
+        objet = f"Requete sur les notes {examens}"
+        message = "&nbsp; &nbsp; <strong> Etudiant: </strong>" + results[0][5] + "&nbsp;" + results[0][6] + "<br/>" + "<br/> &nbsp; &nbsp; <strong> Matricule </strong>" + results[0][2]+ "<br/> <br/> Probleme(s): <br/>" + "<strong>" + ", ".join(qualifications) +"</strong>" + "<p>Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer>"  # Convertir la liste en une chaîne
+
+        if qualifications and objet and message and results:
+            
+            email_enseignant = results[0][0]
+            # print(email_enseignant)
+            email_etud = results[0][4]  # Utilisez la bonne colonne pour l'e-mail de l'étudiant
+
+            try:
+                    send_mail(
+                        objet,
+                        message,
+                        f"infoConnect <{email_etud}>", #expediteur
+                        [email_enseignant], #destinataire
+                        fail_silently=False,
+                        html_message=message
+                    )
+                    send_mail(
+                        objet,
+                        message,
+                        "infoConnect <pharma.prjt.yde@gmail.com>",  # Utilisez la bonne adresse e-mail
+                        [email_etud],
+                        fail_silently=False,
+                        html_message='<html><body style="background-color:  #f0f8f9;"> <p style="padding: 10px;"> Merci,<br/> nous vous remercions pour l\'interet que vous portez a cette plateforme!</p> <p style="padding-left: 10px;">Votre requete a été transmise. <br> A bientot!! </p><p style="padding: 10px;">Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>'
+              
+                    )
+                    messages.success(
+                        request, 'Votre requete a été envoyée avec succès.')
+            except Exception as e:
+                    messages.error(
+                        request, 'Une erreur s\'est produite lors de l\'envoi de la suggestion.')
+        else:
+            messages.error(
+                request, 'erreur.')
+
+    return redirect('requete')
+
 
 # def requete(request):
 #     return render(request, 'requete.html')

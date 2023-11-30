@@ -28,7 +28,7 @@ def send_notification_email(subject, message, recipient_list):
     email = EmailMultiAlternatives(
         subject=subject,
         body=text_content,
-        from_email="pharma.prjt.yde <'pharma.prjt.yde@gmail.com'>",
+        from_email="infoConnect <'pharma.prjt.yde@gmail.com'>",
         to=recipient_list,
     ) 
     email.attach_alternative(html_content, "text/html")

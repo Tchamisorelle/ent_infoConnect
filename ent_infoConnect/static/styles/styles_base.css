@@ -111,6 +111,7 @@ body {
 
   .contentt {
     margin: 50px;
+    position: fixed;
   }
   .container-fluid {
   }

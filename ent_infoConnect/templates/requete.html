@@ -1,8 +1,196 @@
 {% extends 'base.html' %} {% block title %} infoConnect_requete {% endblock %}
-<!-- {% load static %} {% block css %}
-<link rel="stylesheet" href="{% static 'styles/styles_base.css' %}" />
-{% endblock %} -->
-{% block content %}
-<div class="container-fluid"><h1>infoConnect_requete</h1></div>
-<!-- Autres éléments spécifiques à cette vue -->
-{% endblock %}
+{% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'styles/styles_requete.css' %}" />
+{% endblock %} {% block content %} {% csrf_token %} 
+{% if messages %}
+  <div class="messages">
+    {% for message in messages %}
+      {% if message.level == DEFAULT_MESSAGE_LEVELS.SUCCESS %}
+        <div class="alert alert-success" role="alert">
+          <p>{{ message|escape }}</p>
+        </div>
+      {% elif message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}
+        <div class="alert alert-danger" role="alert">
+          <p>{{ message|escape }}</p>
+        </div>
+      {% elif message.level == DEFAULT_MESSAGE_LEVELS.WARNING %}
+        <div class="alert alert-warning" role="alert">
+          <p>{{ message|escape }}</p>
+        </div>
+      {% else %}
+        <div class="alert alert-info" role="alert">
+          <p>{{ message|escape }}</p>
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endif %}
+
+  <div class="tete">< Envoie d'une requete</div>
+  <div class="container mt-4">
+    <form method="POST" action="{% url 'req_note' %}">
+        {% csrf_token %}
+      <fieldset id="sect1" class="form2">
+        <legend class="text-sm">Notes disponibles</legend>
+        <div class="mb-3">
+          <div class="form-check">
+            <div id="checkboxes-container"></div>
+          </div>
+        </div>
+      </fieldset>
+
+      <fieldset id="sect2" class="form1">
+        <legend class="text-sm">Motifs</legend>
+        <div class="mb-3">
+          <div class="form-group" id="Motif">
+            <div class="form-check">
+              <input
+                type="checkbox"
+                name="qualification"
+                value="absence_note"
+                id="Abscence_note"
+                class="form-check-input"
+              />
+              <label for="Abscence_note" class="form-check-label"
+                >Abscence de note</label
+              >
+            </div>
+            <div class="form-check">
+              <input
+                type="checkbox"
+                name="qualification"
+                value="absence_nom"
+                id="absence_nom"
+                class="form-check-input"
+              />
+              <label for="absence_nom" class="form-check-label"
+                >Absence de nom</label
+              >
+            </div>
+
+            <div class="form-check">
+              <input
+                type="checkbox"
+                name="qualification"
+                value="erreur_nom"
+                id="erreur_nom"
+                class="form-check-input"
+              />
+              <label for="erreur_nom" class="form-check-label"
+                >Erreur de nom</label
+              >
+            </div>
+
+            <div class="form-check">
+              <input
+                type="checkbox"
+                name="qualification"
+                value="erreur_matricule"
+                id="erreur_matricule"
+                class="form-check-input"
+              />
+              <label for="erreur_matricule" class="form-check-label"
+                >Erreur sur le matricule</label
+              >
+            </div>
+
+            <div class="form-check">
+              <input
+                type="checkbox"
+                name="qualification"
+                value="erreur_note"
+                id="erreur_note"
+                class="form-check-input"
+              />
+              <label for="erreur_note" class="form-check-label"
+                >Erreur de note</label
+              >
+            </div>
+          </div>
+        </div>
+      </fieldset>
+      <div class="bouton">
+        <button type="submit" class="btn bt2" id="submitBtn">Envoyer</button>
+      </div>
+
+      <div class="bouton1">
+        <button type="button" class="bt1">Annuler</button>
+      </div>
+      <div class="tete2">
+        <span> Intervale de validité </span>
+        <br />
+        <div id="dates-container"></div>
+      </div>
+    </form>
+  </div>
+
+  <script>
+    // Script dans votre fichier HTML ou fichier JS séparé
+    let notesData = [];
+
+    function fetchAndDisplayData() {
+      // Récupération des données JSON depuis votre endpoint Django
+      fetch("/list_note/")
+        .then(function (response) {
+          if (!response.ok) {
+            throw new Error("Réponse réseau incorrecte");
+          }
+          return response.json();
+        })
+        .then(function (data) {
+          // Stockez les données récupérées dans la variable globale notesData
+          notesData = data;
+
+          // Appeler une fonction pour générer les cases à cocher
+          generateCheckboxes();
+          displayDates();
+        })
+        .catch(function (error) {
+          console.error(
+            "Erreur lors de la récupération des données JSON :",
+            error
+          );
+        });
+    }
+
+    // Fonction pour générer les cases à cocher dans la page HTML
+    function generateCheckboxes() {
+      // Obtenez l'élément HTML où vous souhaitez ajouter les cases à cocher
+      let checkboxesContainer = document.getElementById("checkboxes-container");
+
+      // Parcourez les données et créez les cases à cocher
+      notesData.forEach(function (note) {
+        let checkbox = document.createElement("input");
+        checkbox.type = "checkbox";
+        checkbox.name = "examens";
+        checkbox.className = "form-check-input";
+        checkbox.value = note["examen"];
+
+        let label = document.createElement("label");
+        label.className = "form-check-label";
+        label.textContent = note["examen"];
+
+        checkboxesContainer.appendChild(checkbox);
+        checkboxesContainer.appendChild(label);
+      });
+    }
+    // Fonction pour afficher les dates dans une autre partie de la page
+    function displayDates() {
+      // Obtenez l'élément HTML où vous souhaitez afficher les dates
+      let datesContainer = document.getElementById("dates-container");
+
+      // Parcourez les données et affichez les dates
+      notesData.forEach(function (note) {
+        let dateElement = document.createElement("p");
+        dateElement.textContent = `Date de début: ${note["date_deb"]}, Date de fin: ${note["date_fin"]}:  ${note["examen"]}`;
+
+        datesContainer.appendChild(dateElement);
+      });
+    }
+
+    // Appelez fetchAndDisplayData() au chargement de la page pour afficher les informations
+    window.addEventListener("load", fetchAndDisplayData);
+  </script>
+
+  {% endblock %}
+</div>
