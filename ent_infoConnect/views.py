@@ -173,12 +173,8 @@ def agenda(request):
 def document(request):
     return render(request, 'connexion.html')
 def dashboard(request):
-<<<<<<< HEAD
     return render(request, 'dashboard.html')
-=======
-    ##################################### modifier et mettre dashboard####################################
-    return render(request, 'notes.html')
->>>>>>> wilson
+
 
 def reset_password_done(request):
     return render(request, 'succes.html')
