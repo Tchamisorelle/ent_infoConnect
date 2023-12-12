@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Notes_ens
+{% endblock %}
+
+{% block content %}
+    <h3 class="note-heading">Notes</h3>
+    {%load static%}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles_notes_ens.css' %}">
+
+
+
+
+    {% if user_info %}
+        <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
+        {% if user_info.matricule_en %}
+            <p>Matricule Enseignant : {{ user_info.matricule_en }}</p>
+        {% endif %}
+    {% else %}
+        <p>Informations utilisateur non disponibles.</p>
+    {% endif %}
+
+
+
+    <form method="post" enctype="multipart/form-data" action="{% url 'import_notes' %}">
+        {% csrf_token %}
+        <label for="file">Sélectionnez le fichier Excel :</label>
+        <input type="file" name="file" accept=".xls, .xlsx" required>
+        
+        <label for="ue_code">Choisissez l'UE :</label>
+        {{ form.ue_code }}
+    
+        <button type="submit">Importer les notes</button>
+    </form>
+    
+    <table class="notes-stats">
+        <thead>
+            <tr>
+                <th>CRITERE</th>
+                <th>NOTES CC</th>
+                <th>NOTES TP</th>
+                <th>NOTES EXAMEN</th>
+                <th>POURCENTAGE</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+        </tbody>
+        
+    </table>
+{% endblock %}
+

@@ -1,0 +1,19 @@
+/* notes_style.css */
+.notes-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notes-table th, .notes-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.notes-table th {
+    background-color: #f2f2f2;
+}
+.note-heading {
+    font-family: inherit;
+    color: blue;
+}

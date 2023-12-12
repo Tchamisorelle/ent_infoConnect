@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Enseignant, Etudiant, ResetLink, Note
+from .models import Enseignant, Etudiant, ResetLink, Note, Ue
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
+import os
+import pandas as pd
+from django import forms
 from .until import send_notification_email
 from decouple import config
 from django.conf import settings
@@ -60,17 +63,19 @@ def user_login(request):
                 'first_name': enseignant.nom,
                 'last_name': enseignant.prenom,
                 'email': email,
+                'matricule_en': enseignant.matricule_en,
             }
             request.session['user_info'] = user_info
-            return redirect('dashboard')
+            return redirect('notes_ens')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
                 'last_name': etudiant.prenom,
                 'email': email,
+                'matricule': etudiant.matricule
             }
             request.session['user_info'] = user_info
-            return redirect('dashboard')
+            return redirect('notes')
         else:
             # Affichez un message d'erreur si l'authentification échoue
             error_message = "Adresse e-mail ou mot de passe incorrect"
@@ -93,8 +98,74 @@ def preinscri(request):
     return render(request, 'preinscription.html')
 def annonce(request):
     return render(request, 'connexion.html')
-def note(request):
-    return render(request, 'connexion.html')
+
+class ImportNotesForm(forms.Form):
+    ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
+    file = forms.FileField()
+
+    def __init__(self, *args, **kwargs):
+        user = kwargs.pop('user')
+        super(ImportNotesForm, self).__init__(*args, **kwargs)
+        self.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user.matricule_en)
+
+def notes(request):
+    user_info = request.session.get('user_info', {})
+    matricule = user_info.get('matricule', None)
+    notes_data = Note.objects.filter(matricule=matricule)
+    return render(request, 'notes.html' ,{'notes_data': notes_data})
+
+
+def import_notes(request):
+    if request.method == 'POST':
+        form = ImportNotesForm(request.POST, request.FILES, user=request.user)
+        if form.is_valid():
+            try:
+                ue_code = form.cleaned_data['ue_code']
+                enseignant = Enseignant.objects.get(matricule_en=request.user.matricule_en)
+                ue = Ue.objects.get(code_ue=ue_code, matricule_en=enseignant.matricule_en)
+                
+                df = pd.read_excel(request.FILES['file'])
+                
+                # notes_data devient matice
+                notes_data = df.values
+                
+                for note_data in notes_data:
+                    
+                    matricule_et, nom, prenoms, cc, tps, examen = note_data
+                    try:
+                        etudiant = Etudiant.objects.get(matricule=matricule_et)
+                    except Etudiant.DoesNotExist:
+                        password = make_password('Gsuite@uy1')
+                        etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password)
+                    
+                    date_deb = datetime.now().date()
+                    date_fin = date_deb + timedelta(days=7)
+                    
+                    # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
+                    Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
+                    Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
+                    Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
+                
+                messages.success(request, 'Les notes ont été importées avec succès.')
+                return redirect('dashboard')
+            except Enseignant.DoesNotExist:
+                messages.error(request, 'Enseignant non trouvé.')
+            except Ue.DoesNotExist:
+                messages.error(request, 'UE non trouvée.')
+            except Exception as e:
+                messages.error(request, f'Une erreur s\'est produite : {str(e)}')
+                return HttpResponseServerError('Internal Server Error')
+    else:
+        form = ImportNotesForm(user=request.user)
+
+    return render(request, 'notes_ens.html', {'form': form})
+
+
+def notes_ens(request):
+    user_info = request.session.get('user_info', {})
+    return render(request, 'notes_ens.html', {'user_info': user_info})
+
+
 def requete(request):
     return render(request, 'requete.html')
 def agenda(request):
@@ -102,7 +173,8 @@ def agenda(request):
 def document(request):
     return render(request, 'connexion.html')
 def dashboard(request):
-    return render(request, 'connexion.html')
+    ##################################### modifier et mettre dashboard####################################
+    return render(request, 'notes.html')
 
 def reset_password_done(request):
     return render(request, 'succes.html')
@@ -379,7 +451,7 @@ def new_utilisateur(request):
             hashed_password = make_password(mot_de_passe)
 
             # Vérification de l'existence de l'e-mail dans le fichier Excel
-            excel_file = r"D:\projets\projet_inf331\infoConnect\ent_infoConnect\bd_etudiant.xlsx"
+            excel_file = os.path.join(os.path.dirname(__file__), "bd_etudiant.xlsx")            
             email_exists = False
 
             try:
@@ -440,7 +512,7 @@ def new_utilisateur_ensei(request):
             hashed_password = make_password(mot_de_passe_ensei)
 
             # Vérification de l'existence de l'e-mail dans le fichier Excel
-            excel_file = r"D:\projets\projet_inf331\infoConnect\ent_infoConnect\bd_professeur.xlsx"
+            excel_file = os.path.join(os.path.dirname(__file__), "bd_professeur.xlsx")            
             email_exists = False
             try:
                     sheet = "Feuil1"
