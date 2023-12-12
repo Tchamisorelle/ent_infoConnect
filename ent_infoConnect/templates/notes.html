@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Notes
+{% endblock %}
+
+{% block content %}
+    <h3 class="note-heading">Notes</h3>
+    {%load static%}
+
+    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles_notes.css' %}">
+
+
+    {% if user_info %}
+        <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
+        {% if user_info.matricule %}
+            <p>Matricule Enseignant : {{ user_info.matricule }}</p>
+        {% endif %}
+    {% else %}
+        <p>Informations utilisateur non disponibles.</p>
+    {% endif %}
+
+    <table class="notes-table">
+        <thead>
+            <tr>
+                <th>Code UE</th>
+                <th>Nom UE</th>
+                <th>CC (/20)</th>
+                <th>TP (/30)</th>
+                <th>Examen (/50)</th>
+                <th>Note (/100)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for row in notes_data %}
+                <tr>
+                    <td>{{ row.code_ue }}</td>
+                    <td>{{ row.nom_ue }}</td>
+                    <td>{{ row.cc }}</td>
+                    <td>{{ row.tp }}</td>
+                    <td>{{ row.examen }}</td>
+                    <td>{{ row.note }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

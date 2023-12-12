@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document, annonce, req_note,list_note, requete, note, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout
+from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document, annonce, req_note,list_note, requete, notes, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes
 from django.contrib.auth import views as auth_views
 
 
@@ -29,8 +29,9 @@ urlpatterns = [
     path('register_ensei/', register_ensei, name='register_ensei'),
     path('mail_reini/', reset_password_request, name='reinitial'),
     path('connexion/', connexion, name='connexion'),
-    # path('interface/', interface, name='interface'),
-    path('note/', note, name='note'),
+    path('notes/', notes, name='notes'),
+    path('notes_ens/', notes_ens, name='notes_ens'),
+    path('import-notes/', import_notes, name='import_notes'),
     path('requete/', requete, name='requete'),
     path('agenda/', agenda, name='agenda'),
     path('document/', document, name='document'),
@@ -48,6 +49,6 @@ urlpatterns = [
     # path("reset-password/", reset_password_request, name="reset_password"),
     path("rest_password/<str:token>/<str:uidb64>/", CustomPasswordResetConfirmView.as_view(), name="password_reset_confirm"),
     path('reset_password_complete/', reset_password_complete, name='reset_password_complete'),
-    
+    path('', connexion),
 
 ]

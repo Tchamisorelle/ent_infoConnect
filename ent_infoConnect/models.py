@@ -16,9 +16,8 @@ class Agenda(models.Model):
     matricule_en = models.ForeignKey('Enseignant',  db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'agenda'
-
 
 class Annonce(models.Model):
     id_ann = models.AutoField(primary_key=True)
@@ -30,7 +29,7 @@ class Annonce(models.Model):
     matricule_en = models.ForeignKey('Enseignant',  db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'annonce'
 
 
@@ -43,7 +42,7 @@ class Document(models.Model):
     matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'document'
 
 class EnseignantManager(BaseUserManager):
@@ -131,7 +130,7 @@ class Note(models.Model):
     code_ue = models.ForeignKey('Ue', db_column='code_ue', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'note'
 
 
@@ -140,7 +139,7 @@ class ProfilEns(models.Model):
     matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'profil_ens'
 
 
@@ -150,7 +149,7 @@ class ProfilEtu(models.Model):
     matricule = models.ForeignKey('Etudiant', db_column='matricule', blank=True, null=True, on_delete=models.CASCADE )
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'profil_etu'
 
 
@@ -159,9 +158,14 @@ class Ue(models.Model):
     nom = models.CharField(max_length=255, blank=True, null=True)
     credit = models.IntegerField(blank=True, null=True)
     matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
+    TYPE_CHOICES = [
+        ('F', 'Fondamentale'),
+        ('O', 'Optionnelle'),
+    ]
+    type_ue = models.CharField(max_length=1, choices=TYPE_CHOICES, default='O')
 
     class Meta:
-        managed = False
+        managed = True
         db_table = 'ue'
 
 

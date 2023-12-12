@@ -1,0 +1,42 @@
+/* styles_notes_ens.css */
+
+/* Formulaire d'importation des notes */
+form {
+    max-width: 600px; /* Ajustez la largeur selon vos besoins */
+    margin: auto; /* Centre le formulaire horizontalement */
+}
+
+form label,
+form input,
+form button {
+    margin-bottom: 10px; /* Ajoute un espacement entre les éléments */
+}
+
+form button {
+    padding: 10px 15px; /* Ajustez la taille selon vos besoins */
+    font-size: 16px; /* Ajustez la taille selon vos besoins */
+}
+
+/* Tableau des statistiques */
+.notes-stats {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.notes-stats th,
+.notes-stats td {
+    text-align: center; /* Centre le texte dans les cellules */
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.notes-stats th {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+/* En-tête de la page de notes */
+.note-heading {
+    font-family: 'inherit';
+    color: blue;
+}
