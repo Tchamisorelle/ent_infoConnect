@@ -141,7 +141,8 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'ent_infoConnect/static'),
     # os.path.join(BASE_DIR, "formu_dyn_angul/dist"),
 ]
-
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'ent_infoConnect/media')
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 

@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document, annonce, req_note,list_note, requete, notes, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes
+from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document,DownloadDocumentView, annonce, req_note,list_note, requete, notes, list_docu, stock_docu, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes
 from django.contrib.auth import views as auth_views
-
+from django.urls import path
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -38,13 +40,17 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('annonce/', annonce, name='annonce'),
     path('sign_up/', new_utilisateur, name='sign-up'),
-    path('req_note/', req_note, name='req_note'),
-    path('list_note/', list_note, name='list_note'),
     path('sign_up_en/', new_utilisateur_ensei, name='sign-up-ensei'),
+    path('req_note/', req_note, name='req_note'),
+    path('list_note/', list_note, name='list_note'), #il s'agit des note du module requete qui recupere la liste de note dispo dans la bd
+    path('list_docu/', list_docu, name='list_docu'),
+    path('stock_docu/', stock_docu, name='stock_docu'),
+    path('download_document/<int:id_doc>/', DownloadDocumentView.as_view(), name='download_document'),
+
+    path('document/', document, name='document'),
     path('go/', go, name='go'),
     path('preinscription/', preinscri, name='preinscri'),
     path('user_logout/', user_logout, name='user_logout'),
-    
     path('reset_password_done/', reset_password_done, name='reset_password_done'),
     # path("reset-password/", reset_password_request, name="reset_password"),
     path("rest_password/<str:token>/<str:uidb64>/", CustomPasswordResetConfirmView.as_view(), name="password_reset_confirm"),
@@ -52,3 +58,6 @@ urlpatterns = [
     path('', connexion),
 
 ]
+# Ajouter ceci pour servir les fichiers médias pendant le développement
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
