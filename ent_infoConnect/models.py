@@ -36,14 +36,19 @@ class Annonce(models.Model):
 class Document(models.Model):
     id_doc = models.AutoField(primary_key=True)
     titre = models.CharField(max_length=255, blank=True, null=True)
+    file = models.FileField(null=True, blank=True)
     date_doc = models.DateField(blank=True, null=True)
     type_doc = models.CharField(max_length=255, blank=True, null=True)
-    matricule = models.ForeignKey('Etudiant',db_column='matricule', blank=True, null=True, on_delete=models.CASCADE)
+    #matricule = models.ForeignKey('Etudiant',db_column='matricule', blank=True, null=True, on_delete=models.CASCADE)
     matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         managed = True
         db_table = 'document'
+    @property
+    def url(self):
+        return reverse('download_document', args=[str(self.id)])
+    
 
 class EnseignantManager(BaseUserManager):
     def create_user(self, matricule_en, email, mot_de_passe_ensei=None, **extra_fields):

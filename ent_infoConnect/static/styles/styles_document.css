@@ -1,0 +1,117 @@
+.sidebar button .document {
+  background-color: blue; /* Exemple de style */
+  text-decoration: none; /* Pour enlever le soulignement du lien */
+  color: white;
+}
+
+.requete.active {
+  /* Styles spécifiques lorsque le lien est actif */
+  font-weight: bold;
+  /* Ajoutez d'autres styles si nécessaire */
+}
+.tete {
+  font-size: 30px;
+  color: #007bff;
+  font-weight: bold;
+  cursor: pointer;
+}
+.document-container {
+  margin-top: 50px;
+}
+.fa-plus {
+  font-size: 24px;
+  color: blue;
+  border: 1px black;
+  cursor: pointer;
+
+  margin-top: 50px;
+  margin-left: 1250px;
+  display: block;
+  position: fixed;
+  text-shadow: 3px 6px 18px rgba(0, 0, 0, 0.37);
+}
+
+.fa-plus:hover {
+  transform: scale(1.1);
+  color: orangered;
+}
+
+/* style document */
+
+/* Styles pour le tableau */
+.document-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+}
+
+.document-table th,
+.document-table td {
+  padding: 8px;
+  text-align: left;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: none; /* Ajout de cette ligne pour supprimer les bordures */
+}
+
+.document-container {
+  max-height: 480px; /* Ajustez la hauteur maximale selon vos besoins */
+  overflow-y: auto;
+}
+
+/* Styles pour l'icône de téléchargement */
+.download-icon {
+  cursor: pointer;
+  color: #007bff; /* Couleur du lien pour ressembler à un lien */
+}
+
+/* Ajoutez d'autres styles selon vos besoins */
+
+/* Marge entre les lignes du tableau */
+.document-table tr {
+  margin-bottom: 10px;
+}
+.document-table th {
+  position: relative;
+}
+
+/*style modale */
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* background: rgba(255, 255, 255, 0.9); Fond blanc semi-transparent */
+  padding: 20px;
+}
+
+.custom-modal .modal-dialog {
+  max-width: 800px; /* Ajuster la largeur maximale du modal selon vos besoins */
+  padding: 30px;
+}
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+.contentt {
+  position: relative;
+}
+
+/* Alignement horizontal des labels et des champs */
+label,
+input {
+  display: inline-block;
+  margin-bottom: 10px;
+  width: 400px;
+}
+
+label {
+  width: 100px; /* Ajustez la largeur en fonction de vos besoins */
+}
+footer {
+  width: 99.9%;
+}
+.row > * {
+  flex-shrink: 0;
+  margin: 0px;
+}

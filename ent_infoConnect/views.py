@@ -1,9 +1,10 @@
 from django.shortcuts import render, redirect
-from .models import Enseignant, Etudiant, ResetLink, Note, Ue
+from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
 import os
+from django.views.decorators.csrf import csrf_exempt
 import pandas as pd
 from django import forms
 from .until import send_notification_email
@@ -26,7 +27,7 @@ from django.shortcuts import render
 from django.views.generic import View
 from django.utils.encoding import force_bytes
 from django.core.mail import EmailMultiAlternatives
-from django.utils.html import strip_tags
+# from django.utils.html import strip_tags
 from django.urls import reverse
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
@@ -39,6 +40,12 @@ from django.contrib.contenttypes.models import ContentType  # Ajoutez cette lign
 import pandas as pd
 from django.http import JsonResponse
 from django.db import connection
+# document
+import json
+from datetime import datetime
+from django.http import FileResponse
+import mimetypes
+from django.shortcuts import get_object_or_404
 # Create your views here.
 
 def user_login(request):
@@ -66,7 +73,7 @@ def user_login(request):
                 'matricule_en': enseignant.matricule_en,
             }
             request.session['user_info'] = user_info
-            return redirect('notes_ens')
+            return redirect('dashboard')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
@@ -75,7 +82,7 @@ def user_login(request):
                 'matricule': etudiant.matricule
             }
             request.session['user_info'] = user_info
-            return redirect('notes')
+            return redirect('dashboard')
         else:
             # Affichez un message d'erreur si l'authentification échoue
             error_message = "Adresse e-mail ou mot de passe incorrect"
@@ -164,17 +171,15 @@ def import_notes(request):
 def notes_ens(request):
     user_info = request.session.get('user_info', {})
     return render(request, 'notes_ens.html', {'user_info': user_info})
-
-
 def requete(request):
     return render(request, 'requete.html')
 def agenda(request):
     return render(request, 'connexion.html')
 def document(request):
-    return render(request, 'connexion.html')
+    return render(request, 'document.html')
+
 def dashboard(request):
     return render(request, 'dashboard.html')
-
 
 def reset_password_done(request):
     return render(request, 'succes.html')
@@ -260,9 +265,73 @@ def req_note(request):
 
     return redirect('requete')
 
+def list_docu(request):
+    documents = Document.objects.values('id_doc','titre', 'file', 'date_doc', 'type_doc')
+    document_data = []
+    for doc in documents:
+        # Utilisez un autre nom (par exemple, doc_data) pour le dictionnaire individuel
+        doc_data = {
+            'id_doc': doc['id_doc'],
+            'titre': doc['titre'],
+            'file': doc['file'],
+            'date_doc': doc['date_doc'],
+            'type_doc': doc['type_doc'],
+        }
+        document_data.append(doc_data)
 
-# def requete(request):
-#     return render(request, 'requete.html')
+    # Utilisez JsonResponse avec safe=True pour envoyer une liste de dictionnaires
+    return JsonResponse(document_data, safe=False)
+
+
+@require_POST
+def stock_docu(request):
+    if request.method == 'POST':
+        # Récupérer les informations de l'utilisateur connecté à partir de la session
+        user_info = request.session.get('user_info', {})
+        matricule_en = user_info.get('matricule_en', None)
+
+        # Vérifier si l'utilisateur est un enseignant
+        if matricule_en:
+            try:
+                # Récupérer l'enseignant à partir de la table Enseignant
+                enseignant = Enseignant.objects.get(matricule_en=matricule_en)
+
+                # Récupérer les données du corps de la requête
+                titre = request.POST.get('titre', '')
+                type_doc = request.POST.get('type_doc', '')
+                date_str = request.POST.get('date_doc', '')
+
+                # Validation de la date
+                date = datetime.strptime(date_str, '%Y-%m-%d').date() if date_str else None
+
+                # Récupération du fichier
+                file = request.FILES.get('file')
+
+                # Enregistrement dans la base de données
+                new_document = Document(titre=titre, type_doc=type_doc, date_doc=date, file=file, matricule_en=enseignant)
+                new_document.save()
+
+                response_data = {"success": True, "message": "Document stocké avec succès."}
+                return redirect('document')
+            except Exception as e:
+                return JsonResponse({'success': False, 'message': 'Erreur lors de l\'enregistrement du document.', 'error': str(e)})
+        else:
+            # L'utilisateur n'est pas un enseignant, renvoyer un message d'erreur
+            error_message = "Vous n'êtes pas autorisé à effectuer cette action."
+            return redirect('document')
+    else:
+        # Gérer la méthode GET si nécessaire
+        # ...
+
+        return redirect('connexion')
+class DownloadDocumentView(View):
+    def get(self, request, id_doc):
+        document = get_object_or_404(Document, pk=id_doc)
+        file_path = document.file.path
+        response = FileResponse(open(file_path, 'rb'))
+        response['Content-Disposition'] = f'attachment; filename="{document.file}"'
+        return response
+
 
 def reset_password_request(request):
     if request.method == "POST":
