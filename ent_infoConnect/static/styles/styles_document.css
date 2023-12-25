@@ -17,6 +17,7 @@
 }
 .document-container {
   margin-top: 50px;
+  background-color: white !important;
 }
 .fa-plus {
   font-size: 24px;
@@ -43,6 +44,7 @@
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
+  background-color: white;
 }
 
 .document-table th,
@@ -50,6 +52,7 @@
   padding: 8px;
   text-align: left;
   overflow: hidden;
+  background-color: white !important;
   text-overflow: ellipsis;
   white-space: nowrap;
   border: none; /* Ajout de cette ligne pour supprimer les bordures */
@@ -58,6 +61,7 @@
 .document-container {
   max-height: 480px; /* Ajustez la hauteur maximale selon vos besoins */
   overflow-y: auto;
+  background-color: white;
 }
 
 /* Styles pour l'icône de téléchargement */
@@ -71,9 +75,11 @@
 /* Marge entre les lignes du tableau */
 .document-table tr {
   margin-bottom: 10px;
+  background-color: white;
 }
 .document-table th {
   position: relative;
+  background-color: white;
 }
 
 /*style modale */
