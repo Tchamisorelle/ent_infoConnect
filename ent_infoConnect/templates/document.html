@@ -5,16 +5,18 @@
 <div class="tete">< Documents</div>
 
 <div class="document-container"></div>
-<span class="add-button" data-toggle="modal" data-target="#uploadDocumentModal">
-  <i class="fas fa-plus"></i>
-</span>
+<div class="add-button" data-toggle="modal" data-target="#uploadDocumentModal">
+  <i class="fas fa-plus" title="add doc"></i> <span class="add">Ajouter</span>
+</div>
 
 <!-- Modal pour la récupération de la requête POST -->
 <div class="modal fade" id="uploadDocumentModal">
   <div class="modal-dialog custom-modal">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Importer un Document</h5>
+        <h5 class="modal-title" style="color: blue; font-weight: 700">
+          Importer un Document
+        </h5>
         <button
           type="button"
           class="close"
@@ -33,11 +35,27 @@
         >
           {% csrf_token %}
           <label for="titre">Titre </label><br />
-          <input type="text" id="titre" name="titre" required /><br />
-          <label for="type">Type </label><br />
-          <input type="text" id="type_doc" name="type_doc" required /><br />
+          <input
+            type="text"
+            id="titre"
+            name="titre"
+            placeholder="Titre du document"
+            required
+          /><br />
+
           <label for="date">Date </label><br />
           <input type="date" id="date_doc" name="date_doc" required /><br />
+          <label for="description">Description </label><br />
+          <textarea
+            type="text"
+            id="type_doc"
+            name="description"
+            row="50"
+            col="100"
+            style="width: 428px"
+            placeholder="Description du document"
+          ></textarea
+          ><br />
           <label for="file">Fichier </label><br />
           <input type="file" id="file" name="file" required /><br />
           <div class="modal-footer">
@@ -99,7 +117,7 @@
     // Création de l'entête du tableau
     const tableHeader = document.createElement("thead");
     const headerRow = document.createElement("tr");
-    ["Titre", "Fichier", "Date", "Type", "Télécharger"].forEach(
+    ["Titre", "Fichier", "Date", "Description", "Télécharger"].forEach(
       (headerText) => {
         const headerCell = document.createElement("th");
         headerCell.textContent = headerText;
@@ -117,7 +135,7 @@
       const tableRow = document.createElement("tr");
 
       // Ajout des cellules pour chaque propriété du document
-      ["titre", "file", "date_doc", "type_doc"].forEach((property) => {
+      ["titre", "file", "date_doc", "description"].forEach((property) => {
         const tableCell = document.createElement("td");
         tableCell.textContent = doc[property];
         tableRow.appendChild(tableCell);
@@ -126,7 +144,12 @@
       // Ajout de l'icône de téléchargement dans la dernière cellule
       const downloadCell = document.createElement("td");
       const downloadIcon = document.createElement("i");
-      downloadIcon.classList.add("fas", "fa-download", "download-icon");
+      downloadIcon.classList.add(
+        "fas",
+        "fa-circle-arrow-down",
+        "download-icon",
+        "text-center"
+      );
       downloadIcon.addEventListener("click", () =>
         downloadDocument(`${doc.id_doc}`, doc.file)
       );

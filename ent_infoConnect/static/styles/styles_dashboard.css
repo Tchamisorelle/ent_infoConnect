@@ -62,7 +62,7 @@ main {
   width: 1820px;
   padding-bottom: 0px;
   margin-left: 26px;
-  margin-top: 40px;
+  margin-top: 55px;
   position: relative;
 }
 
@@ -72,13 +72,16 @@ main {
   font-weight: 600;
   margin: 20px;
   height: 200px;
-
+  font-family: "Roboto", sans-serif;
   width: 600px;
   border-radius: 20px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   position: relative; /* Ajout de cette ligne pour positionner les éléments enfants */
 }
-
+.dashboard-block:hover {
+  background-color: blue;
+  color: white;
+}
 .dashboard-block a {
   position: relative; /* Ajout de cette ligne pour positionner le lien absolument */
   color: blue;
@@ -86,9 +89,11 @@ main {
   transition: background-color 0.3s, color 0.3s; /* Ajout de color à la transition */
 }
 
-.dashboard-block a:hover {
+.dashboard-block:hover a {
   color: white;
-  background-color: blue;
+}
+p {
+  font-family: "Roboto", sans-serif;
 }
 .span2 {
   margin-left: 10px;
@@ -102,16 +107,14 @@ main {
 .span1 {
   margin-top: 30px;
   margin-left: 100px;
+
+  font-family: "Roboto", sans-serif;
 }
 
-.dashboard-block:hover {
-  background-color: blue;
-  color: white;
-}
 footer {
-  margin-top: 86px;
+  margin-top: 70px;
   position: relative;
-  width: 97.1%;
+  width: 97.3%;
   margin-right: 0;
 }
 /* Assuming your existing CSS */
@@ -134,8 +137,4 @@ footer {
 }
 header {
   margin: 0px;
-}
-.dashboard-block i {
-  background-color: rgba(50, 106, 138, 0.192);
-  box-shadow: 0px 2px 15px rgba(50, 106, 138, 0.87);
 }

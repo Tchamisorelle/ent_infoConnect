@@ -1,6 +1,12 @@
 {% extends 'base.html' %} {% block title %} infoConnect_dashboard {% endblock %}
 {% load static %} {% block css %}
 <link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap"
+  rel="stylesheet"
+/>
 {% endblock %} {% block content %}
 
 <div class="header">
@@ -17,10 +23,10 @@
     <i
       class="fas fa-book"
       style="
-        background-color: rgba(30, 168, 157, 1);
+        background-color: rgba(30, 168, 157, 0.781);
         padding: 6px;
         color: blue;
-        border-radius: 1px;
+        border-radius: 5px;
       "
     ></i>
     <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
@@ -28,7 +34,7 @@
     <a href="{% url 'notes' %}">
       <p class="span1">
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
-        ici >>
+        ici <i class="fa-solid fa-arrow-right"></i>
       </p>
     </a>
   </section>
@@ -37,10 +43,10 @@
     <i
       class="fas fa-file-alt"
       style="
-        background-color: rgba(30, 168, 157, 1);
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
         padding: 6px;
         color: blue;
-        border-radius: 1px;
       "
     ></i>
     <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
@@ -48,7 +54,7 @@
     <a href="{% url 'requete' %}">
       <p class="span1">
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
-        ici >>
+        ici <i class="fa-solid fa-arrow-right"></i>
       </p>
     </a>
   </section>
@@ -57,10 +63,10 @@
     <i
       class="fas fa-bullhorn"
       style="
-        background-color: rgba(30, 168, 157, 1);
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
         padding: 6px;
         color: blue;
-        border-radius: 1px;
       "
     ></i>
     <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
@@ -68,7 +74,7 @@
     <a href="{% url 'annonce' %}">
       <p class="span1">
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
-        ici >>
+        ici <i class="fa-solid fa-arrow-right"></i>
       </p>
     </a>
   </section>
@@ -77,10 +83,10 @@
     <i
       class="fas fa-file"
       style="
-        background-color: rgba(30, 168, 157, 1);
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
         padding: 6px;
         color: blue;
-        border-radius: 1px;
       "
     ></i>
     <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
@@ -88,7 +94,7 @@
     <a href="{% url 'document' %}">
       <p class="span1">
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
-        ici >>
+        ici <i class="fa-solid fa-arrow-right"></i>
       </p>
     </a>
   </section>
@@ -97,24 +103,24 @@
     <i
       class="fas fa-calendar"
       style="
-        background-color: rgba(30, 168, 157, 1);
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
         padding: 6px;
         color: blue;
-        border-radius: 1px;
       "
     ></i>
     <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;d'Agenda
     <a href="{% url 'agenda' %}">
       <p class="span1">
         <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
-        ici >>
+        ici <i class="fa-solid fa-arrow-right"></i>
       </p>
     </a>
   </section>
 </main>
 <script>
   var text = "ENT-Université de Yaoundé I";
-  var speed = 100; // Vitesse de défilement en millisecondes
+  var speed = 300; // Vitesse de défilement en millisecondes
   typeAndDeleteText(text, speed);
   function typeAndDeleteText(text, speed) {
     var element = document.getElementById("text");

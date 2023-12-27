@@ -377,7 +377,7 @@ CREATE TABLE public.document (
     id_doc integer NOT NULL,
     titre character varying(255),
     date_doc date,
-    type_doc character varying(255),
+    description character varying(255),
     matricule_en character varying(20),
     file character varying(100)
 );
@@ -886,6 +886,7 @@ COPY public.django_migrations (id, app, name, applied) FROM stdin;
 84	ent_infoConnect	0017_remove_document_matricule	2023-12-24 17:43:43.267864+01
 85	ent_infoConnect	0018_alter_document_file	2023-12-24 18:36:48.405779+01
 86	ent_infoConnect	0019_alter_document_file	2023-12-24 21:00:55.315245+01
+87	ent_infoConnect	0020_rename_type_doc_document_description	2023-12-27 03:33:53.715804+01
 \.
 
 
@@ -905,8 +906,10 @@ m9gvou5c6xwi38yztnjbp3oicisgrsed	.eJxFzDEKgDAMQNG7ZFZRoSBO3kRCSDGQVGjaQcS7qzi4Pj
 -- Data for Name: document; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-COPY public.document (id_doc, titre, date_doc, type_doc, matricule_en, file) FROM stdin;
+COPY public.document (id_doc, titre, date_doc, description, matricule_en, file) FROM stdin;
 22	cour_inf351	2023-12-24	pdf	ji-az	inf351_1_dcWlZb0.pdf
+23	rseau	2023-12-25	excel	ji-az	NOTES.xlsx
+24	rseau	2023-12-27	excel	ji-az	b.w2.pdf
 \.
 
 
@@ -952,6 +955,7 @@ COPY public.etudiant (matricule, nom, prenom, email, sexe, mot_de_passe, filiere
 --
 
 COPY public.note (id_note, examen, valeur, date_fin, date_deb, code_ue, matricule, matricule_en) FROM stdin;
+1	CC	30.00	2020-10-04	2022-12-11	INF311	20u2855	11r29404
 \.
 
 
@@ -1054,14 +1058,14 @@ SELECT pg_catalog.setval('public.django_content_type_id_seq', 16, true);
 -- Name: django_migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.django_migrations_id_seq', 86, true);
+SELECT pg_catalog.setval('public.django_migrations_id_seq', 87, true);
 
 
 --
 -- Name: document_id_doc_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.document_id_doc_seq', 22, true);
+SELECT pg_catalog.setval('public.document_id_doc_seq', 24, true);
 
 
 --
@@ -1075,7 +1079,7 @@ SELECT pg_catalog.setval('public."ent_infoConnect_resetlink_id_seq"', 5, true);
 -- Name: note_id_note_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.note_id_note_seq', 1, false);
+SELECT pg_catalog.setval('public.note_id_note_seq', 1, true);
 
 
 --
