@@ -38,7 +38,7 @@ class Document(models.Model):
     titre = models.CharField(max_length=255, blank=True, null=True)
     file = models.FileField(null=True, blank=True)
     date_doc = models.DateField(blank=True, null=True)
-    type_doc = models.CharField(max_length=255, blank=True, null=True)
+    description = models.CharField(max_length=255, blank=True, null=True)
     #matricule = models.ForeignKey('Etudiant',db_column='matricule', blank=True, null=True, on_delete=models.CASCADE)
     matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 

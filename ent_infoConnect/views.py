@@ -266,7 +266,7 @@ def req_note(request):
     return redirect('requete')
 
 def list_docu(request):
-    documents = Document.objects.values('id_doc','titre', 'file', 'date_doc', 'type_doc')
+    documents = Document.objects.values('id_doc','titre', 'file', 'date_doc', 'description')
     document_data = []
     for doc in documents:
         # Utilisez un autre nom (par exemple, doc_data) pour le dictionnaire individuel
@@ -275,7 +275,7 @@ def list_docu(request):
             'titre': doc['titre'],
             'file': doc['file'],
             'date_doc': doc['date_doc'],
-            'type_doc': doc['type_doc'],
+            'description': doc['description'],
         }
         document_data.append(doc_data)
 
@@ -298,7 +298,7 @@ def stock_docu(request):
 
                 # Récupérer les données du corps de la requête
                 titre = request.POST.get('titre', '')
-                type_doc = request.POST.get('type_doc', '')
+                description = request.POST.get('description', '')
                 date_str = request.POST.get('date_doc', '')
 
                 # Validation de la date
@@ -308,7 +308,7 @@ def stock_docu(request):
                 file = request.FILES.get('file')
 
                 # Enregistrement dans la base de données
-                new_document = Document(titre=titre, type_doc=type_doc, date_doc=date, file=file, matricule_en=enseignant)
+                new_document = Document(titre=titre, description=description, date_doc=date, file=file, matricule_en=enseignant)
                 new_document.save()
 
                 response_data = {"success": True, "message": "Document stocké avec succès."}
