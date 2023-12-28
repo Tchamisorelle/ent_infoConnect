@@ -14,7 +14,7 @@
     {% if user_info %}
         <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
         {% if user_info.matricule %}
-            <p>Matricule Enseignant : {{ user_info.matricule }}</p>
+            <p>Matricule Etudiant : {{ user_info.matricule }}</p>
         {% endif %}
     {% else %}
         <p>Informations utilisateur non disponibles.</p>

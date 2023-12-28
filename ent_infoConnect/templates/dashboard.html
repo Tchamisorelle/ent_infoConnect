@@ -1,0 +1,160 @@
+{% extends 'base.html' %} {% block title %} infoConnect_dashboard {% endblock %}
+{% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'styles/styles_dashboard.css' %}" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link
+  href="https://fonts.googleapis.com/css2?family=Righteous&family=Roboto&display=swap"
+  rel="stylesheet"
+/>
+{% endblock %} {% block content %}
+
+<div class="header">
+  <p class="image-text" id="text">
+    <span id="typing-indicator"> </span>
+  </p>
+
+  <img src="{% static './images/dd.png' %}" alt="Dashboard Logo" />
+</div>
+
+<main>
+  <section class="dashboard-block">
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;
+    <i
+      class="fas fa-book"
+      style="
+        background-color: rgba(30, 168, 157, 0.781);
+        padding: 6px;
+        color: blue;
+        border-radius: 5px;
+      "
+    ></i>
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
+    Notes
+    <a href="{% url 'notes' %}">
+      <p class="span1">
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
+        ici <i class="fa-solid fa-arrow-right"></i>
+      </p>
+    </a>
+  </section>
+  <section class="dashboard-block">
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;
+    <i
+      class="fas fa-file-alt"
+      style="
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
+        padding: 6px;
+        color: blue;
+      "
+    ></i>
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
+    Requetes
+    <a href="{% url 'requete' %}">
+      <p class="span1">
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
+        ici <i class="fa-solid fa-arrow-right"></i>
+      </p>
+    </a>
+  </section>
+  <section class="dashboard-block">
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;
+    <i
+      class="fas fa-bullhorn"
+      style="
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
+        padding: 6px;
+        color: blue;
+      "
+    ></i>
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
+    Annonces
+    <a href="{% url 'annonce' %}">
+      <p class="span1">
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
+        ici <i class="fa-solid fa-arrow-right"></i>
+      </p>
+    </a>
+  </section>
+  <section class="dashboard-block">
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;
+    <i
+      class="fas fa-file"
+      style="
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
+        padding: 6px;
+        color: blue;
+      "
+    ></i>
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;des
+    Documents
+    <a href="{% url 'document' %}">
+      <p class="span1">
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
+        ici <i class="fa-solid fa-arrow-right"></i>
+      </p>
+    </a>
+  </section>
+  <section class="dashboard-block">
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;
+    <i
+      class="fas fa-calendar"
+      style="
+        background-color: rgba(30, 168, 157, 0.781);
+        border-radius: 5px;
+        padding: 6px;
+        color: blue;
+      "
+    ></i>
+    <br />&nbsp;&nbsp;&nbsp;&nbsp;Gestion <br />&nbsp;&nbsp;&nbsp;&nbsp;d'Agenda
+    <a href="{% url 'agenda' %}">
+      <p class="span1">
+        <br />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cliquez
+        ici <i class="fa-solid fa-arrow-right"></i>
+      </p>
+    </a>
+  </section>
+</main>
+<script>
+  var text = "ENT-Université de Yaoundé I";
+  var speed = 300; // Vitesse de défilement en millisecondes
+  typeAndDeleteText(text, speed);
+  function typeAndDeleteText(text, speed) {
+    var element = document.getElementById("text");
+    var indicator = document.getElementById("typing-indicator");
+
+    var index = 0;
+    var direction = 1; // 1: écriture, -1: effacement
+    var textLength = 0; // Longueur du texte actuel
+
+    setTimeout(function () {
+      var intervalId = setInterval(function () {
+        if (direction === 1) {
+          element.textContent += text[index];
+          index++;
+          textLength++;
+          if (index >= text.length) {
+            direction = -1;
+          }
+        } else if (direction === -1) {
+          element.textContent = element.textContent.slice(0, -1);
+          textLength--;
+
+          if (element.textContent === "") {
+            direction = 1;
+            index = 0;
+          }
+        }
+
+        // Afficher/masquer le trait d'écriture
+        indicator.style.width = textLength + "";
+      }, speed); // Vitesse de défilement en millisecondes
+
+      // Arrêter l'intervalle après un certain temps (facultatif)
+    }, 1200); // Délai de 5 secondes en millisecondes
+  }
+</script>
+{% endblock %}

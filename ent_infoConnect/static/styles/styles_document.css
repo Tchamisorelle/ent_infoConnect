@@ -1,0 +1,182 @@
+.sidebar button .document {
+  background-color: blue; /* Exemple de style */
+  text-decoration: none; /* Pour enlever le soulignement du lien */
+  color: white;
+}
+
+.requete.active {
+  /* Styles spécifiques lorsque le lien est actif */
+  font-weight: bold;
+  /* Ajoutez d'autres styles si nécessaire */
+}
+.tete {
+  font-size: 30px;
+  color: blue;
+  font-weight: bold;
+  cursor: pointer;
+}
+.document-container {
+  margin-top: 50px;
+  background-color: white !important;
+}
+.fa-plus {
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+  border: 1px blue;
+  cursor: pointer;
+  text-shadow: 0px 2px 3px rgba(0, 0, 0, 0.37);
+}
+.add-button {
+  padding: 20px;
+  width: 200px;
+  height: 60px;
+  background-color: white;
+  margin-top: 300px;
+  margin-left: 0px;
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  border-radius: 5px;
+}
+.add-button:hover {
+  padding: 20px;
+  width: 200px;
+  height: 60px;
+  background-color: rgba(245, 244, 244, 0.527);
+  margin-top: 300px;
+  margin-left: 0px;
+  display: flex;
+  border-radius: 5px;
+  justify-content: center;
+  text-align: center;
+}
+.add-button:hover .fa-plus {
+  transform: scale(1.1);
+  color: blue;
+}
+.add-button:hover .fa-plus:hover {
+  transform: scale(1.1);
+  color: blue;
+}
+.add-button:hover .add {
+  color: blue;
+  font-size: 24px;
+  font-weight: bold;
+  cursor: pointer;
+}
+.add {
+  font-size: 24px;
+  font-weight: bold;
+  color: rgba(0, 0, 0, 0.39);
+}
+
+.close {
+  background-color: white;
+  border: none;
+  font-size: 30px;
+}
+.close:hover {
+  background-color: white;
+  border: none;
+  font-size: 30px;
+  color: red;
+}
+
+/* Styles pour le tableau */
+.document-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  background-color: white;
+}
+
+.document-table th,
+.document-table td {
+  padding: 8px;
+  text-align: left;
+  overflow: hidden;
+  background-color: white !important;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  border: none; /* Ajout de cette ligne pour supprimer les bordures */
+}
+
+.document-container {
+  max-height: 480px; /* Ajustez la hauteur maximale selon vos besoins */
+  overflow-y: auto;
+  background-color: white;
+}
+
+/* Styles pour l'icône de téléchargement */
+.download-icon {
+  cursor: pointer;
+  color: rgb(73, 73, 73); /* Couleur du lien pour ressembler à un lien */
+  text-align: center;
+  margin-left: 40px;
+}
+.download-icon:hover {
+  cursor: pointer;
+  color: blue; /* Couleur du lien pour ressembler à un lien */
+  text-align: center;
+  margin-left: 40px;
+}
+
+/* Ajoutez d'autres styles selon vos besoins */
+
+/* Marge entre les lignes du tableau */
+.document-table tr {
+  margin-bottom: 10px;
+  background-color: white;
+}
+.document-table th {
+  position: relative;
+  background-color: white;
+}
+
+/*style modale */
+.custom-modal {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  /* background: rgba(255, 255, 255, 0.9); Fond blanc semi-transparent */
+  padding: 20px;
+}
+
+.custom-modal .modal-dialog {
+  max-width: 800px; /* Ajuster la largeur maximale du modal selon vos besoins */
+  padding: 30px;
+}
+.modal-backdrop.show {
+  opacity: 0.5;
+}
+.contentt {
+  position: relative;
+}
+
+/* Alignement horizontal des labels et des champs */
+label,
+input {
+  display: inline-block;
+  margin-bottom: 10px;
+  width: 428px;
+  padding: 4px;
+  margin: 0px;
+}
+input {
+  display: inline-block;
+  margin-bottom: 10px;
+  width: 428px;
+  height: 50px;
+}
+
+label {
+  width: 100px; /* Ajustez la largeur en fonction de vos besoins */
+}
+footer {
+  width: 99.9%;
+}
+.row > * {
+  flex-shrink: 0;
+  margin: 0px;
+}

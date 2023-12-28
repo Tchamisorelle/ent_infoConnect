@@ -17,7 +17,7 @@ GENERER LE MODEL DJANGO EN USE LA BD
 	python manage.py inspectdb
 
 Sauvegardez votre base de données PostgreSQL: 
-	pg_dump -U votre_utilisateur -d votre_base_de_donnees -f chemin_vers_sauvegarde.sql
+	pg_dump -U postgres -d bd_infoConnect -f bd_projet.sql
 
 restaurer sauv d bd:
 
