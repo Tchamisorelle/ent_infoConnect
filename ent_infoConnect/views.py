@@ -5,8 +5,10 @@ from django.contrib.auth.hashers import check_password
 import re
 import os
 from django.http import HttpResponseServerError
+from django.views.decorators.csrf import csrf_exempt
 import pandas as pd
 from datetime import datetime, timedelta
+from django.db import IntegrityError
 
 from django import forms
 from .until import send_notification_email
@@ -76,7 +78,7 @@ def user_login(request):
                 'matricule_en': enseignant.matricule_en,
             }
             request.session['user_info'] = user_info
-            return redirect('dashboard')
+            return redirect('dashboard_ens')
         elif etudiant is not None and check_password(mot_de_passe, etudiant.mot_de_passe):
             user_info = {
                 'first_name': etudiant.nom,
@@ -113,9 +115,11 @@ def annonce(request):
 
 def notes(request):
     user_info = request.session.get('user_info', {})
+
     matricule = user_info.get('matricule', None)
     notes_data = Note.objects.filter(matricule=matricule)
-    return render(request, 'notes.html' ,{'notes_data': notes_data})
+    
+    return render(request, 'notes.html' ,{'notes_data': notes_data, 'user_info': user_info})
 
 
 class ImportNotesForm(forms.Form):
@@ -151,10 +155,10 @@ def import_notes(request):
                     examen = None                    
                     for note_data in notes_data:
                         
-                        print(f"matricule_et: {matricule_et}")
-                        print(f"cc: {cc}")
-                        print(f"tps: {tps}")
-                        print(f"examen: {examen}")
+                        #print(f"matricule_et: {matricule_et}")
+                        #print(f"cc: {cc}")
+                        #print(f"tps: {tps}")
+                        #print(f"examen: {examen}")
 
                         matricule_et, nom, prenoms, cc, tps, examen = note_data
                         try:
@@ -167,12 +171,27 @@ def import_notes(request):
                         date_deb = datetime.now().date()
                         date_fin = date_deb + timedelta(days=7)
                         
-                        # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
-                        Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                        Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                        Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                        try:
+                            # recherche si la note existe et mise a jour
+                            existing_note_cc = Note.objects.get(examen='cc', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                            existing_note_tps = Note.objects.get(examen='tps', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                            existing_note_examen = Note.objects.get(examen='examen', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                            existing_note_cc.valeur = cc
+                            existing_note_tps.valeur = tps
+                            existing_note_examen.valeur = examen
+
+                            existing_note_cc.save()
+                            existing_note_tps.save()
+                            existing_note_examen.save()
+                        except Note.DoesNotExist:
                     
+                            # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
+                            Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                            Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                            Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+
                     messages.success(request, 'Les notes ont été importées avec succès.')
+                    return redirect('notes_ens')
                 except Enseignant.DoesNotExist:
                     messages.error(request, 'Enseignant non trouvé.')
                 except Ue.DoesNotExist:
@@ -198,7 +217,6 @@ def notes_ens(request):
     return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info})
 
 
-
 def requete(request):
     return render(request, 'requete.html')
 def agenda(request):
@@ -208,6 +226,10 @@ def document(request):
 
 def dashboard(request):
     return render(request, 'dashboard.html')
+
+
+def dashboard_ens(request):
+    return render(request, 'dashboard_ens.html')
 
 def reset_password_done(request):
     return render(request, 'succes.html')

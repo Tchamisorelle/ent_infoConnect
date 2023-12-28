@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document,DownloadDocumentView, annonce, req_note,list_note, requete, notes, list_docu, stock_docu, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes
+from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document,DownloadDocumentView, annonce, req_note,list_note, requete, notes, list_docu, stock_docu, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes, dashboard_ens
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.conf import settings
@@ -38,6 +38,7 @@ urlpatterns = [
     path('agenda/', agenda, name='agenda'),
     path('document/', document, name='document'),
     path('dashboard/', dashboard, name='dashboard'),
+    path('dashboard_ens/', dashboard_ens, name = 'dashboard_ens'),
     path('annonce/', annonce, name='annonce'),
     path('sign_up/', new_utilisateur, name='sign-up'),
     path('sign_up_en/', new_utilisateur_ensei, name='sign-up-ensei'),
