@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_en.html' %}
 
 {% block title %}
     Notes_ens
@@ -23,15 +23,27 @@
     {% endif %}
 
 
+    {% if form.errors %}
+    <div class="alert alert-danger">
+        <strong>Erreur(s) dans le formulaire :</strong>
+        <ul>
+            {% for error in form.errors %}
+                <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+
+
 
     <form method="post" enctype="multipart/form-data" action="{% url 'import_notes' %}">
         {% csrf_token %}
         <label for="file">Sélectionnez le fichier Excel :</label>
-        <input type="file" name="file" accept=".xls, .xlsx" required>
-        
+        <input type="file" id="file" name="file" accept=".xls, .xlsx" required>
+
         <label for="ue_code">Choisissez l'UE :</label>
         {{ form.ue_code }}
-    
+
         <button type="submit">Importer les notes</button>
     </form>
     

@@ -4,8 +4,10 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
 import os
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseServerError
 import pandas as pd
+from datetime import datetime, timedelta
+
 from django import forms
 from .until import send_notification_email
 from decouple import config
@@ -52,7 +54,8 @@ def user_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         mot_de_passe = request.POST.get('password')
-
+        enseignant = None
+        etudiant = None
         try:
             enseignant = Enseignant.objects.get(email=email)
         except Enseignant.DoesNotExist:
@@ -106,14 +109,7 @@ def preinscri(request):
 def annonce(request):
     return render(request, 'connexion.html')
 
-class ImportNotesForm(forms.Form):
-    ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
-    file = forms.FileField()
 
-    def __init__(self, *args, **kwargs):
-        user = kwargs.pop('user')
-        super(ImportNotesForm, self).__init__(*args, **kwargs)
-        self.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user.matricule_en)
 
 def notes(request):
     user_info = request.session.get('user_info', {})
@@ -122,55 +118,87 @@ def notes(request):
     return render(request, 'notes.html' ,{'notes_data': notes_data})
 
 
+class ImportNotesForm(forms.Form):
+    ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
+    file = forms.FileField()
+
+    def __init__(self, *args, user_info=None, **kwargs):
+        super(ImportNotesForm, self).__init__(*args, **kwargs)
+
+        if user_info:
+            self.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
+
+
 def import_notes(request):
-    if request.method == 'POST':
-        form = ImportNotesForm(request.POST, request.FILES, user=request.user)
-        if form.is_valid():
-            try:
-                ue_code = form.cleaned_data['ue_code']
-                enseignant = Enseignant.objects.get(matricule_en=request.user.matricule_en)
-                ue = Ue.objects.get(code_ue=ue_code, matricule_en=enseignant.matricule_en)
-                
-                df = pd.read_excel(request.FILES['file'])
-                
-                # notes_data devient matice
-                notes_data = df.values
-                
-                for note_data in notes_data:
+    if 'user_info' in request.session:
+        form = ImportNotesForm(request.POST, request.FILES, user_info=request.session['user_info'])
+        if request.method == 'POST':
+            if form.is_valid():
+                try:
+                    ue_code = form.cleaned_data['ue_code']
+                    enseignant = Enseignant.objects.get(matricule_en=request.session['user_info']['matricule_en'])
+                    ue = Ue.objects.get(matricule_en=enseignant.matricule_en)
                     
-                    matricule_et, nom, prenoms, cc, tps, examen = note_data
-                    try:
-                        etudiant = Etudiant.objects.get(matricule=matricule_et)
-                    except Etudiant.DoesNotExist:
-                        password = make_password('Gsuite@uy1')
-                        etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password)
+                    df = pd.read_excel(request.FILES['file'])
                     
-                    date_deb = datetime.now().date()
-                    date_fin = date_deb + timedelta(days=7)
+                    # notes_data devient matice
+                    notes_data = df.values
+                    matricule_et = None
+                    nom = None
+                    prenoms = None
+                    cc = None
+                    tps = None
+                    examen = None                    
+                    for note_data in notes_data:
+                        
+                        print(f"matricule_et: {matricule_et}")
+                        print(f"cc: {cc}")
+                        print(f"tps: {tps}")
+                        print(f"examen: {examen}")
+
+                        matricule_et, nom, prenoms, cc, tps, examen = note_data
+                        try:
+                            etudiant = Etudiant.objects.get(matricule=matricule_et)
+                        except Etudiant.DoesNotExist:
+                            email = f"{nom.lower()}.{prenoms.lower()}@facsciences-uy1.cm"
+                            password = make_password('Gsuite@uy1')
+                            etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password, email = email)
+                        
+                        date_deb = datetime.now().date()
+                        date_fin = date_deb + timedelta(days=7)
+                        
+                        # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
+                        Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                        Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                        Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
                     
-                    # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
-                    Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
-                    Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
-                    Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue)
-                
-                messages.success(request, 'Les notes ont été importées avec succès.')
-                return redirect('dashboard')
-            except Enseignant.DoesNotExist:
-                messages.error(request, 'Enseignant non trouvé.')
-            except Ue.DoesNotExist:
-                messages.error(request, 'UE non trouvée.')
-            except Exception as e:
-                messages.error(request, f'Une erreur s\'est produite : {str(e)}')
-                return HttpResponseServerError('Internal Server Error')
+                    messages.success(request, 'Les notes ont été importées avec succès.')
+                except Enseignant.DoesNotExist:
+                    messages.error(request, 'Enseignant non trouvé.')
+                except Ue.DoesNotExist:
+                    messages.error(request, 'UE non trouvée.')
+                except Exception as e:
+                    messages.error(request, f'Une erreur s\'est produite : {str(e)}')
+                    return HttpResponseServerError('Internal Server Error')
+                return redirect('notes_ens')
+            messages.error(request, 'Le formulaire n\'est pas valide. Veuillez corriger les erreurs.')
     else:
-        form = ImportNotesForm(user=request.user)
+        form = ImportNotesForm(user_info=request.session['user_info'])    
 
     return render(request, 'notes_ens.html', {'form': form})
 
 
 def notes_ens(request):
     user_info = request.session.get('user_info', {})
-    return render(request, 'notes_ens.html', {'user_info': user_info})
+    
+    form = ImportNotesForm(request.POST or None, request.FILES or None)
+    if user_info:
+        form.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
+
+    return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info})
+
+
+
 def requete(request):
     return render(request, 'requete.html')
 def agenda(request):
