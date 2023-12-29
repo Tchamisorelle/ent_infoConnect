@@ -142,11 +142,12 @@ footer {
   z-index: 1000;
   display: flex;
   bottom: 0;
-  width: 99.9%;
+  width: 100%;
   font-size: 12px;
   cursor: pointer;
   height: 25px;
   box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.2);
+  margin: 0px;
 }
 .nav-item.nav-profile img {
   width: 40px;
@@ -165,7 +166,9 @@ ul {
   padding: 0;
   margin: 0;
 }
-
+.col-10 {
+  display: flex;
+}
 .sidebar button.disable-hover:hover {
   width: 35px;
   background-color: blue;
@@ -199,3 +202,39 @@ ul {
   border-radius: 50%;
   border: 2px solid #ffffff; /* Bordure blanche */
 }
+/* ... Votre code existant ... */
+
+/* Media Queries */
+@media only screen and (max-width: 425px) {
+  .search {
+    margin-left: 0;
+  }
+
+  .search input {
+    margin-right: 0;
+  }
+
+  .search button {
+    margin-right: 0;
+  }
+
+  #sidebar {
+    display: none;
+  }
+
+  .contentt {
+    margin: 10px;
+  }
+}
+
+/* Media Queries pour les tablettes */
+@media only screen and (min-width: 768px) {
+}
+
+/* Media Queries pour les grands écrans d'ordinateur */
+@media only screen and (min-width: 1025px) {
+}
+@media only screen and (min-width: 1440px) {
+}
+
+/* ... Le reste de votre code ... */
