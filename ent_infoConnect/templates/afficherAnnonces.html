@@ -1,0 +1,396 @@
+{% load humanize %}
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <title>Annonces</title>
+</head>
+<body>
+    <h1>Annonces</h1>
+
+    {% if message %}
+        <p>{{ message }}</p>
+    {% endif %}
+
+    {% if annonces_list %}
+        <ul>
+            {% for annonce in annonces_list %}
+                {% if annonce.id_ann != annonce_id %}
+                <li>
+                    <h3>{{ annonce.titre }}</h3>
+                    <p>{{ annonce.texte }}</p>
+                    <p>Date de publication : {{ annonce.date_pub }}</p>
+                    <p>Catégorie : {{ annonce.categorie }}</p>
+                    {% if annonce.matricule_en %}
+                        <p>Posté par : {{ annonce.matricule_en.nom}}</p>
+                    {% elif annonce.matricule %}
+                        <p>Posté par : {{ annonce.matricule.nom}}</p>
+                    {% endif %}
+                    
+                
+                    {% if user.is_authenticated and annonce.user == user %}
+                        <form id="delete-form-{{ annonce.id_ann }}" action="{% url 'deleteAnnonce' annonce.id_ann %}" method="post">
+                            {% csrf_token %}
+                            <input type="submit" value="Supprimer cette annonce" class="delete-button" data-id="{{ annonce.id_ann }}">
+                        </form>
+
+                        <form id="edit-form-{{ annonce.id_ann }}" action="{% url 'editAnnonce' annonce.id_ann %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="annonce_id" value="{{ annonce.id_ann }}">
+                            <input type="submit" value="Modifier cette annonce" class="edit-button" data-id="{{ annonce.id_ann }}">
+                        </form>
+                    {% endif %}
+                    
+                    <!-- Modal de confirmation de suppression-->
+                    <div id="delete-modal-{{ annonce.id_ann }}" class="modal">
+                        <div class="modal-content">
+                            <h4>Confirmation de suppression</h4>
+                            <p>Êtes-vous sûr de vouloir supprimer cette annonce ?</p>
+                            <div class="modal-buttons">
+                                <button class="confirm-delete-button" data-id="{{ annonce.id_ann }}">Supprimer</button>
+                                <button class="cancel-delete-button" data-id="{{ annonce.id_ann }}">Annuler</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Modal de modification -->
+                    <div id="edit-modal-{{ annonce.id_ann }}" class="modal">
+                        <div class="modal-content2">
+                            <h4>Modification de l'annonce</h4>
+                            <form id="edit-form-submit-{{ annonce.id_ann }}" class="editModalForm" action="{% url 'editAnnonce' annonce.id_ann %}" method="post">
+                                {% csrf_token %}
+                                <div class="top">
+                                    <input type="hidden" name="annonce_id" value="{{ annonce.id_ann }}"><br>
+                                    <label for="edit-titre-{{ annonce.id_ann }}">Titre :</label><br>
+                                    <input name="titre" type="text" id="edit-titre-{{ annonce.id_ann }}" name="edit_titre" value="{{ annonce.titre }}"><br>
+                                    <label for="edit-texte-{{ annonce.id_ann }}">Texte :</label><br>
+                                    <textarea name="texte" class="textarea" id="edit-texte-{{ annonce.id_ann }}"  name="edit_texte">{{ annonce.texte }}</textarea><br>
+                                </div>
+                                <div class="bottom">
+                                    <button class="confirm-edit-button" data-id="{{ annonce.id_ann }}">Enregistrer</button>
+                                    <button class="cancel-edit-button" data-id="{{ annonce.id_ann }}">Annuler</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </li>
+                {% endif %}
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>Aucune annonce disponible.</p>
+    {% endif %}
+
+    <button class="floating-button" onclick="ajouterAnnonce()"><i class="fa fa-plus"></i></button>
+
+    <button class="floating-button-filter" onclick="ouvrirModalFiltre()"><i class="fa fa-filter"></i></button>
+
+    <div id="modalFiltre" class="modal">
+        <div class="modal-content">
+          <span class="close" onclick="fermerModalFiltre()">&times;</span>
+          <h2>Filtrer les annonces</h2>
+          <label for="categorie">Catégorie:</label>
+          <select id="categorie">
+            <!-- Les options de catégorie seront ajoutées dynamiquement ici -->
+          </select>
+          <label for="matricule">Matricule:</label>
+          <input type="text" id="matricule">
+          <button onclick="appliquerFiltre()">Appliquer</button>
+        </div>
+    </div>
+
+    <script>
+    function ajouterAnnonce() {
+    // Rediriger vers la page d'ajout d'annonce
+    window.location.href = "annonce";
+    }
+    </script>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.js" ></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+
+    <script type="text/javascript">
+        $('.textarea').emojioneArea({
+        pickerPosition:'bottom'
+        });
+    </script>
+    <!-- CSS -->
+    <style>
+        .floating-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            margin-bottom: 10px;
+          }
+          
+          .floating-button i {
+            line-height: 50px;
+            color: #fff;
+          }
+
+          .floating-button-filter {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+            padding: 12px;
+            margin-bottom: 70px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
+          
+          floating-button-filter:hover {
+            background-color: #0056b3;
+          }
+        
+        .modal-content p {
+            text-align: center;
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.4);
+            backdrop-filter: blur(8px); /* Ajout de l'effet de flou */
+            font-family: sans-serif;
+        }
+    
+        .modal-content {
+            display: flex;
+            flex-direction: column;
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+        .top input,
+        .top textarea {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1.5px solid blue;
+            background: none;
+            margin-bottom: 10px;
+        }
+
+        .modal-content2 {
+            font-family: sans-serif;
+            display: flex;
+            flex-direction: column;
+            background-color: #fefefe;
+            margin: 15px auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 500px;
+            border-radius: 15px;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .editModalForm {
+            width: 90%;
+            padding: 10px;
+            border-radius: 5px;
+            background: none;
+            color: #007bff;
+            font-size: 10px;
+            margin-bottom: 10px;
+        }
+
+        .editModalForm .top,
+        .editModalForm .bottom,
+        .modal-buttons {
+            text-align: center;
+        }
+        
+        .cancel-delete-button,
+        .confirm-delete-button,
+        .cancel-edit-button,
+        .confirm-edit-button {
+            padding: 10px;
+            margin: 10px;
+            border-radius: 5px;
+            border: none;
+            font-size: 14px;
+            font-weight: 1000px;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+    </style>
+    
+    <!-- JavaScript -->
+    <script>
+        // Récupérer les éléments du DOM
+        const deleteButtons = document.querySelectorAll(".delete-button");
+        const confirmDeleteButtons = document.querySelectorAll(".confirm-delete-button");
+        const cancelDeleteButtons = document.querySelectorAll(".cancel-delete-button");
+        const editButtons = document.querySelectorAll(".edit-button");
+        const confirmEditButtons = document.querySelectorAll(".confirm-edit-button");
+        const cancelEditButtons = document.querySelectorAll(".cancel-edit-button");
+
+        // Ajouter un écouteur d'événement à chaque bouton de suppression
+        deleteButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault();  // Empêcher l'envoi du formulaire
+
+                const id = button.dataset.id;
+                const deleteModal = document.getElementById("delete-modal-" + id);
+
+                // Afficher le modal de confirmation correspondant à l'annonce
+                deleteModal.style.display = "block";
+            });
+        });
+
+        // Ajouter un écouteur d'événement à chaque bouton de confirmation de suppression
+        confirmDeleteButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const id = button.dataset.id;
+                const deleteForm = document.getElementById("delete-form-" + id);
+
+                // Soumettre le formulaire pour effectuer la suppression
+                deleteForm.submit();
+            });
+        });
+
+        // Ajouter un écouteur d'événement à chaque bouton d'annulation de suppression
+        cancelDeleteButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const id = button.dataset.id;
+                const deleteModal = document.getElementById("delete-modal-" + id);
+
+                // Cacher le modal de confirmation correspondant à l'annonce
+                deleteModal.style.display = "none";
+            });
+        });
+
+        // Ajouter un écouteur d'événement à chaque bouton de modification
+        editButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault();  // Empêcher l'envoi du formulaire
+
+                const id = button.dataset.id;
+                const editModal = document.getElementById("edit-modal-" + id);
+
+                // Afficher le modal de modification correspondant à l'annonce
+                editModal.style.display = "block";
+            });
+        });
+
+        // Ajouter un écouteur d'événement à chaque bouton de confirmation de modification
+        confirmEditButtons.forEach(function(button) {
+            button.addEventListener("click", function() {
+                const id = button.dataset.id;
+                const editForm = document.getElementById("edit-form-submit-" + id);
+
+                // Soumettre le formulaire pour effectuer la modification
+                editForm.submit();
+            });
+        });
+
+        // Ajouter un écouteur d'événement à chaque bouton d'annulation de modification
+        cancelEditButtons.forEach(function(button) {
+            button.addEventListener("click", function(event) {
+                event.preventDefault();  // Empêcher l'envoi du formulaire
+        
+                const id = button.dataset.id;
+                const editModal = document.getElementById("edit-modal-" + id);
+        
+                // Cacher le modal de modification correspondant à l'annonce
+                editModal.style.display = "none";
+        
+                // Réinitialiser les champs du formulaire avec les valeurs d'origine
+                const titreInput = document.getElementById("edit-titre-" + id);
+                const texteTextarea = document.getElementById("edit-texte-" + id);
+                titreInput.value = "{{ annonce.titre }}";
+                texteTextarea.value = "{{ annonce.texte }}";
+            });
+
+            function recupererCategories() {
+                // Effectuez ici une requête à la base de données pour obtenir les catégories disponibles
+                // Supposons que vous recevez la liste des catégories sous forme d'un tableau nommé "categories"
+                const categories = ['Voitures', 'Immobilier', 'Emplois']; // Exemple de tableau de catégories
+              
+                const selectCategorie = document.getElementById('categorie');
+              
+                // Ajoutez les options de catégorie au menu déroulant
+                categories.forEach(categorie => {
+                  const option = document.createElement('option');
+                  option.value = categorie;
+                  option.textContent = categorie;
+                  selectCategorie.appendChild(option);
+                });
+              }
+              
+              // Appelez la fonction pour récupérer les catégories au chargement de la page
+              recupererCategories();
+
+              function ouvrirModalFiltre() {
+                // Sélectionnez le modal de filtrage
+                var modalFiltre = document.getElementById('modalFiltre');
+              
+                // Affichez le modal en modifiant son style
+                modalFiltre.style.display = 'block';
+              }
+              
+              function fermerModalFiltre() {
+                const modal = document.getElementById('modalFiltre');
+                modal.style.display = 'none';
+              }
+
+              function appliquerFiltre() {
+                const selectCategorie = document.getElementById('categorie');
+                const categorieSelectionnee = selectCategorie.value;
+              
+                const inputMatricule = document.getElementById('matricule');
+                const matricule = inputMatricule.value.trim().toLowerCase();
+              
+                const annonces = document.querySelectorAll('.annonce');
+              
+                annonces.forEach(annonce => {
+                  const annonceCategorie = annonce.dataset.categorie.toLowerCase();
+                  const annonceMatricule = annonce.dataset.matricule.toLowerCase();
+              
+                  const categorieMatch = categorieSelectionnee === 'toutes' || annonceCategorie === categorieSelectionnee;
+                  const matriculeMatch = matricule === '' || annonceMatricule.includes(matricule);
+              
+                  if (categorieMatch && matriculeMatch) {
+                    annonce.style.display = 'block'; // Afficher l'annonce
+                  } else {
+                    annonce.style.display = 'none'; // Masquer l'annonce
+                  }
+                });
+              
+                fermerModalFiltre(); // Fermer le modal de filtrage après avoir appliqué le filtre
+              }
+        });
+    </script>
+
+</body>
+</html>

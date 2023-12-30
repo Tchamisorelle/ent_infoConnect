@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
+from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document, Annonce
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
@@ -110,6 +110,42 @@ def preinscri(request):
     return render(request, 'preinscription.html')
 def annonce(request):
     return render(request, 'connexion.html')
+
+from django.shortcuts import get_object_or_404
+
+def deleteAnnonce(request, annonce_id):
+    annonce = get_object_or_404(Annonce, id_ann=annonce_id)
+    annonce.delete()
+    # Rediriger ou effectuer d'autres opérations après la suppression de l'annonce
+    return redirect('afficherAnnonces')
+
+
+def editAnnonce(request, annonce_id):
+    annonce = get_object_or_404(Annonce, id_ann=annonce_id)
+
+    if request.method == 'POST':
+        titre = request.POST.get('titre')
+        texte = request.POST.get('texte')
+        
+        annonce.titre = titre
+        annonce.date_pub = datetime.now()
+        annonce.texte = texte
+        annonce.save()
+
+        return redirect('afficherAnnonces')
+    
+    context = {'annonce': annonce}
+    return render(request, 'afficherAnnonces', context)
+
+def afficherAnnonces(request):
+    annonces = Annonce.objects.all()  # Récupère toutes les annonces
+
+    context = {
+        'annonces_list': annonces,
+        'user': request.user  # Passer l'utilisateur connecté dans le contexte
+    }
+
+    return render(request, 'afficherAnnonces.html', context)
 
 
 

@@ -1,0 +1,202 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Annonces</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.css"/>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style type="text/css">
+        body {
+            overflow-x: hidden;
+            background: white;
+            color: blue;
+            font-family: sans-serif;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        
+        .chat-container {
+            display: flex;
+            flex-direction: column;
+            min-height: 100%;
+        }
+        
+        .chat-log {
+            flex-grow: 1;
+            overflow-y: scroll;
+            border: 1px solid #ccc;
+            padding: 10px;
+        }
+        
+        .message {
+            margin-bottom: 10px;
+        }
+        
+        .sender {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        
+        .content {
+            display: inline;
+        }
+        
+        .chat-input {
+            margin-top: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 10px;
+        }
+        
+        input {
+            width: 70%;
+            padding: 5px;
+        }
+        
+        .button {
+            padding: 7px;
+            margin-left: 20px;
+            justify-content: center;
+            border: blue 1px;
+            background-color: blue;
+            color: white;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        .chat-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 600px;
+            background: none;
+        }
+
+        .chat-log {
+            padding: 50px;
+            margin: 20px;
+            border-radius: 5px;
+            max-width: 700px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .chat-log h1 {
+            text-align: center;
+        }
+
+        .message {
+            margin-bottom: 20px;
+        }
+
+        .message .sender {
+            font-weight: bold;
+            margin-right: 5px;
+        }
+
+        .message .content {
+            color: #ddd;
+        }
+
+        form {
+            padding: 40px;
+            height: 60%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative; /* Ajout de la position relative sur le formulaire */
+        }
+        
+        form input[type="text"] {
+            width: 90%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1.5px solid blue;
+            background: none;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+        
+        form textarea {
+            width: 80%;
+            padding: 10px;
+            border-radius: 5px;
+            border: 1.5px solid blue;
+            background: none;
+            color: #ddd;
+            margin-bottom: 10px;
+        }
+        
+        .top {
+            width: 90%;
+            height: 100%;
+            position: absolute; /* Ajout de la position absolue sur le bouton */
+            top: 0; /* Fixation du bouton en bas du formulaire */
+        }
+        .bottom {
+            position: absolute; /* Ajout de la position absolue sur le bouton */
+            width: 20%;
+            bottom: 0; /* Fixation du bouton en bas du formulaire */
+        }
+
+        form .button {
+            padding: 10px;
+            border-radius: 5px;
+            border: none;
+            background: #007bff;
+            color: #fff;
+            cursor: pointer;
+        }
+        
+        form .button:hover {
+            border: 1.5px solid blue;
+            color: blue;
+            background: white;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-log">
+          <h1>Créer une Annonce </h1>
+            <form method="post" action="">
+              {% csrf_token %}
+              <div class="top">
+                {% comment %} <span>matricule</span>
+                <br><input type="text" name="matricule" id="matricule" placeholder="Entrez le matricule" required><br>
+                <span>matricule_en</span>
+                <br><input type="text" name="matricule_en" id="matricule_en" placeholder="Entrez le matricule" required><br>
+                <span>categorie</span>
+                <br><input type="text" name="categorie" id="categorie" placeholder="Entrez inf/l1" required><br> {% endcomment %}
+                <span>Titre</span>
+                <br><input type="text" name="titre" id="titre" placeholder="Entrez le titre de votre annonce" required><br>
+                <span>Contenu</span>
+                <br><textarea cols="3" rows="3" id="textarea" required></textarea>
+              </div>
+              <div class="bottom">
+                <input class="button" type="submit" value="Poster"/>
+              </div>
+            </form>
+        </div>
+    </div>
+
+
+<script src="https://code.jquery.com/jquery-3.7.1.js" ></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/emojionearea/3.4.2/emojionearea.min.js"></script>
+
+<script type="text/javascript">
+    $('#textarea').emojioneArea({
+      pickerPosition:'bottom'
+    });
+</script>
+
+</body>
+</html>

@@ -5,6 +5,7 @@ from django.contrib.auth.hashers import make_password
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.urls import reverse
 
 class Agenda(models.Model):
     id_ag = models.AutoField(primary_key=True)
@@ -22,12 +23,15 @@ class Agenda(models.Model):
 class Annonce(models.Model):
     id_ann = models.AutoField(primary_key=True)
     texte = models.TextField(blank=True, null=True)
-    date_pub = models.DateField(blank=True, null=True)
+    date_pub = models.DateTimeField(auto_now=True, null=True)
     categorie = models.CharField(max_length=255, blank=True, null=True)
     titre = models.CharField(max_length=255, blank=True, null=True)
     matricule = models.ForeignKey('Etudiant', db_column='matricule', blank=True, null=True, on_delete=models.CASCADE)
     matricule_en = models.ForeignKey('Enseignant',  db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
 
+    def can_edit_delete(self, User_info):
+        return self.user_id == user_id
+    
     class Meta:
         managed = True
         db_table = 'annonce'
