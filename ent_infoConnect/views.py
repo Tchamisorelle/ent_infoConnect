@@ -9,6 +9,7 @@ from django.views.decorators.csrf import csrf_exempt
 import pandas as pd
 from datetime import datetime, timedelta
 from django.db import IntegrityError
+from django.db.models import Count
 
 from django import forms
 from .until import send_notification_email
@@ -133,88 +134,148 @@ class ImportNotesForm(forms.Form):
             self.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
 
 
+def import_notes_logic(request, form):
+    try:
+        ue_code = form.cleaned_data['ue_code']
+        enseignant = Enseignant.objects.get(matricule_en=request.session['user_info']['matricule_en'])
+        ue = Ue.objects.get(matricule_en=enseignant.matricule_en)
+        df = pd.read_excel(request.FILES['file'])
+        notes_data = df.values
+        matricule_et = None
+        nom = None
+        prenoms = None
+        cc = None
+        tps = None
+        examen = None                    
+        for note_data in notes_data:
+            matricule_et, nom, prenoms, cc, tps, examen = note_data
+            matricule_et = matricule_et.lower()
+            try:
+                etudiant = Etudiant.objects.get(matricule=matricule_et)
+            except Etudiant.DoesNotExist:
+                email = f"{nom.lower()}.{prenoms.lower()}@facsciences-uy1.cm"
+                password = make_password('Gsuite@uy1')
+                etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password, email=email)
+
+            date_deb = datetime.now().date()
+            date_fin = date_deb + timedelta(days=7)
+            try:
+                existing_note_cc = Note.objects.get(examen='cc', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                existing_note_tps = Note.objects.get(examen='tps', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                existing_note_examen = Note.objects.get(examen='examen', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                existing_note_cc.valeur = cc
+                existing_note_tps.valeur = tps
+                existing_note_examen.valeur = examen
+                existing_note_cc.save()
+                existing_note_tps.save()
+                existing_note_examen.save()
+            except Note.DoesNotExist:
+                Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+                Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+
+        messages.success(request, 'Les notes ont été importées avec succès.')
+        return redirect('notes_ens')
+    except Enseignant.DoesNotExist:
+        messages.error(request, 'Enseignant non trouvé.')
+    except Ue.DoesNotExist:
+        messages.error(request, 'UE non trouvée.')
+    except Exception as e:
+        messages.error(request, f'Une erreur s\'est produite : {str(e)}')
+        return HttpResponseServerError('Internal Server Error')
+
+    return None
+
 def import_notes(request):
     if 'user_info' in request.session:
         form = ImportNotesForm(request.POST, request.FILES, user_info=request.session['user_info'])
         if request.method == 'POST':
             if form.is_valid():
-                try:
-                    ue_code = form.cleaned_data['ue_code']
-                    enseignant = Enseignant.objects.get(matricule_en=request.session['user_info']['matricule_en'])
-                    ue = Ue.objects.get(matricule_en=enseignant.matricule_en)
-                    
-                    df = pd.read_excel(request.FILES['file'])
-                    
-                    # notes_data devient matice
-                    notes_data = df.values
-                    matricule_et = None
-                    nom = None
-                    prenoms = None
-                    cc = None
-                    tps = None
-                    examen = None                    
-                    for note_data in notes_data:
-                        
-                        #print(f"matricule_et: {matricule_et}")
-                        #print(f"cc: {cc}")
-                        #print(f"tps: {tps}")
-                        #print(f"examen: {examen}")
-
-                        matricule_et, nom, prenoms, cc, tps, examen = note_data
-                        try:
-                            etudiant = Etudiant.objects.get(matricule=matricule_et)
-                        except Etudiant.DoesNotExist:
-                            email = f"{nom.lower()}.{prenoms.lower()}@facsciences-uy1.cm"
-                            password = make_password('Gsuite@uy1')
-                            etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password, email = email)
-                        
-                        date_deb = datetime.now().date()
-                        date_fin = date_deb + timedelta(days=7)
-                        
-                        try:
-                            # recherche si la note existe et mise a jour
-                            existing_note_cc = Note.objects.get(examen='cc', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                            existing_note_tps = Note.objects.get(examen='tps', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                            existing_note_examen = Note.objects.get(examen='examen', matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                            existing_note_cc.valeur = cc
-                            existing_note_tps.valeur = tps
-                            existing_note_examen.valeur = examen
-
-                            existing_note_cc.save()
-                            existing_note_tps.save()
-                            existing_note_examen.save()
-                        except Note.DoesNotExist:
-                    
-                            # Créer un objet Note pour chaque type de note car un etudiant a 3 notes
-                            Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                            Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-                            Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
-
-                    messages.success(request, 'Les notes ont été importées avec succès.')
-                    return redirect('notes_ens')
-                except Enseignant.DoesNotExist:
-                    messages.error(request, 'Enseignant non trouvé.')
-                except Ue.DoesNotExist:
-                    messages.error(request, 'UE non trouvée.')
-                except Exception as e:
-                    messages.error(request, f'Une erreur s\'est produite : {str(e)}')
-                    return HttpResponseServerError('Internal Server Error')
-                return redirect('notes_ens')
-            messages.error(request, 'Le formulaire n\'est pas valide. Veuillez corriger les erreurs.')
+                result = import_notes_logic(request, form)
+                if result is not None:
+                    return result
+            else:
+                messages.error(request, 'Le formulaire n\'est pas valide. Veuillez corriger les erreurs.')
     else:
-        form = ImportNotesForm(user_info=request.session['user_info'])    
+        form = ImportNotesForm(user_info=request.session['user_info'])
 
     return render(request, 'notes_ens.html', {'form': form})
 
-
 def notes_ens(request):
     user_info = request.session.get('user_info', {})
-    
     form = ImportNotesForm(request.POST or None, request.FILES or None)
+
     if user_info:
         form.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
 
-    return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info})
+    if request.method == 'POST':
+        if form.is_valid():
+            ue_code = form.cleaned_data['ue_code']
+            type_exams = ['cc', 'tps', 'examen']
+
+            stats = {}
+            for exam in type_exams:
+                stats[exam] = stat(ue_code, exam)  
+
+
+    stats = calculate_stats(user_info.get('matricule_en'))
+
+    return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info, 'stats': stats})
+
+def calculate_stats(matricule_en):
+    stats = {}
+    type_exams = ['cc', 'tps', 'examen']
+
+    for exam in type_exams:
+        stats[exam] = stat(matricule_en, exam)  # Appeler la fonction stat ici
+
+    return stats
+
+def stat(ue, type_exam):
+    eleves = Note.objects.filter(examen=type_exam, code_ue=ue)
+    nbr_eleves = eleves.count()
+    
+    eleves_0_25 = selection(0, 25, eleves, type_exam)
+    eleves_25_50 = selection(25, 50, eleves, type_exam)
+    eleves_50_75 = selection(50, 75, eleves, type_exam)
+    eleves_75_100 = selection(75, 100, eleves, type_exam)
+
+
+    # Pourcentages
+    pourcentage_0_25 = (eleves_0_25 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
+    pourcentage_25_50 = (eleves_25_50 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
+    pourcentage_50_75 = (eleves_50_75 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
+    pourcentage_75_100 = (eleves_75_100 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
+
+    eff = {
+        'effectif_0_25': eleves_0_25,
+        'effectif_25_50': eleves_25_50,
+        'effectif_50_75': eleves_50_75,
+        'effectif_75_100': eleves_75_100,
+    }
+    freq = {
+        'range_0_25': pourcentage_0_25,
+        'range_25_50': pourcentage_25_50,
+        'range_50_75': pourcentage_50_75,
+        'range_75_100': pourcentage_75_100,
+    }
+
+    return eff, freq
+
+
+
+def selection(notemin, notemax, eleves, type_exam):
+    compteur = 0
+    for eleve in eleves:
+        if type_exam == 'cc' and notemin <= (eleve.valeur / 20) * 100 < notemax:
+            compteur += 1
+        elif type_exam == 'tps' and notemin <= (eleve.valeur / 30) * 100 < notemax:
+            compteur += 1
+        elif type_exam == 'examen' and notemin <= (eleve.valeur / 50) * 100 < notemax:
+            compteur += 1
+    
+    return compteur
+
 
 
 def requete(request):
