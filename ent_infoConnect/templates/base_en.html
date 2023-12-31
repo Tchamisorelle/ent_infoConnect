@@ -10,6 +10,8 @@
         rel="stylesheet"
         href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
         />
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+
         <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
@@ -56,7 +58,10 @@
                         src="{% static './images/R.png' %}"
                         alt="profile"
                         class="w-px-40 h-auto rounded-circle"
+                      
+                        title="Account"
                     />
+                    <div class="status-indicator"></div>
                     </div>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-end">
@@ -102,8 +107,8 @@
         </header>
     </div>
     </div>
-    <div class="row">
-      <div class="col-xl-2 col-lg-2 col-md-2 col-xs-1 col-sm-1">
+    <div class="row sir">
+      <div class="col-2">
         <div class="sidebar" id="sidebar">
           <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'dashboard' %}" class="dashboard"><span style="padding-right: 25px;">Dashboard</span></button></a>
           <button><i class="fas fa-book"></i><a href="{% url 'notes_ens' %}" class="note"><span style="padding-right: 72.6px;">Notes</span></button></a>
@@ -113,7 +118,7 @@
           <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}" class="agenda"><span style="padding-right: 50.7px;">Agenda</span></a></button>
         </div>
       </div>
-      <div class="col-xl-10 col-lg-10 col-md-10 col-xs-5 col-sm-5">
+      <div class="col-10">
         <div class="container-fuild">
         <div class="contentt">
             
@@ -166,7 +171,7 @@
         var searchValue = document
           .querySelector(".search input")
           .value.toLowerCase();
-        var contentItems = document.querySelectorAll(".contentt div"); // Sélectionne tous les div à l'intérieur de la section de contenu
+        var contentItems = document.querySelectorAll(".contentt div:nth-child(1) "); // Sélectionne tous les div à l'intérieur de la section de contenu
 
         contentItems.forEach(function (item) {
           var textContent = item.textContent.toLowerCase();
@@ -178,21 +183,8 @@
         });
       }
 
-      function showSuggestions() {
-        var searchValue = document
-          .querySelector(".search input")
-          .value.toLowerCase();
-        var contentItems = document.querySelectorAll(".contentt");
 
-        contentItems.forEach(function (item) {
-          var textContent = item.textContent.toLowerCase();
-          if (textContent.includes(searchValue)) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
-        });
-      }
+      
     </script>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
