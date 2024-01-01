@@ -32,23 +32,24 @@
             </tr>
         </thead>
         <tbody>
-            {% for unite, notes_ue in notes_data.items %}
+            {% for unite, data in notes_data.items %}
                 <tr>
                     <td>{{ unite }}</td>
-                    <td>{{ unite.nom }}</td>
+                    <td>{{ data.nom }}</td>
                     {% for exam in exams %}
                         <td>
-                            {% for note in notes_ue %}
+                            {% for note in data.notes %}
                                 {% if note.examen == exam %}
                                     {{ note.valeur }}
                                 {% endif %}
                             {% endfor %}
                         </td>
                     {% endfor %}
-                    <td>{{ total }}</td>
+                    <td>{{ data.total }}</td>
                 </tr>
             {% endfor %}
         </tbody>
+        
         
     </table>
 {% endblock %}
