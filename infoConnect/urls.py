@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns
-from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document,DownloadDocumentView, annonce, req_note,list_note, requete, notes, list_docu, stock_docu, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes, dashboard_ens
+from ent_infoConnect.views import user_login, rmail, agenda, dashboard, document,DownloadDocumentView, annonce, req_note,list_note, requete,requete_ens,document_ens, notes, list_docu, stock_docu, register, reset_password_request, connexion, new_utilisateur, go, register_ensei, new_utilisateur_ensei, preinscri, reset_password_done, reset_password_complete,CustomPasswordResetConfirmView, user_logout, notes_ens, import_notes, dashboard_ens
 from django.contrib.auth import views as auth_views
 from django.urls import path
 from django.conf import settings
@@ -34,9 +34,11 @@ urlpatterns = [
     path('notes/', notes, name='notes'),
     path('notes_ens/', notes_ens, name='notes_ens'),
     path('import-notes/', import_notes, name='import_notes'),
-    path('requete/', requete, name='requete'),
+    path('requete/', requete, name='requete'), 
+    path('requete_ens/', requete_ens, name='requete_ens'), 
     path('agenda/', agenda, name='agenda'),
     path('document/', document, name='document'),
+    path('document_ens/', document_ens, name='document_ens'),
     path('dashboard/', dashboard, name='dashboard'),
     path('dashboard_ens/', dashboard_ens, name = 'dashboard_ens'),
     path('annonce/', annonce, name='annonce'),

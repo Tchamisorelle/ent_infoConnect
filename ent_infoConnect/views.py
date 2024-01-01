@@ -286,10 +286,14 @@ def selection(notemin, notemax, eleves, type_exam):
 
 def requete(request):
     return render(request, 'requete.html')
+def requete_ens(request):
+    return render(request, 'requete_ens.html')
 def agenda(request):
     return render(request, 'connexion.html')
 def document(request):
     return render(request, 'document.html')
+def document_ens(request):
+    return render(request, 'document_ens.html')
 
 def dashboard(request):
     return render(request, 'dashboard.html')
