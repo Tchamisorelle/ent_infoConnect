@@ -235,7 +235,7 @@ def calculate_stats(ue):
     type_exams = ['cc', 'tps', 'examen']
 
     for exam in type_exams:
-        stats[exam] = stat(ue, exam)  # Appeler la fonction stat ici
+        stats[exam] = stat(ue, exam)
 
     return stats
 
