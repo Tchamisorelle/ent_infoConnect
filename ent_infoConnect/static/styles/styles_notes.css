@@ -1,5 +1,5 @@
 /* notes_style.css */
-.notes-table {
+/* .notes-table {
     width: 100%;
     border-collapse: collapse;
 }
@@ -16,4 +16,54 @@
 .note-heading {
     font-family: inherit;
     color: blue;
+} */
+.sidebar button .note {
+    background-color: blue; /* Exemple de style */
+    text-decoration: none; /* Pour enlever le soulignement du lien */
+    color: white;
 }
+  
+.note.active {
+    /* Styles spécifiques lorsque le lien est actif */
+    font-weight: bold;
+    /* Ajoutez d'autres styles si nécessaire */
+}
+.tete {
+  font-size: 30px;
+    color: blue;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* Styles pour la table de notes */
+.notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+  }
+  
+  .notes-table th,
+  .notes-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+    border-right: 0.1px solid #ddd;
+  }
+  
+  .notes-table th {
+    background-color: #f2f2f2;
+    border-bottom: 1px solid #ddd;
+  }
+  
+  .notes-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .notes-table tbody tr:hover {
+    background-color: #e5e5e5;
+  }
+  

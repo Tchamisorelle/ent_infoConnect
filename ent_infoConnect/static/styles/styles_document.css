@@ -31,7 +31,7 @@
   width: 200px;
   height: 60px;
   background-color: white;
-  margin-top: 300px;
+  margin-top: 230px;
   margin-left: 0px;
   display: flex;
   justify-content: center;
@@ -43,7 +43,7 @@
   width: 200px;
   height: 60px;
   background-color: rgba(245, 244, 244, 0.527);
-  margin-top: 300px;
+  
   margin-left: 0px;
   display: flex;
   border-radius: 5px;
@@ -84,7 +84,6 @@
 
 /* Styles pour le tableau */
 .document-table {
-  width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
   background-color: white;
@@ -92,13 +91,30 @@
 
 .document-table th,
 .document-table td {
-  padding: 8px;
+  padding: 18px;
   text-align: left;
   overflow: hidden;
-  background-color: white !important;
+  background-color: white;
   text-overflow: ellipsis;
   white-space: nowrap;
   border: none; /* Ajout de cette ligne pour supprimer les bordures */
+  /* border-right: 1px solid #ddd; */
+}
+
+.document-table th {
+  background-color: #d0f2f85b;
+  border-bottom: 1px solid #ddd;
+  
+}
+.document-table td{
+  border-right: 1px solid #ddd;
+}
+.document-table tbody tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+.document-table tbody tr:hover {
+  background-color: #e5e5e5;
 }
 
 .document-container {
@@ -124,14 +140,14 @@
 /* Ajoutez d'autres styles selon vos besoins */
 
 /* Marge entre les lignes du tableau */
-.document-table tr {
+/* .document-table tr {
   margin-bottom: 10px;
   background-color: white;
 }
 .document-table th {
   position: relative;
   background-color: white;
-}
+} */
 
 /*style modale */
 .custom-modal {
@@ -189,10 +205,10 @@ footer {
   }
   .add-button {
     padding: 20px;
-    width: 200px;
+    width: 250px;
     height: 60px;
     background-color: white;
-    margin-top: 200px;
+    margin-top: 230px;
     margin-left: 0px;
   }
   .col-2 {
@@ -203,18 +219,7 @@ footer {
   .document-container {
     max-height: 500px;
   }
-  .search {
-    margin-left: 0;
-  }
-
-  .search input {
-    margin-right: 0;
-  }
-
-  .search button {
-    margin-right: 0;
-  }
-
+  
   .contentt {
     margin: 40px;
   }
@@ -228,7 +233,7 @@ footer {
     width: 200px;
     height: 60px;
     background-color: white;
-    margin-top: 250px;
+    margin-top: 200px;
     margin-left: 0px;
     margin-right: 30px;
   }

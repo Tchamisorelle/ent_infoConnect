@@ -1,56 +1,65 @@
-{% extends 'base_en.html' %}
+{% extends 'base_en.html' %} {% block title %} Notes_ens {% endblock %}
+{% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'styles/styles_notes_ens.css' %}" />
+{% endblock %} {% block content %}
 
-{% block title %}
-    Notes_ens
-{% endblock %}
+<h3 class="tete"> < Notes</h3>
 
-{% block content %}
-    <h3 class="note-heading">Notes</h3>
-    {%load static%}
+{% if user_info %}
+<!-- <p>
+  Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{user_info.email }})
+</p> -->
+{% if user_info.matricule_en %}
+<p class="te"><span class="ma"> </span></p>
+{% endif %} {% else %}
+<p>Informations utilisateur non disponibles.</p>
+{% endif %} {% if form.errors %}
+<div class="alert alert-danger">
+  <strong>Erreur(s) dans le formulaire :</strong>
+  <ul>
+    {% for error in form.errors %}
+    <li>{{ error }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
 
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles_notes_ens.css' %}">
+<div class="accordion" id="accordionForm">
+  <div class="accordion-item">
+    <h2 class="accordion-header" id="headingOne">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm" aria-expanded="true" aria-controls="collapseForm">
+        Importation des notes
+      </button>
+    </h2>
+    <div id="collapseForm" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionForm">
+      <div class="accordion-body">
+        <form method="post" class="for" enctype="multipart/form-data" action="{% url 'import_notes' %}">
+          {% csrf_token %}
+
+          <div class="mb-3">
+            <label for="file" class="form-label">Importer un fichier Excel</label>
+            <input type="file" class="form-control" id="file" name="file" accept=".xls, .xlsx" required />
+          </div>
+
+          <div class="mb-3">
+            <label for="ue_code" class="form-label">Choisir l'UE</label>
+            {{ form.ue_code }}
+          </div>
+          <button type="submit" class="btn btn-primary">Envoyer</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
 
 
-
-
-    {% if user_info %}
-        <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
-        {% if user_info.matricule_en %}
-            <p>Matricule Enseignant : {{ user_info.matricule_en }}</p>
-        {% endif %}
-    {% else %}
-        <p>Informations utilisateur non disponibles.</p>
-    {% endif %}
-
-
-    {% if form.errors %}
-        <div class="alert alert-danger">
-            <strong>Erreur(s) dans le formulaire :</strong>
-            <ul>
-                {% for error in form.errors %}
-                    <li>{{ error }}</li>
-                {% endfor %}
-            </ul>
-        </div>
-    {% endif %}
-
-
-    <form method="post" enctype="multipart/form-data" action="{% url 'import_notes' %}">
-        {% csrf_token %}
-        <label for="file">Sélectionnez le fichier Excel :</label>
-        <input type="file" id="file" name="file" accept=".xls, .xlsx" required>
-    
-        <label for="ue_code">Choisissez l'UE :</label>
-        {{ form.ue_code }}
-    
-        <button type="submit">Importer les notes</button>
-    </form>
 
     {% for ue_code, ue_stats in stats.items %}
 
-        <h4>Statistiques pour l'UE {{ ue_code }}</h4>
 
-        <table class="notes-stats">
+        <p class="note-heading">Statistiques pour l'UE {{ ue_code }}</p>
+
+        <table class="table notes-stats">
             <thead>
                 <tr>
                     <th>CRITERE SUR LA NOTE(%)</th>
@@ -93,4 +102,3 @@
         </table>
     {% endfor %}
 {% endblock %}
-

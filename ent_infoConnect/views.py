@@ -117,10 +117,16 @@ def annonce(request):
 def notes(request):
     user_info = request.session.get('user_info', {})
 
+    exams = ['cc', 'tps', 'examen']
     matricule = user_info.get('matricule', None)
-    notes_data = Note.objects.filter(matricule=matricule)
-    
-    return render(request, 'notes.html' ,{'notes_data': notes_data, 'user_info': user_info})
+    Unites_en = Ue.objects.all()
+    notes_etudiant = {}
+    for unite in Ue.objects.all():
+        notes_ue = Note.objects.filter(matricule=matricule, code_ue=unite)
+        total = sum(note.valeur for note in notes_ue)
+        notes_etudiant[unite.code_ue] = notes_ue
+  
+    return render(request, 'notes.html' ,{'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams, 'total': total})
 
 
 class ImportNotesForm(forms.Form):
