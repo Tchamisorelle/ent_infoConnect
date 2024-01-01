@@ -1,24 +1,18 @@
-{% extends 'base.html' %}
-
-{% block title %}
-    Notes
+{% extends 'base.html' %} {% block title %} Notes
 {% endblock %}
-
-{% block content %}
-    <h3 class="note-heading">Notes</h3>
-    {%load static%}
-
-    <link rel="stylesheet" type="text/css" href="{% static 'styles/styles_notes.css' %}">
-
-
-    {% if user_info %}
-        <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
-        {% if user_info.matricule %}
-            <p>Matricule Etudiant : {{ user_info.matricule }}</p>
-        {% endif %}
-    {% else %}
-        <p>Informations utilisateur non disponibles.</p>
-    {% endif %}
+{% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'styles/styles_notes.css' %}" />
+{% endblock %} {% block content %}
+<h3 class="tete">< Notes</h3>
+{% if user_info %}
+<!-- <p>
+  Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})
+</p> -->
+{% if user_info.matricule %}
+<!-- <p>Matricule Etudiant : {{ user_info.matricule }}</p> -->
+{% endif %} {% else %}
+<p>Informations utilisateur non disponibles.</p>
+{% endif %}
 
     <table class="notes-table">
         <thead>
@@ -53,4 +47,3 @@
         
     </table>
 {% endblock %}
-
