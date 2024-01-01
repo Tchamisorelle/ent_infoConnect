@@ -16,25 +16,6 @@ form button {
     font-size: 16px; /* Ajustez la taille selon vos besoins */
 }
 
-/* Tableau des statistiques */
-.notes-stats {
-    width: 100%;
-    border-collapse: collapse;
-}
-
-.notes-stats th,
-.notes-stats td {
-    text-align: center; /* Centre le texte dans les cellules */
-    border: 1px solid #ddd;
-    padding: 28px;
-
-}
-
-.notes-stats th {
-    background-color: #f2f2f2;
-    font-weight: bold;
-}
-
 /* En-tête de la page de notes */
 .note-heading {
     font-family: 'inherit';
@@ -43,23 +24,6 @@ form button {
     font-weight: bold;
 }
 
-.for{
-    border: 2px solid blue;
-    border-radius: 5px;
-    
-    color: black;
-    font-size: 14px;
-
-    padding: 30px;
-}
-.ma{
-    font-size: 16px;
-    font-weight: bold;
-}
-.te{
-    margin-left: 30px;
-    margin-top: 50px;
-}
 .tete {
     font-size: 30px;
     color: blue;
@@ -92,11 +56,7 @@ form button {
     /* Ajoutez d'autres styles si nécessaire */
   }
 
-.for {
-    max-width: 400px;
-    margin: 5%;
-  }
-  
+
   .form-label {
     font-weight: bold;
   }
@@ -152,4 +112,130 @@ form button {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+
+  @media only screen and (max-width: 425px) {
+    .search {
+        margin-left: 0;
+      }
+      footer {
+        width: 100%;
+      }
+      
+    
+      .search input {
+        margin-right: 0;
+      }
+    
+      .search button {
+        margin-right: 0;
+      }
+    
+      #sidebar {
+        display: none;
+      }
+    
+      .contentt {
+        margin: 0px;
+      }
+      .notes-stats {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .notes-stats th,
+      .notes-stats td {
+        border: 1px solid #ddd;
+        padding: 1px;
+        font-size: 10px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: none;
+        border-right: 0.1px solid #ddd;
+      }
+      
+      .notes-stats th {
+        background-color: #f2f2f2;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .notes-stats tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      
+      .notes-stats tbody tr:hover {
+        background-color: #e5e5e5;
+      }
+      .tete {
+        font-size: 15px;
+          color: blue;
+          font-weight: bold;
+          cursor: pointer;
+          margin-top: 20px;
+          
+      }
+      .col-10 {
+        margin-left: 20px!important;
+      }
+      
+    }   
+  @media only screen and (max-width: 768px) {
+    .notes-stats {
+        width: 50%;
+        border-collapse: collapse;
+        margin-top: 20px;
+      }
+      .notes-stats th,
+      .notes-stats td {
+        border: 1px solid #ddd;
+        padding: 1px;
+        font-size: 10px;
+        text-align: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        border: none;
+        border-right: 0.1px solid #ddd;
+      }
+      
+      .notes-stats th {
+        background-color: #f2f2f2;
+        border-bottom: 1px solid #ddd;
+      }
+      
+      .notes-stats tbody tr:nth-child(even) {
+        background-color: #f9f9f9;
+      }
+      
+      .notes-stats tbody tr:hover {
+        background-color: #e5e5e5;
+      }
+      .tete {
+        font-size: 15px;
+          color: blue;
+          font-weight: bold;
+          cursor: pointer;
+          margin-top: 20px;
+      }
+      .col-10 {
+        display: flex;
+        width: 500px;
+        margin-left: 120px ;
+      }
+  }
+  @media only screen and (max-width: 1025px) {
+    .col-10 {
+        display: flex;
+        width: 500px;
+        margin-left: 100px ;
+      }
+  }
+  @media only screen and (max-width: 1440px) {
+    .col-10 {
+        display: flex;
+        width: 500px;
+        margin-left: 150px ;
+      }
   }
