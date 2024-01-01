@@ -117,10 +117,16 @@ def annonce(request):
 def notes(request):
     user_info = request.session.get('user_info', {})
 
+    exams = ['cc', 'tps', 'examen']
     matricule = user_info.get('matricule', None)
-    notes_data = Note.objects.filter(matricule=matricule)
-    
-    return render(request, 'notes.html' ,{'notes_data': notes_data, 'user_info': user_info})
+    Unites_en = Ue.objects.all()
+    notes_etudiant = {}
+    for unite in Ue.objects.all():
+        notes_ue = Note.objects.filter(matricule=matricule, code_ue=unite)
+        total = sum(note.valeur for note in notes_ue)
+        notes_etudiant[unite.code_ue] = notes_ue
+  
+    return render(request, 'notes.html' ,{'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams, 'total': total})
 
 
 class ImportNotesForm(forms.Form):
@@ -207,27 +213,27 @@ def notes_ens(request):
 
     if user_info:
         form.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
+           
+    stats = {}
 
     if request.method == 'POST':
         if form.is_valid():
             ue_code = form.cleaned_data['ue_code']
-            type_exams = ['cc', 'tps', 'examen']
 
-            stats = {}
-            for exam in type_exams:
-                stats[exam] = stat(ue_code, exam)  
+    for ue in Ue.objects.filter(matricule_en=user_info.get('matricule_en')):
+        ue_stats = calculate_stats(ue.code_ue)
+        print(ue_stats)
+        stats[ue.code_ue] = ue_stats
 
-
-    stats = calculate_stats(user_info.get('matricule_en'))
 
     return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info, 'stats': stats})
 
-def calculate_stats(matricule_en):
+def calculate_stats(ue):
     stats = {}
     type_exams = ['cc', 'tps', 'examen']
 
     for exam in type_exams:
-        stats[exam] = stat(matricule_en, exam)  # Appeler la fonction stat ici
+        stats[exam] = stat(ue, exam)  # Appeler la fonction stat ici
 
     return stats
 
@@ -242,10 +248,10 @@ def stat(ue, type_exam):
 
 
     # Pourcentages
-    pourcentage_0_25 = (eleves_0_25 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
-    pourcentage_25_50 = (eleves_25_50 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
-    pourcentage_50_75 = (eleves_50_75 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
-    pourcentage_75_100 = (eleves_75_100 / nbr_eleves) * 100 if nbr_eleves > 0 else 'Nan'
+    pourcentage_0_25 = "{:.2f}".format((eleves_0_25 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
+    pourcentage_25_50 = "{:.2f}".format((eleves_25_50 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
+    pourcentage_50_75 = "{:.2f}".format((eleves_50_75 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
+    pourcentage_75_100 = "{:.2f}".format((eleves_75_100 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
 
     eff = {
         'effectif_0_25': eleves_0_25,

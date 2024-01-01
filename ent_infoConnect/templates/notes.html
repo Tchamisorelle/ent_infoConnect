@@ -14,28 +14,35 @@
 <p>Informations utilisateur non disponibles.</p>
 {% endif %}
 
-<table class="notes-table">
-  <thead>
-    <tr>
-      <th>Code UE</th>
-      <th>Nom UE</th>
-      <th>CC (/20)</th>
-      <th>TP (/30)</th>
-      <th>Examen (/50)</th>
-      <th>Note (/100)</th>
-    </tr>
-  </thead>
-  <tbody>
-    {% for row in notes_data %}
-    <tr>
-      <td>{{ row.code_ue }}</td>
-      <td>{{ row.nom_ue }}</td>
-      <td>{{ row.cc }}</td>
-      <td>{{ row.tp }}</td>
-      <td>{{ row.examen }}</td>
-      <td>{{ row.note }}</td>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+    <table class="notes-table">
+        <thead>
+            <tr>
+                <th>Code UE</th>
+                <th>Nom UE</th>
+                <th>CC (/20)</th>
+                <th>TP (/30)</th>
+                <th>Examen (/50)</th>
+                <th>Note (/100)</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for unite, notes_ue in notes_data.items %}
+                <tr>
+                    <td>{{ unite }}</td>
+                    <td>{{ unite.nom }}</td>
+                    {% for exam in exams %}
+                        <td>
+                            {% for note in notes_ue %}
+                                {% if note.examen == exam %}
+                                    {{ note.valeur }}
+                                {% endif %}
+                            {% endfor %}
+                        </td>
+                    {% endfor %}
+                    <td>{{ total }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+        
+    </table>
 {% endblock %}

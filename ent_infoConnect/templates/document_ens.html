@@ -1,0 +1,203 @@
+{% extends 'base_en.html' %} {% block title %} infoConnect_requete {% endblock %}
+{% load static %} {% block css %}
+<link rel="stylesheet" href="{% static 'styles/styles_document.css' %}" />
+{% endblock %} {% block content %}
+<div class="tete">< Documents</div>
+
+<div class="document-container"></div>
+<div class="add-button" data-toggle="modal" data-target="#uploadDocumentModal">
+  <i class="fas fa-plus" title="add doc"></i> <span class="add">Ajouter</span>
+</div>
+
+<!-- Modal pour la récupération de la requête POST -->
+<div class="modal fade" id="uploadDocumentModal">
+  <div class="modal-dialog custom-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" style="color: blue; font-weight: 700">
+          Importer un Document
+        </h5>
+        <button
+          type="button"
+          class="close"
+          data-dismiss="modal"
+          aria-label="Close"
+        >
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form
+          method="POST"
+          id="upload-document-form"
+          action="{% url 'stock_docu' %}"
+          enctype="multipart/form-data"
+        >
+          {% csrf_token %}
+          <label for="titre">Titre </label><br />
+          <input
+            type="text"
+            id="titre"
+            name="titre"
+            placeholder="Titre du document"
+            required
+          /><br />
+
+          <label for="date">Date </label><br />
+          <input type="date" id="date_doc" name="date_doc" required /><br />
+          <label for="description">Description </label><br />
+          <textarea
+            type="text"
+            id="type_doc"
+            name="description"
+            row="50"
+            col="100"
+            style="width: 428px"
+            placeholder="Description du document"
+          ></textarea
+          ><br />
+          <label for="file">Fichier </label><br />
+          <input type="file" id="file" name="file" required /><br />
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-dismiss="modal"
+            >
+              Annuler
+            </button>
+            <button type="submit" class="btn btn-primary">Envoyer</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  // Script dans votre fichier HTML ou fichier JS séparé
+  let documentData = [];
+
+  function fetchAndDisplayData() {
+    // Récupération des données JSON depuis votre endpoint Django
+    fetch("/list_docu/")
+      .then(function (response) {
+        if (!response.ok) {
+          throw new Error("Réponse réseau incorrecte");
+        }
+        return response.json();
+      })
+      .then(function (data) {
+        // Stockez les données récupérées dans la variable globale
+        documentData = data;
+
+        // Appeler une fonction pour générer les cases à cocher
+        generateDocumentCards();
+      })
+      .catch(function (error) {
+        console.error(
+          "Erreur lors de la récupération des données JSON :",
+          error
+        );
+      });
+  }
+
+  function generateDocumentCards() {
+    // Sélection de l'élément contenant le tableau
+    const documentContainer = document.querySelector(".document-container");
+
+    // Création du tableau
+    const documentTable = document.createElement("table");
+    documentTable.classList.add("document-table");
+
+    // Création de l'entête du tableau
+    const tableHeader = document.createElement("thead");
+    const headerRow = document.createElement("tr");
+    ["Titre", "Fichier", "Date", "Description", "Télécharger"].forEach(
+      (headerText) => {
+        const headerCell = document.createElement("th");
+        headerCell.textContent = headerText;
+        headerRow.appendChild(headerCell);
+      }
+    );
+    tableHeader.appendChild(headerRow);
+    documentTable.appendChild(tableHeader);
+
+    // Création du corps du tableau
+    const tableBody = document.createElement("tbody");
+
+    // Parcours des données des documents
+    documentData.forEach((doc) => {
+      const tableRow = document.createElement("tr");
+
+      // Ajout des cellules pour chaque propriété du document
+      ["titre", "file", "date_doc", "description"].forEach((property) => {
+        const tableCell = document.createElement("td");
+        tableCell.textContent = doc[property];
+        tableRow.appendChild(tableCell);
+      });
+
+      // Ajout de l'icône de téléchargement dans la dernière cellule
+      const downloadCell = document.createElement("td");
+      const downloadIcon = document.createElement("i");
+      downloadIcon.classList.add(
+        "fas",
+        "fa-circle-arrow-down",
+        "download-icon",
+        "text-center"
+      );
+      downloadIcon.addEventListener("click", () =>
+        downloadDocument(`${doc.id_doc}`, doc.file)
+      );
+      downloadCell.appendChild(downloadIcon);
+      tableRow.appendChild(downloadCell);
+
+      // Ajout de la ligne au corps du tableau
+      tableBody.appendChild(tableRow);
+    });
+
+    // Ajout du corps du tableau à la table
+    documentTable.appendChild(tableBody);
+
+    // Ajout de la table au conteneur
+    documentContainer.appendChild(documentTable);
+  }
+  window.addEventListener("load", fetchAndDisplayData);
+  // Fonction pour déclencher le téléchargement du document
+  function downloadDocument(id_doc, file) {
+    const url = `/download_document/${id_doc}/`;
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file;
+    link.click();
+  }
+</script>
+
+<script>
+  function uploadDocument() {
+    console.log("Début de la fonction uploadDocument");
+
+    var form = document.getElementById("upload-document-form");
+    var formData = new FormData(form);
+
+    fetch("/stock_docu/", {
+      method: "POST",
+      body: formData,
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+
+    console.log("Fin de la fonction uploadDocument");
+  }
+</script>
+
+{% endblock %}
