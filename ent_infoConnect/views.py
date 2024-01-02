@@ -130,6 +130,14 @@ def notes(request):
     return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams})
 
 
+def normalisationNotes(totaux_notes):
+    note_pondere = []
+    for total in totaux_notes:
+        if 0 <= total < 
+def MGP(etudiant, notes_normalisees, credit):
+
+
+
 
 class ImportNotesForm(forms.Form):
     ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
@@ -246,7 +254,7 @@ def stat(ue, type_exam):
     eleves_0_25 = selection(0, 25, eleves, type_exam)
     eleves_25_50 = selection(25, 50, eleves, type_exam)
     eleves_50_75 = selection(50, 75, eleves, type_exam)
-    eleves_75_100 = selection(75, 100, eleves, type_exam)
+    eleves_75_100 = selection(75, 100.01, eleves, type_exam)
 
 
     # Pourcentages
@@ -283,8 +291,6 @@ def selection(notemin, notemax, eleves, type_exam):
             compteur += 1
     
     return compteur
-
-
 
 def requete(request):
     return render(request, 'requete.html')
