@@ -60,45 +60,53 @@
         <p class="note-heading">Statistiques pour l'UE {{ ue_code }}</p>
 
         <table class="table notes-stats">
-            <thead>
-                <tr>
-                    <th>CRITERE SUR LA NOTE(%)</th>
-                    <th>CC</th>
-                    <th>TP</th>
-                    <th>EXAMEN</th>
-                    <th>POURCENTAGE(CC | TP | EXAMEN)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>[0 - 25[</td>
-                    <td>{{ ue_stats.cc.0.effectif_0_25 }}</td>
-                    <td>{{ ue_stats.tps.0.effectif_0_25 }}</td>
-                    <td>{{ ue_stats.examen.0.effectif_0_25 }}</td>
-                    <td>{{ ue_stats.cc.1.range_0_25 }} | {{ ue_stats.tps.1.range_0_25 }} | {{ ue_stats.examen.1.range_0_25 }}</td>
-                </tr>
-                <tr>
-                    <td>[25 - 50[</td>
-                    <td>{{ ue_stats.cc.0.effectif_25_50 }}</td>
-                    <td>{{ ue_stats.tps.0.effectif_25_50 }}</td>
-                    <td>{{ ue_stats.examen.0.effectif_25_50 }}</td>
-                    <td>{{ ue_stats.cc.1.range_25_50 }} | {{ ue_stats.tps.1.range_25_50 }} | {{ ue_stats.examen.1.range_25_50 }}</td>
-                </tr>
-                <tr>
-                    <td>[50 - 75[</td>
-                    <td>{{ ue_stats.cc.0.effectif_50_75 }}</td>
-                    <td>{{ ue_stats.tps.0.effectif_50_75 }}</td>
-                    <td>{{ ue_stats.examen.0.effectif_50_75 }}</td>
-                    <td>{{ ue_stats.cc.1.range_50_75 }} | {{ ue_stats.tps.1.range_50_75 }} | {{ ue_stats.examen.1.range_50_75 }}</td>
-                </tr>
-                <tr>
-                    <td>[75 - 100[</td>
-                    <td>{{ ue_stats.cc.0.effectif_75_100 }}</td>
-                    <td>{{ ue_stats.tps.0.effectif_75_100 }}</td>
-                    <td>{{ ue_stats.examen.0.effectif_75_100 }}</td>
-                    <td>{{ ue_stats.cc.1.range_75_100 }} | {{ ue_stats.tps.1.range_75_100 }} | {{ ue_stats.examen.1.range_75_100 }}</td>
-                </tr>
-            </tbody>
-        </table>
+          <thead>
+              <tr>
+                  <th rowspan="2">CRITERE SUR LA NOTE(%)</th>
+                  <th colspan="3">EFFECTIF</th>
+                  <th colspan="3">POURCENTAGE</th>
+              </tr>
+              <tr>
+                  <th>CC</th>
+                  <th>TP</th>
+                  <th>EXAMEN</th>
+                  <th>CC</th>
+                  <th>TP</th>
+                  <th>EXAMEN</th>
+              </tr>
+          </thead>
+          <tbody>
+              <tr>
+                  <td>[0 - 25[</td>
+                  <td>{{ ue_stats.cc.0.effectif_0_25 }}</td>
+                  <td>{{ ue_stats.tps.0.effectif_0_25 }}</td>
+                  <td>{{ ue_stats.examen.0.effectif_0_25 }}</td>
+                  <td>{{ ue_stats.cc.1.range_0_25 }}%</td>
+                  <td>{{ ue_stats.tps.1.range_0_25 }}%</td>
+                  <td>{{ ue_stats.examen.1.range_0_25 }}%</td>
+              </tr>
+              <tr>
+                  <td>[25 - 50[</td>
+                  <td>{{ ue_stats.cc.0.effectif_25_50 }}</td>
+                  <td>{{ ue_stats.tps.0.effectif_25_50 }}</td>
+                  <td>{{ ue_stats.examen.0.effectif_25_50 }}</td>
+                  <td>{{ ue_stats.cc.1.range_25_50 }}% </td> <td> {{ ue_stats.tps.1.range_25_50 }}% </td>  <td>{{ ue_stats.examen.1.range_25_50 }}%</td>
+              </tr>
+              <tr>
+                  <td>[50 - 75[</td>
+                  <td>{{ ue_stats.cc.0.effectif_50_75 }}</td>
+                  <td>{{ ue_stats.tps.0.effectif_50_75 }}</td>
+                  <td>{{ ue_stats.examen.0.effectif_50_75 }}</td>
+                  <td>{{ ue_stats.cc.1.range_50_75 }}% </td> <td>{{ ue_stats.tps.1.range_50_75 }}% </td> <td>{{ ue_stats.examen.1.range_50_75 }}%</td>
+              </tr>
+              <tr>
+                  <td>[75 - 100[</td>
+                  <td>{{ ue_stats.cc.0.effectif_75_100 }}</td>
+                  <td>{{ ue_stats.tps.0.effectif_75_100 }}</td>
+                  <td>{{ ue_stats.examen.0.effectif_75_100 }}</td>
+                  <td>{{ ue_stats.cc.1.range_75_100 }}% </td> <td> {{ ue_stats.tps.1.range_75_100 }}% </td> <td> {{ ue_stats.examen.1.range_75_100 }}%</td>          
+          </tbody>
+      </table>
+      
     {% endfor %}
 {% endblock %}

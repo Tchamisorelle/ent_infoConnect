@@ -246,7 +246,7 @@ def stat(ue, type_exam):
     eleves_0_25 = selection(0, 25, eleves, type_exam)
     eleves_25_50 = selection(25, 50, eleves, type_exam)
     eleves_50_75 = selection(50, 75, eleves, type_exam)
-    eleves_75_100 = selection(75, 100, eleves, type_exam)
+    eleves_75_100 = selection(75, 100.01, eleves, type_exam)
 
 
     # Pourcentages
