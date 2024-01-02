@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
+from django.db.models import F
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
@@ -308,16 +309,38 @@ def reset_password_done(request):
     return render(request, 'succes.html')
 
 def list_note(request):
-    
-    notes = Note.objects.values('code_ue', 'date_deb', 'date_fin')
+    # Récupérer toutes les valeurs uniques de code_ue
+    code_ue_list = Note.objects.values_list('code_ue', flat=True).distinct()
+
+    # Créer une liste pour stocker les données finales
     notes_data = []
-    for note in notes:
-        note_data = {
-            'examen': note['code_ue'],
-            'date_deb': note['date_deb'],
-            'date_fin': note['date_fin'],
+
+    # Pour chaque code_ue, récupérer toutes les valeurs uniques de date_deb, date_fin et examen
+    for code_ue in code_ue_list:
+        # Récupérer les valeurs uniques de date_deb, date_fin et examen pour le code_ue actuel
+        notes_for_ue = Note.objects.filter(code_ue=code_ue).values(
+            'date_deb',
+            'date_fin',
+            'examen'
+        ).distinct()
+        # notes_data.extend(notes_for_ue)
+        # Ajouter les données au dictionnaire final
+        # for note in notes_for_ue:
+        #     notes_data.append({
+        #         'examen': code_ue,
+        #         'date_deb': note['date_deb'],
+        #         'date_fin': note['date_fin'],
+        #         'typ_exam': note['examen'],
+        #     })
+        # Agréger les valeurs pour le code_ue actuel
+        aggregated_data = {
+            'examen': code_ue,
+            'dates': [{'date_deb': note['date_deb'], 'date_fin': note['date_fin'], 'typ_exam': note['examen']} for note in notes_for_ue],
         }
-        notes_data.append(note_data)
+        
+
+        # Ajout les données agrégées au dictionnaire final
+        notes_data.append(aggregated_data)
         
     return JsonResponse(notes_data, safe=False)
 

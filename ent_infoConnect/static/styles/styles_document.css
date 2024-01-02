@@ -190,7 +190,7 @@ label {
   width: 100px; /* Ajustez la largeur en fonction de vos besoins */
 }
 footer {
-  width: 99.9%;
+  width: 100%;
 }
 .row > * {
   flex-shrink: 0;

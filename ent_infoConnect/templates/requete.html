@@ -172,6 +172,9 @@
 
         checkboxesContainer.appendChild(checkbox);
         checkboxesContainer.appendChild(label);
+        // Ajouter un élément <br> après chaque label
+        let lineBreak = document.createElement("br");
+        checkboxesContainer.appendChild(lineBreak);
       });
     }
     // Fonction pour afficher les dates dans une autre partie de la page
@@ -179,12 +182,16 @@
       // Obtenez l'élément HTML où vous souhaitez afficher les dates
       let datesContainer = document.getElementById("dates-container");
 
-      // Parcourez les données et affichez les dates
-      notesData.forEach(function (note) {
-        let dateElement = document.createElement("p");
-        dateElement.textContent = `Date de début: ${note["date_deb"]}, Date de fin: ${note["date_fin"]}:  ${note["examen"]}`;
+      notesData.forEach(function (examen) {
+        //console.log(`Examen: ${examen.examen}`);
 
-        datesContainer.appendChild(dateElement);
+        // Parcour les données et affichez les dates
+        examen.dates.forEach(function (note) {
+          let dateElement = document.createElement("p");
+          dateElement.textContent = `Date de début: ${note["date_deb"]}, Date de fin: ${note["date_fin"]}:  ${examen.examen}, ${note["typ_exam"]}`;
+
+          datesContainer.appendChild(dateElement);
+      });
       });
     }
 
