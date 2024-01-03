@@ -169,6 +169,9 @@ class Ue(models.Model):
     ]
     type_ue = models.CharField(max_length=1, choices=TYPE_CHOICES, default='O')
 
+
+    def __str__(self):
+        return self.code_ue
     class Meta:
         managed = True
         db_table = 'ue'

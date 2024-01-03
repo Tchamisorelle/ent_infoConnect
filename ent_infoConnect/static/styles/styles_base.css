@@ -232,4 +232,29 @@ ul {
 @media only screen and (min-width: 1440px) {
 }
 
-/* ... Le reste de votre code ... */
+/* test */
+
+.circle-outer {
+  width: 5cm;
+  height: 5cm;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.circle-inner {
+  width: 4.5cm;
+  height: 4.5cm;
+  border-radius: 50%;
+  background-color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mgp-value {
+  font-size: 1.5em;
+  color: black;
+}
+
