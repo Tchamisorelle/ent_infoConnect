@@ -38,7 +38,8 @@
 
 /* Styles pour la table de notes */
 .notes-table {
-    width: 100%;
+    margin-left: 40px;
+    width: 170%;
     border-collapse: collapse;
     margin-top: 20px;
   }
@@ -52,12 +53,10 @@
     overflow: hidden;
     text-overflow: ellipsis;
     border: none;
-    border-right: 0.1px solid #ddd;
   }
   
   .notes-table th {
     background-color: #f2f2f2;
-    border-bottom: 1px solid #ddd;
   }
   
   .notes-table tbody tr:nth-child(even) {
@@ -65,7 +64,9 @@
   }
   
   .notes-table tbody tr:hover {
-    background-color: #e5e5e5;
+    background-color: #c1c9fa;
+    color: white;
+    font-weight: 700;
   }
   @media only screen and (max-width: 425px) {
     .search {
@@ -106,12 +107,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         border: none;
-        border-right: 0.1px solid #ddd;
       }
       
       .notes-table th {
         background-color: #f2f2f2;
-        border-bottom: 1px solid #ddd;
       }
       
       .notes-table tbody tr:nth-child(even) {
@@ -151,12 +150,10 @@
         overflow: hidden;
         text-overflow: ellipsis;
         border: none;
-        border-right: 0.1px solid #ddd;
       }
       
       .notes-table th {
         background-color: #f2f2f2;
-        border-bottom: 1px solid #ddd;
       }
       
       .notes-table tbody tr:nth-child(even) {
@@ -182,7 +179,7 @@
   @media only screen and (max-width: 1025px) {
     .col-10 {
         display: flex;
-        width: 500px;
+        width: 70%;
         margin-left: 100px !important;
       }
   }

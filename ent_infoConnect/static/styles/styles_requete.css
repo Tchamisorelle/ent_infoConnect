@@ -25,6 +25,11 @@ legend {
 p{
   margin: 0;
 }
+p:hover{
+  margin: 0;
+  cursor: pointer;
+  color: red;
+}
 /* Style pour les cases à cocher sélectionnées */
 .form-check-input:checked + label {
   font-weight: bold;
@@ -40,6 +45,11 @@ p{
   height: 250px;
   padding: 30px;
   color: #686868;
+  
+  box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
+}
+.form1:hover{
+  background-color: rgba(240, 244, 245, 0.055);
 }
 .form2 {
   margin-top: 40px;
@@ -49,6 +59,12 @@ p{
   height: 330px;
   padding: 30px;
   color: #686868;
+  
+  overflow-y: scroll;
+  box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
+}
+.form2:hover{
+  background-color: rgba(240, 244, 245, 0.055);
 }
 label {
   font-weight: 549;
@@ -105,12 +121,68 @@ label {
 }
 .tete2 {
   font-size: 30px;
-  margin-left: 1000px;
-  background-color: white;
+  margin-left: 400px;
+  background-color: blue; /* Couleur initiale */
+  margin-top: 40px;
   width: 450px;
   height: 330px;
   padding: 10px;
+  overflow-y: scroll;
+  animation: borderColorChange 8s infinite;
+  border: 2px solid blue; /* Animation de 8 secondes, infinie */
 }
+.tete2:hover{
+  background-color: rgba(240, 244, 245, 0.055);
+}
+@keyframes borderColorChange {
+  0% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+12.5% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+}
+25% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+37.5% {
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+50% {
+    border-left-color: rgb(252, 156, 156);
+    border-top-color: lightblue;
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: blue;
+}
+62.5% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+}
+75% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+87.5% {
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+100% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+}
+    
 .tete2 > span {
   color: #686868;
   font-weight: bold;
@@ -168,6 +240,11 @@ label {
     color: #686868;
     font-size: 12px;
     margin-left: 0;
+    
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
+  }
+  .form1:hover{
+    background-color: rgba(233, 247, 252, 0.623);
   }
   .form2 {
     margin-top: 3px;
@@ -178,6 +255,8 @@ label {
     padding: 30px;
     color: #686868;
     font-size: 12px;
+    
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   #sidebar {
     display: none;
@@ -214,6 +293,9 @@ label {
     width: 250px;
     height: 130px;
     padding: 5px;
+    overflow-y: scroll;
+    animation: borderColorChange 8s infinite; 
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   #dates-container {
     font-size: 8px;
@@ -250,6 +332,8 @@ label {
     color: #686868;
     font-size: 12px;
     margin-left: 0;
+    
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   .form2 {
     margin-top: 0px;
@@ -260,6 +344,9 @@ label {
     padding: 30px;
     color: #686868;
     font-size: 12px;
+    
+  overflow-y: scroll;
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
 
   .bouton button,
@@ -294,6 +381,9 @@ label {
     width: 400px;
     height: 128px;
     padding: 10px;
+    overflow-y: scroll;
+    animation: borderColorChange 8s infinite; 
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   #dates-container {
     font-size: 10px;
@@ -337,6 +427,8 @@ label {
     height: 250px;
     padding: 30px;
     color: #686868;
+    
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   .form2 {
     margin-top: 40px;
@@ -346,6 +438,9 @@ label {
     height: 330px;
     padding: 30px;
     color: #686868;
+    
+  overflow-y: scroll;
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   label {
     font-weight: 549;
@@ -408,6 +503,9 @@ label {
     width: 450px;
     height: 330px;
     padding: 10px;
+    overflow-y: scroll;
+    animation: borderColorChange 8s infinite; 
+    box-shadow: 0px 2px 4px rgba(80, 79, 79, 0.473);
   }
   .tete2 > span {
     color: #686868;

@@ -87,6 +87,7 @@
   table-layout: fixed;
   border-collapse: collapse;
   background-color: white;
+  width: 100%;
 }
 
 .document-table th,
@@ -102,19 +103,19 @@
 }
 
 .document-table th {
-  background-color: #d0f2f85b;
+  background-color: #d3d4d434;
   border-bottom: 1px solid #ddd;
   
 }
-.document-table td{
-  border-right: 1px solid #ddd;
-}
-.document-table tbody tr:nth-child(even) {
+
+.document-table td:nth-child(even) {
   background-color: #f9f9f9;
 }
 
-.document-table tbody tr:hover {
-  background-color: #e5e5e5;
+.document-table td:hover {
+  background-color: #c1c9fa;
+    color: white;
+    font-weight: 700;
 }
 
 .document-container {
@@ -200,6 +201,10 @@ footer {
   .tete {
     font-size: 15px;
   }
+  .nav-link {
+    padding: 0px;
+
+  }
   .document-container {
     max-height: 280px;
   }
@@ -217,7 +222,8 @@ footer {
 }
 @media only screen and (min-width: 768px) {
   .document-container {
-    max-height: 500px;
+    max-height: 800px;
+    margin-left: 40px;
   }
   
   .contentt {
@@ -225,7 +231,7 @@ footer {
   }
   .col-10 {
     display: flex;
-    width: 500px;
+    width: 70%;
     margin-left: 100px !important;
   }
   .add-button {

@@ -103,6 +103,7 @@ button > a:hover {
 
 .contentt {
   margin: 50px;
+  padding: 1px;
   position: relative;
 }
 .container-fluid {
@@ -135,7 +136,6 @@ footer {
   padding: 25px;
   background-color: white;
   text-align: center;
-  position: relative;
   z-index: 1000;
   display: flex;
   bottom: 0;
@@ -219,9 +219,7 @@ ul {
     display: none;
   }
 
-  .contentt {
-    margin: 10px;
-  }
+  
 }
 
 /* Media Queries pour les tablettes */
