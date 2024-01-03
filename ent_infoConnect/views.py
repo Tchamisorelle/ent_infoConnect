@@ -140,7 +140,7 @@ def notes(request):
 
     
 
-    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams})
+    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams, 'mgp': mgp})
 
 
 def MGP(notes_normalisees, Credits):
