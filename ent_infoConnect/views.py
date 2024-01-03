@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
+from django.db.models import F
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
 import re
@@ -120,15 +121,78 @@ def notes(request):
     matricule = user_info.get('matricule', None)
     Unites_en = Ue.objects.all()
     notes_etudiant = {}
-
+    totaux_notes=[]
+    Credits = []
+    mgp = 0
     for unite in Ue.objects.all():
         nom_ue = unite.nom
+        credit = unite.credit
         notes_ue = Note.objects.filter(matricule=matricule, code_ue=unite.code_ue)
         total = sum(note.valeur for note in notes_ue)
+        totaux_notes.append(total)
+        Credits.append(credit)
         notes_etudiant[unite.code_ue] = {'notes': notes_ue, 'total': total, 'nom': nom_ue}
+    notes_normalisees = normalisationNotes(totaux_notes)
 
-    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams})
+    mgp = MGP(notes_normalisees, Credits)
+    print(mgp)
 
+
+    
+
+    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams, 'mgp': mgp})
+
+
+def MGP(notes_normalisees, Credits):
+    somme = 0
+    for note, credit in zip(notes_normalisees, Credits):
+        somme = somme + note*credit
+    n =  sum(Credits)
+    return somme / n
+
+
+
+
+
+def normalisationNotes(totaux_notes):
+    note_pondere = []
+    for total in totaux_notes:
+        if 0 <= total < 35:
+            note_pondere.append(0)
+            continue
+        elif 35 <= total < 40:
+            note_pondere.append(1)
+            continue
+        elif 40 <= total < 45:
+            note_pondere.append(1.3)
+            continue
+        elif 45 <= total < 50:
+            note_pondere.append(1.7)
+            continue
+        elif 50 <= total < 55:
+            note_pondere.append(2)
+            continue
+        elif 55 <= total < 60:
+            note_pondere.append(2.3)
+            continue
+        elif 60 <= total < 65:
+            note_pondere.append(2.7)
+            continue
+        elif 65 <= total < 70:
+            note_pondere.append(3)
+            continue
+        elif 70 <= total < 75:
+            note_pondere.append(3.3)
+            continue
+        elif 75 <= total < 80:
+            note_pondere.append(3.7)
+            continue
+        elif 80 <= total <= 100:
+            note_pondere.append(4)
+            continue
+        
+    return note_pondere
+        
 
 
 class ImportNotesForm(forms.Form):
@@ -235,7 +299,7 @@ def calculate_stats(ue):
     type_exams = ['cc', 'tps', 'examen']
 
     for exam in type_exams:
-        stats[exam] = stat(ue, exam)  # Appeler la fonction stat ici
+        stats[exam] = stat(ue, exam)
 
     return stats
 
@@ -246,7 +310,7 @@ def stat(ue, type_exam):
     eleves_0_25 = selection(0, 25, eleves, type_exam)
     eleves_25_50 = selection(25, 50, eleves, type_exam)
     eleves_50_75 = selection(50, 75, eleves, type_exam)
-    eleves_75_100 = selection(75, 100, eleves, type_exam)
+    eleves_75_100 = selection(75, 100.01, eleves, type_exam)
 
 
     # Pourcentages
@@ -284,8 +348,6 @@ def selection(notemin, notemax, eleves, type_exam):
     
     return compteur
 
-
-
 def requete(request):
     return render(request, 'requete.html')
 def requete_ens(request):
@@ -308,16 +370,38 @@ def reset_password_done(request):
     return render(request, 'succes.html')
 
 def list_note(request):
-    
-    notes = Note.objects.values('code_ue', 'date_deb', 'date_fin')
+    # Récupérer toutes les valeurs uniques de code_ue
+    code_ue_list = Note.objects.values_list('code_ue', flat=True).distinct()
+
+    # Créer une liste pour stocker les données finales
     notes_data = []
-    for note in notes:
-        note_data = {
-            'examen': note['code_ue'],
-            'date_deb': note['date_deb'],
-            'date_fin': note['date_fin'],
+
+    # Pour chaque code_ue, récupérer toutes les valeurs uniques de date_deb, date_fin et examen
+    for code_ue in code_ue_list:
+        # Récupérer les valeurs uniques de date_deb, date_fin et examen pour le code_ue actuel
+        notes_for_ue = Note.objects.filter(code_ue=code_ue).values(
+            'date_deb',
+            'date_fin',
+            'examen'
+        ).distinct()
+        # notes_data.extend(notes_for_ue)
+        # Ajouter les données au dictionnaire final
+        # for note in notes_for_ue:
+        #     notes_data.append({
+        #         'examen': code_ue,
+        #         'date_deb': note['date_deb'],
+        #         'date_fin': note['date_fin'],
+        #         'typ_exam': note['examen'],
+        #     })
+        # Agréger les valeurs pour le code_ue actuel
+        aggregated_data = {
+            'examen': code_ue,
+            'dates': [{'date_deb': note['date_deb'], 'date_fin': note['date_fin'], 'typ_exam': note['examen']} for note in notes_for_ue],
         }
-        notes_data.append(note_data)
+        
+
+        # Ajout les données agrégées au dictionnaire final
+        notes_data.append(aggregated_data)
         
     return JsonResponse(notes_data, safe=False)
 

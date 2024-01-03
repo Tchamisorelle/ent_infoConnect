@@ -22,6 +22,58 @@ form button {
     color: blue;
     font-size: 19px;
     font-weight: bold;
+    margin-left: 30px;
+    animation: borderColorChange 8s infinite;
+    border: 1px solid blue;
+}
+@keyframes borderColorChange {
+  0% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+12.5% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+}
+25% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+37.5% {
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+50% {
+    border-left-color: rgb(252, 156, 156);
+    border-top-color: lightblue;
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: blue;
+}
+62.5% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+}
+75% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+87.5% {
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+100% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+
 }
 
 .tete {
@@ -43,6 +95,7 @@ form button {
   }
 .accordion{
     margin-bottom: 70px;
+    margin-left: 30px;
 }
 .sidebar button .note {
     background-color: blue; /* Exemple de style */
@@ -86,6 +139,10 @@ form button {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
+    margin-right: 50px;
+    margin-top: 0px;
+    margin-left: 50px;
+    margin-bottom: 50px;
   }
 
   .notes-stats th, .notes-stats td {
@@ -112,9 +169,59 @@ form button {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 10px;
+    border: 1px solid blue;
+    animation: borderColorChange 8s infinite;
   }
+    @keyframes borderColorChange {
+      0% {
+        border-left-color: blue;
+        border-top-color: rgb(252, 156, 156);
+        border-right-color: rgb(252, 186, 88);
+        border-bottom-color: lightblue;
+    }
+    12.5% {
+        border-left-color: lightblue;
+        border-top-color: blue;
+    }
+    25% {
+        border-left-color: lightblue;
+        border-top-color: blue;
+        border-right-color: rgb(252, 156, 156);
+        border-bottom-color: rgb(252, 186, 88);
+    }
+    37.5% {
+        border-right-color: rgb(252, 156, 156);
+        border-bottom-color: rgb(252, 186, 88);
+    }
+    50% {
+        border-left-color: rgb(252, 156, 156);
+        border-top-color: lightblue;
+        border-right-color: rgb(252, 186, 88);
+        border-bottom-color: blue;
+    }
+    62.5% {
+        border-left-color: rgb(252, 186, 88);
+        border-top-color: blue;
+    }
+    75% {
+        border-left-color: rgb(252, 186, 88);
+        border-top-color: blue;
+        border-right-color: lightblue;
+        border-bottom-color: rgb(252, 156, 156);
+    }
+    87.5% {
+        border-right-color: lightblue;
+        border-bottom-color: rgb(252, 156, 156);
+    }
+    100% {
+        border-left-color: blue;
+        border-top-color: rgb(252, 156, 156);
+        border-right-color: rgb(252, 186, 88);
+        border-bottom-color: lightblue;
+    }
+}
 
-  @media only screen and (max-width: 425px) {
+  @media only screen and (max-width: 768px) {
     .search {
         margin-left: 0;
       }
@@ -181,61 +288,21 @@ form button {
       }
       
     }   
-  @media only screen and (max-width: 768px) {
-    .notes-stats {
-        width: 50%;
-        border-collapse: collapse;
-        margin-top: 20px;
-      }
-      .notes-stats th,
-      .notes-stats td {
-        border: 1px solid #ddd;
-        padding: 1px;
-        font-size: 10px;
-        text-align: center;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        border: none;
-        border-right: 0.1px solid #ddd;
-      }
-      
-      .notes-stats th {
-        background-color: #f2f2f2;
-        border-bottom: 1px solid #ddd;
-      }
-      
-      .notes-stats tbody tr:nth-child(even) {
-        background-color: #f9f9f9;
-      }
-      
-      .notes-stats tbody tr:hover {
-        background-color: #e5e5e5;
-      }
-      .tete {
-        font-size: 15px;
-          color: blue;
-          font-weight: bold;
-          cursor: pointer;
-          margin-top: 20px;
-      }
-      .col-10 {
-        display: flex;
-        width: 500px;
-        margin-left: 120px ;
-      }
-  }
-  @media only screen and (max-width: 1025px) {
+ 
+  @media only screen and (min-width: 1025px) {
     .col-10 {
         display: flex;
-        width: 500px;
-        margin-left: 100px ;
-      }
-  }
-  @media only screen and (max-width: 1440px) {
-    .col-10 {
-        display: flex;
-        width: 500px;
+        width: 60%;
         margin-left: 150px ;
+      }
+      .contentt{
+        margin: 100px;
+      }
+  }
+  @media only screen and (min-width: 1440px) {
+    .col-10 {
+        display: flex;
+        width: 75%;
+        margin-left: 100px ;
       }
   }
