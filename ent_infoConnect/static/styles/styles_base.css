@@ -19,9 +19,6 @@ header {
 
   width: 100%;
 }
-.row > header {
-  width: 100%;
-}
 
 .logo {
   font-size: 1.5em;
@@ -106,7 +103,7 @@ button > a:hover {
 
 .contentt {
   margin: 50px;
-  position: fixed;
+  position: relative;
 }
 .container-fluid {
 }
@@ -138,7 +135,7 @@ footer {
   padding: 25px;
   background-color: white;
   text-align: center;
-  position: absolute;
+  position: relative;
   z-index: 1000;
   display: flex;
   bottom: 0;
