@@ -112,7 +112,7 @@ button > a:hover {
 }
 i {
   font-size: 15px;
-  margin-right: 6px;
+  margin: 6px;
 }
 
 .sidebar button i {

@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'base_en.html' %}
 
 {% block title %}
     Annonces
@@ -15,13 +15,13 @@
 
     <div class="header">
         <h1>
-            <a href="{% url 'dashboard' %}" class="dashboard">
+            <a href="{% url 'dashboard_ens' %}" class="dashboard">
                 <i class="fas fa-chevron-left"></i>
             </a>
             Annonces
         </h1>
         {% if user_info %}
-        <p>Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
+        <p>Bienvenue,  Pr./Dr./Mr. {{ user_info.matricule_en }} {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})</p>
         {% else %}
             <p>Informations utilisateur non disponibles.</p>
         {% endif %}
@@ -58,7 +58,7 @@
                                     </div>
                                 {% endif %}
                                 
-                                {% if annonce.matricule.email == user_info.email%}
+                                {% if annonce.matricule_en.email == user_info.email%}
                                     <div id="announcements-buttons" class="announcements-buttons">
                                         <form id="delete-form-{{ annonce.id_ann }}" action="{% url 'deleteAnnonce' annonce.id_ann %}" method="post">
                                             {% csrf_token %}
@@ -129,10 +129,10 @@
         <div class="modal-content-ajout">
             <span id="closeButton" onclick="fermerModalAjout()">&times;</span>
             <h1>Créer une Annonce</h1>
-            <form method="post" action="{% url 'addAnnonce' %}">
+            <form method="post" action="{% url 'addAnnonce_ens' %}">
                 {% csrf_token %}
                 <div class="top">
-                    <input type="hidden" name="matricule" value="{{ user_info.matricule }}"><br>
+                    <input type="hidden" name="matricule_en" value="{{ user_info.matricule_en }}"><br>
                     <span>Categorie</span>
                     <br><input type="text" name="categorie" id="categorie" placeholder="Entrez inf/l1" required><br>
                     <span>Titre</span>
@@ -185,7 +185,7 @@
     pickerPosition:'bottom'
     });
     </script>
-    
+
     <script type="text/javascript">
         $('#textarea').emojioneArea({
         pickerPosition:'top'
@@ -318,22 +318,6 @@
         background: #007bff;
         color: #fff;
         cursor: pointer;
-    }
-
-    .floating-button-filter {
-        position: fixed;
-        bottom: 20px;
-        right: 20px;
-        background-color: #007bff;
-        color: #fff;
-        border: none;
-        border-radius: 50%;
-        width: 50px;
-        height: 50px;
-        font-size: 24px;
-        cursor: pointer;
-        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
-        margin-bottom: 150px;
     }
     
     .floating-button-filter:hover {

@@ -28,10 +28,6 @@ class Annonce(models.Model):
     titre = models.CharField(max_length=255, blank=True, null=True)
     matricule = models.ForeignKey('Etudiant', db_column='matricule', blank=True, null=True, on_delete=models.CASCADE)
     matricule_en = models.ForeignKey('Enseignant',  db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
-
-    def can_edit_delete(self, User_info):
-        return self.user_id == user_id
-    
     class Meta:
         managed = True
         db_table = 'annonce'
@@ -64,7 +60,7 @@ class EnseignantManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, matricule, email, mot_de_passe_ensei=None, **extra_fields):
+    def create_superuser(self, matricule_en, email, mot_de_passe_ensei=None, **extra_fields):
         extra_fields.setdefault("is_staff", True)
         extra_fields.setdefault("is_superuser", True)
         return self.create_user(matricule_en, email, mot_de_passe_ensei, **extra_fields)

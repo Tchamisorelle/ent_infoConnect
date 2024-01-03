@@ -84,7 +84,7 @@ def user_login(request):
                 'first_name': etudiant.nom,
                 'last_name': etudiant.prenom,
                 'email': email,
-                'matricule': etudiant.matricule
+                'matricule': etudiant.matricule,
             }
             request.session['user_info'] = user_info
             return redirect('dashboard')
@@ -117,7 +117,7 @@ def deleteAnnonce(request, annonce_id):
     annonce = get_object_or_404(Annonce, id_ann=annonce_id)
     annonce.delete()
     # Rediriger ou effectuer d'autres opérations après la suppression de l'annonce
-    return redirect('afficherAnnonces')
+    return redirect('annonce')
 
 
 def editAnnonce(request, annonce_id):
@@ -132,22 +132,105 @@ def editAnnonce(request, annonce_id):
         annonce.texte = texte
         annonce.save()
 
-        return redirect('afficherAnnonces')
+        return redirect('annonce')
     
     context = {'annonce': annonce}
-    return render(request, 'afficherAnnonces', context)
+    return render(request, 'annonce', context)
 
-def afficherAnnonces(request):
-    annonces = Annonce.objects.all()  # Récupère toutes les annonces
+def annonce(request):
+    user_info = request.session.get('user_info', {})
+    statut = user_info.get('statut')
+    annonces_list = Annonce.objects.order_by('-date_pub')
 
-    context = {
-        'annonces_list': annonces,
-        'user': request.user  # Passer l'utilisateur connecté dans le contexte
-    }
+    return render(request, 'annonce.html', {'annonces_list': annonces_list, 'user_info': user_info, 'statut': statut})
 
-    return render(request, 'afficherAnnonces.html', context)
+def annonce_ens(request):
+    user_info = request.session.get('user_info', {})
+    annonces_list_ens = Annonce.objects.order_by('-date_pub')
+
+    return render(request, 'annonce_ens.html', {'annonces_list': annonces_list_ens, 'user_info': user_info})
+
+    
+
+def addAnnonce(request):
+    user_info = request.session.get('user_info', {})
+    etudiants_delegues = Etudiant.objects.filter(statut='delegue')
+    if request.method == 'POST':
+        categorie = request.POST.get('categorie')
+        titre = request.POST.get('titre')
+        texte = request.POST.get('texte')
+        matricule = request.POST.get('matricule')
+
+        annonce = Annonce()  # Création d'une nouvelle instance de l'annonce
+        annonce.titre = titre
+        annonce.texte = texte
+        annonce.categorie = categorie
+
+        annonce.date_pub = datetime.now()  # Date de publication actuelle
+        
+        try:
+            etudiant = Etudiant.objects.get(matricule=matricule)
+            annonce.matricule = etudiant
+        except Enseignant.DoesNotExist:
+            annonce.matricule = None
+
+        # if request.user.is_authenticated:
+        #     matricule_en = request.user.matricule_en
+        #     enseignant = Enseignant.objects.get(matricule_en=matricule_en)
+        #     annonce.matricule_en = enseignant
+        # else:
+        #     annonce.matricule_en = None
+        
+        annonce.matricule_en = None
+
+        # Enregistrement de l'annonce dans la base de données
+        annonce.save()
+
+        # Redirection avec message de succès
+        messages.success(request, 'Annonce créée avec succès.')
+        return redirect('annonce')
+
+    return render(request, 'annonce.html' ,{'etudiants_delegues': etudiants_delegues, 'user_info': user_info})
 
 
+def addAnnonce_ens(request):
+    user_info = request.session.get('user_info', {})
+    if request.method == 'POST':
+        categorie = request.POST.get('categorie')
+        titre = request.POST.get('titre')
+        texte = request.POST.get('texte')
+        matricule_en = request.POST.get('matricule_en')
+
+        annonce = Annonce()  # Création d'une nouvelle instance de l'annonce
+        annonce.titre = titre
+        annonce.texte = texte
+        annonce.categorie = categorie
+
+        annonce.date_pub = datetime.now()  # Date de publication actuelle
+        
+        try:
+            enseignant = Enseignant.objects.get(matricule_en=matricule_en)
+            annonce.matricule_en = enseignant
+        except Enseignant.DoesNotExist:
+            annonce.matricule_en = None
+
+        # if request.user.is_authenticated:
+        #     matricule_en = request.user.matricule_en
+        #     enseignant = Enseignant.objects.get(matricule_en=matricule_en)
+        #     annonce.matricule_en = enseignant
+        # else:
+        #     annonce.matricule_en = None
+        
+        annonce.matricule = None
+
+        # Enregistrement de l'annonce dans la base de données
+        annonce.save()
+
+        # Redirection avec message de succès
+        messages.success(request, 'Annonce créée avec succès.')
+        return redirect('annonce')
+
+    return render(request, 'annonce_ens.html', {'user_info': user_info})
 
 def notes(request):
     user_info = request.session.get('user_info', {})
