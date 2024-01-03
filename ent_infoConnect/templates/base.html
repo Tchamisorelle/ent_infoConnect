@@ -116,11 +116,12 @@
           <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}" class="annonce"><span style="padding-right: 43px;">Annonce</span></a></button>
           <button><i class="fas fa-file"></i><a href="{% url 'document' %}" class="document"><span style="padding-right: 35.6px;">Document</span></a></button>
           <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}" class="agenda"><span style="padding-right: 50.7px;">Agenda</span></a></button>
+          <div class="circle-outer" style="background-color: {% if mgp < 2 %}red{% elif mgp < 3 %}orange{% else %}green{% endif %};">
+            <div class="circle-inner">
+                <span class="mgp-value">MGP <br>{{ mgp }} / 4</span>
+            </div>
         </div>
-        <div class="circle-outer" style="background-color: {% if mgp < 2 %}red{% elif mgp < 3 %}orange{% else %}green{% endif %};">
-          <div class="circle-inner">
-              <span class="mgp-value">MGP <br>{{ mgp }} / 4</span>
-          </div>
+        
         </div>      
       </div>
       <div class="col-10">
