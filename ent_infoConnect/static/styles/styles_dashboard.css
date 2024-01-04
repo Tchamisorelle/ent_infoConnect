@@ -378,7 +378,8 @@ footer {
 
 
   .image-text {
-    margin-left: 10%;
+    margin-left: 40%;
+    font-size: 28px !important;
   }
 } 
 /* @media only screen and (min-width: 1025px) {
