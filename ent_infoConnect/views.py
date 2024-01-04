@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect
 from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
+from .utils import MGP, normalisationNotes, calculate_stats, stat, selection
 from django.db.models import F
 from django.contrib.auth.hashers import make_password
 from django.contrib.auth.hashers import check_password
@@ -121,80 +122,15 @@ def notes(request):
     matricule = user_info.get('matricule', None)
     Unites_en = Ue.objects.all()
     notes_etudiant = {}
-    totaux_notes=[]
-    Credits = []
-    mgp = 0
+
     for unite in Ue.objects.all():
         nom_ue = unite.nom
-        credit = unite.credit
         notes_ue = Note.objects.filter(matricule=matricule, code_ue=unite.code_ue)
         total = sum(note.valeur for note in notes_ue)
-        totaux_notes.append(total)
-        Credits.append(credit)
         notes_etudiant[unite.code_ue] = {'notes': notes_ue, 'total': total, 'nom': nom_ue}
-    notes_normalisees = normalisationNotes(totaux_notes)
 
-    mgp = MGP(notes_normalisees, Credits)
-    print(mgp)
-
-
-    
-
-    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams, 'mgp': mgp})
-
-
-def MGP(notes_normalisees, Credits):
-    somme = 0
-    for note, credit in zip(notes_normalisees, Credits):
-        somme = somme + note*credit
-    n =  sum(Credits)
-    return somme / n
-
-
-
-
-
-def normalisationNotes(totaux_notes):
-    note_pondere = []
-    for total in totaux_notes:
-        if 0 <= total < 35:
-            note_pondere.append(0)
-            continue
-        elif 35 <= total < 40:
-            note_pondere.append(1)
-            continue
-        elif 40 <= total < 45:
-            note_pondere.append(1.3)
-            continue
-        elif 45 <= total < 50:
-            note_pondere.append(1.7)
-            continue
-        elif 50 <= total < 55:
-            note_pondere.append(2)
-            continue
-        elif 55 <= total < 60:
-            note_pondere.append(2.3)
-            continue
-        elif 60 <= total < 65:
-            note_pondere.append(2.7)
-            continue
-        elif 65 <= total < 70:
-            note_pondere.append(3)
-            continue
-        elif 70 <= total < 75:
-            note_pondere.append(3.3)
-            continue
-        elif 75 <= total < 80:
-            note_pondere.append(3.7)
-            continue
-        elif 80 <= total <= 100:
-            note_pondere.append(4)
-            continue
+    return render(request, 'notes.html', {'notes_data': notes_etudiant, 'user_info': user_info, 'exams': exams})
         
-    return note_pondere
-        
-
-
 class ImportNotesForm(forms.Form):
     ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
     file = forms.FileField()
@@ -288,79 +224,30 @@ def notes_ens(request):
 
     for ue in Ue.objects.filter(matricule_en=user_info.get('matricule_en')):
         ue_stats = calculate_stats(ue.code_ue)
-        print(ue_stats)
         stats[ue.code_ue] = ue_stats
 
 
     return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info, 'stats': stats})
 
-def calculate_stats(ue):
-    stats = {}
-    type_exams = ['cc', 'tps', 'examen']
 
-    for exam in type_exams:
-        stats[exam] = stat(ue, exam)
-
-    return stats
-
-def stat(ue, type_exam):
-    eleves = Note.objects.filter(examen=type_exam, code_ue=ue)
-    nbr_eleves = eleves.count()
-    
-    eleves_0_25 = selection(0, 25, eleves, type_exam)
-    eleves_25_50 = selection(25, 50, eleves, type_exam)
-    eleves_50_75 = selection(50, 75, eleves, type_exam)
-    eleves_75_100 = selection(75, 100.01, eleves, type_exam)
-
-
-    # Pourcentages
-    pourcentage_0_25 = "{:.2f}".format((eleves_0_25 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
-    pourcentage_25_50 = "{:.2f}".format((eleves_25_50 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
-    pourcentage_50_75 = "{:.2f}".format((eleves_50_75 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
-    pourcentage_75_100 = "{:.2f}".format((eleves_75_100 / nbr_eleves) * 100) if nbr_eleves > 0 else 'Nan'
-
-    eff = {
-        'effectif_0_25': eleves_0_25,
-        'effectif_25_50': eleves_25_50,
-        'effectif_50_75': eleves_50_75,
-        'effectif_75_100': eleves_75_100,
-    }
-    freq = {
-        'range_0_25': pourcentage_0_25,
-        'range_25_50': pourcentage_25_50,
-        'range_50_75': pourcentage_50_75,
-        'range_75_100': pourcentage_75_100,
-    }
-
-    return eff, freq
-
-
-
-def selection(notemin, notemax, eleves, type_exam):
-    compteur = 0
-    for eleve in eleves:
-        if type_exam == 'cc' and notemin <= (eleve.valeur / 20) * 100 < notemax:
-            compteur += 1
-        elif type_exam == 'tps' and notemin <= (eleve.valeur / 30) * 100 < notemax:
-            compteur += 1
-        elif type_exam == 'examen' and notemin <= (eleve.valeur / 50) * 100 < notemax:
-            compteur += 1
-    
-    return compteur
 
 def requete(request):
-    return render(request, 'requete.html')
+    user_info = request.session.get('user_info', {})
+    return render(request, 'requete.html', {'user_info': user_info})
 def requete_ens(request):
     return render(request, 'requete_ens.html')
 def agenda(request):
     return render(request, 'connexion.html')
 def document(request):
-    return render(request, 'document.html')
+    user_info = request.session.get('user_info', {})
+
+    return render(request, 'document.html', {'user_info': user_info})
 def document_ens(request):
     return render(request, 'document_ens.html')
 
 def dashboard(request):
-    return render(request, 'dashboard.html')
+    user_info = request.session.get('user_info', {})
+    return render(request, 'dashboard.html', {'user_info': user_info})
 
 
 def dashboard_ens(request):
@@ -734,8 +621,6 @@ def new_utilisateur(request):
                 sheet = "Feuil1"
                 workbook = pd.read_excel(excel_file, sheet_name=sheet)
                 
-                print("Fichier Excel ouvert avec succès")
-
                 for index, row in workbook.iterrows():
                     mail = row["mail"].lower()
                     matricul = row["matricule"].lower()
@@ -793,8 +678,6 @@ def new_utilisateur_ensei(request):
             try:
                     sheet = "Feuil1"
                     workbook = pd.read_excel(excel_file, sheet_name=sheet)
-                    print("Fichier Excel ouvert avec succès")
-
                     for index, row in workbook.iterrows():
                         mail = row["mail"].lower()
                         matricule = row["matricule"].lower()
