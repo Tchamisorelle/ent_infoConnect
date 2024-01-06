@@ -1,0 +1,251 @@
+.header{
+    display: flex;
+    margin-top: -50px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.header h1{
+    display: flex;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    color: #007bff;
+    font-size: 50px;
+    font-family: sans-serif;
+}
+
+.header i{
+    color: #007bff;
+    font-size: 25px;
+    margin: 20px;
+    cursor: pointer;
+}
+
+.header i :hover {
+    background-color: #0056b3;
+}
+
+.container {
+    padding: 1rem;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    z-index: 1;
+    max-width: 200vh;
+    max-height: 60vh; /* Ajout de la hauteur maximale */
+    overflow-y: auto; /* Activation du défilement vertical si nécessaire */
+}
+
+.announces {
+    background-color: aliceblue;
+    border-radius: 15px;
+    font-family: sans-serif;
+    display: grid;
+    min-width: 150vh;
+    margin-bottom: 20px;
+}
+
+.announcements-item{
+    width: 90%;
+    margin: 20px;
+    display: grid;
+    grid-template-columns: 80% 20%;
+    row-gap: 10px;
+    position: relative;
+    border-radius: 15px;
+}
+
+.announcements-text {
+    max-width: 1000px;
+    min-height: 100px;
+    padding: 20px;
+}
+
+.announcements-item.hide {
+    display: none;
+}
+
+.announcements-item h1 {
+    font-weight: 600;
+    font-size: 20px;
+}
+
+.announcements-item p {
+    font-size: 15px;
+}
+
+.announcements-item .avatar-info {
+    grid-column: 1 / 2;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.announcements-item .avatar-info img {
+    width: 40px;
+    height: 40px;
+    border: 3px solid #ffffff;
+    border-radius: 2px;
+    margin-left: 20px;
+}
+
+.announcements-item .avatar-info .status {
+    font-size: 0.75rem;
+}
+
+.announcements-item .avatar-info .avatar-name {
+    margin-top: 15px;
+    color: #48506b;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.announcements-item .announcements-time {
+    color: #7984ab;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 250px;
+    font-size: 12px;
+}
+
+.announcements-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.ann-butt {
+    display: flex;
+    margin: 20px;
+    justify-content: center;
+    align-items: center;
+    width: 120px;
+    height: 40px;
+    border: 1px solid #007bff;
+    border-radius: 20px;
+}
+
+.ann-butt i {
+    width: 30px;
+    height: 30px;
+    color: #007bff;
+    margin-right: 0;
+    background: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.announcements-buttons input {
+    border-radius: 5px;
+    border: none;
+    font-size: 12px;
+    font-weight: 1000px;
+    background: none;
+    color: #007bff;
+    cursor: pointer;
+}
+
+/* css pour le modal d'ajout */
+#modalAjout {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px); /* Ajout de l'effet de flou */
+    font-family: sans-serif;
+}
+
+.modal-content-ajout {
+    display: flex;
+    flex-direction: column;
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 500px;
+    border-radius: 15px;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content-ajout h1{
+    margin-top: 10px;
+    
+}
+
+.modal-content-ajout .top {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content-ajout form {
+    background-color: #fefefe;
+    padding: 20px;
+    width: 400px;
+}
+
+.modal-content-ajout input,
+.modal-content-ajout textarea {
+    width: 300px;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1.5px solid blue;
+    background: none;
+    margin-bottom: 10px;
+    max-height: 300px;
+}
+
+.modal-content h1,
+.modal-content span {
+    text-align: center;
+}
+
+.modal-buttons {
+    text-align: center;
+}
+
+.modal-content-ajout .bottom {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;   
+}
+
+.modal-content-ajout .button {
+    width: 120px;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 5px;
+    border: none;
+    font-size: 14px;
+    font-weight: 1000px;
+    background: #007bff;
+    color: #fff;
+    cursor: pointer;
+}
+
+#closeButton {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    cursor: pointer;
+}
+  
+#closeButton:hover,
+#closeButton:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
