@@ -1,201 +1,251 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" /> -->
-        <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css"
-        />
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 
-        <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
-        rel="stylesheet"
-        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
-        crossorigin="anonymous"
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
-        <link rel="stylesheet" href="{% static 'styles/styles_base.css' %}" />
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}" /> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
 
-        {% block css %}{% endblock %}
-        
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        
-        <title>{% block title %}  base infoConnect {% endblock%} </title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Righteous&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'styles/styles_base.css' %}" />
 
-        
-    </head>
-  <body>
+    {% block css %}{% endblock %}
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <title>{% block title %} base infoConnect {% endblock%} </title>
+
+
+</head>
+
+<body>
     <div class="">
         <header>
-            <div class="logo" style="font-weight: bold; font-size: 22px; margin-left: 20px; margin-top:10px; margin-right:0px; cursor:pointer; position: absolute; font-family: 'Righteous', sans-serif;">
+            <div class="logo"
+                style="font-weight: bold; font-size: 22px; margin-left: 20px; margin-top:10px; margin-right:0px; cursor:pointer; position: absolute; font-family: 'Righteous', sans-serif;">
                 infoConnect
             </div>
             <div class="search">
+
                 <button class="close-btn" onclick="toggleSidebar()">
-                <i class="fa-solid fa-bars" style="cursor: pointer"></i>
+                    <i class="fa-solid fa-bars" style="cursor: pointer"></i>
                 </button>
                 <button onclick="filterResults()">
-                <i class="fa-solid fa-magnifying-glass"></i>
+                    <i class="fa-solid fa-magnifying-glass"></i>
                 </button>
-                <input type="text" placeholder="Rechercher..." />
+                <input type="text" oninput="showSuggestions()" placeholder="Rechercher..." />
+                <div class="suggestions">
+                    <ul class="suggestions-list "></ul>
+                </div>
             </div>
             <div class="">
                 <ul>
-                <div class="nav-item nav-profile navbar-dropdown dropdown-user dropdown" >
-                    <a
-                        class="nav-link dropdown-toggle hide-arrow"
-                        href="javascript:void(0);"
-                        data-bs-toggle="dropdown"
-                    >
-                    <div class="avatar avatar-online">
-                        <img
-                        src="{% static './images/R.png' %}"
-                        alt="profile"
-                        class="w-px-40 h-auto rounded-circle"
-                      
-                        title="Account"
-                    />
-                    <div class="status-indicator"></div>
-                    </div>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <a class="dropdown-item" href="#">
-                        <div class="d-flex">
-                            <div class="flex-shrink-0 me-3">
+                    <div class="nav-item nav-profile navbar-dropdown dropdown-user dropdown">
+                        <a class="nav-link dropdown-toggle hide-arrow" href="javascript:void(0);"
+                            data-bs-toggle="dropdown">
                             <div class="avatar avatar-online">
-                                <img
-                                    src="{% static './images/R.png' %}"
-                                    alt="profile"
-                                    class="w-px-40 h-auto rounded-circle"
-                                />
+                                <img src="{% static './images/R.png' %}" alt="profile"
+                                    class="w-px-40 h-auto rounded-circle" title="Account" />
+                                <div class="status-indicator"></div>
                             </div>
-                            </div>
-                            
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <div class="d-flex">
+                                        <div class="flex-shrink-0 me-3">
+                                            <div class="avatar avatar-online">
+                                                <img src="{% static './images/R.png' %}" alt="profile"
+                                                    class="w-px-40 h-auto rounded-circle" />
+                                            </div>
+                                        </div>
 
-                            <div class="flex-grow-1">
-                            <span class="fw-semibold d-block">{{ request.session.user_info.last_name }}</span>
-                            <small class="text-muted">Admin</small>
-                            </div>
-                        </div>
-                        </a>
-                    </li>
-                    <li>
-                        <a class="dropdown-item" href="#">
-                        <i class="fa-solid fa-user"></i>
-                        <span class="align-middle">My Profile</span>
-                        </a>
-                    </li>
-                    <li>
-                    <div class="dropdown-divider"></div>
-                    </li>
-                    <li>
-                    <a class="dropdown-item" href="{% url 'user_logout' %}">
-                        <i class="fa-solid fa-power-off"></i>
-                        <span class="align-middle">Log Out</span>
-                    </a>
-                    </li>
-                </div>
+
+                                        <div class="flex-grow-1">
+                                            <span class="fw-semibold d-block">{{ request.session.user_info.last_name }}
+
+                                            </span>
+                                            <small class="text-muted">Admin</small>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#">
+                                    <i class="fa-solid fa-user"></i>
+                                    <span class="align-middle">My Profile</span>
+                                </a>
+                            </li>
+                            <li>
+                                <div class="dropdown-divider"></div>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="{% url 'user_logout' %}">
+                                    <i class="fa-solid fa-power-off"></i>
+                                    <span class="align-middle">Log Out</span>
+                                </a>
+                            </li>
+                    </div>
                 </ul>
             </div>
         </header>
     </div>
     </div>
     <div class="row sir">
-      <div class="col-2">
-        <div class="sidebar" id="sidebar">
-          <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'dashboard' %}" class="dashboard"><span style="padding-right: 25px;">Dashboard</span></button></a>
-          <button><i class="fas fa-book"></i><a href="{% url 'notes' %}" class="note"><span style="padding-right: 72.6px;">Notes</span></button></a>
-          <button><i class="fas fa-file-alt"></i><a href="{% url 'requete' %}" class="requete"><span style="padding-right: 48.7px;">Requête</span></button></a>
-          <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}" class="annonce"><span style="padding-right: 43px;">Annonce</span></a></button>
-          <button><i class="fas fa-file"></i><a href="{% url 'document' %}" class="document"><span style="padding-right: 35.6px;">Document</span></a></button>
-          <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}" class="agenda"><span style="padding-right: 50.7px;">Agenda</span></a></button>
-          <div class="circle-outer" style="background-color: {% if mgp < 2 %}red{% elif mgp < 3 %}orange{% else %}green{% endif %};">
-            <div class="circle-inner">
-                <span class="mgp-value">MGP <br>{{ mgp }} / 4</span>
-            </div>
-          </div>
-        
-        </div>      
-      </div>
-      <div class="col-10">
-        <div class="container-fuild">
-        <div class="contentt">
-            
+        <div class="col-2">
+            <div class="sidebar" id="sidebar">
+                <button><i class="fas fa-tachometer-alt"></i><a href="{% url 'dashboard' %}" class="dashboard"><span
+                            style="padding-right: 25px;">Dashboard</span></button></a>
+                <button><i class="fas fa-book"></i><a href="{% url 'notes' %}" class="note"><span
+                            style="padding-right: 72.6px;">Notes</span></button></a>
+                <button><i class="fas fa-file-alt"></i><a href="{% url 'requete' %}" class="requete"><span
+                            style="padding-right: 48.7px;">Requête</span></button></a>
+                <button><i class="fas fa-bullhorn"></i><a href="{% url 'annonce' %}" class="annonce"><span
+                            style="padding-right: 43px;">Annonce</span></a></button>
+                <button><i class="fas fa-file"></i><a href="{% url 'document' %}" class="document"><span
+                            style="padding-right: 35.6px;">Document</span></a></button>
+                <button><i class="fas fa-calendar"></i><a href="{% url 'agenda' %}" class="agenda"><span
+                            style="padding-right: 50.7px;">Agenda</span></a></button>
+                <div class="circle-outer"
+                    style="background-color: {% if mgp < 2 %}red{% elif mgp < 3 %}orange{% else %}green{% endif %};">
+                    <div class="circle-inner">
+                        <span class="mgp-value">MGP <br>{{ mgp }} / 4</span>
+                    </div>
+                </div>
 
-            {% block content %}{% endblock %}
+            </div>
         </div>
+        <div class="col-10">
+            <div class="container-fuild">
+                <div class="contentt">
+
+
+                    {% block content %}{% endblock %}
+                </div>
+            </div>
         </div>
-      </div>
     </div>
 
     <footer>&copy;infoConnect 2023</footer>
 
     <script>
-      function toggleSidebar() {
-        var sidebar = document.getElementById("sidebar");
-        var sidebarSpan = sidebar.getElementsByTagName("span");
-        var sidebarIcons = sidebar.querySelectorAll("i");
-        var sidebarButtons = sidebar.querySelectorAll("button");
-    
-        //sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
-        sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
-    
-        // Cache ou affiche le texte des boutons en fonction de la largeur de la barre latérale
-        for (var i = 0; i < sidebarSpan.length; i++) {
-            var button = sidebarSpan[i];
-            button.style.display = sidebar.style.width === "270px" ? "inline" : "none";
-        }
+        function toggleSidebar() {
+            var sidebar = document.getElementById("sidebar");
+            var sidebarSpan = sidebar.getElementsByTagName("span");
+            var sidebarIcons = sidebar.querySelectorAll("i");
+            var sidebarButtons = sidebar.querySelectorAll("button");
 
-        for (var i = 0; i < sidebarIcons.length; i++) {
-            var icon = sidebarIcons[i];
-            var button = sidebarButtons[i];
-            
-            if (sidebar.style.width === "50px") {
-                sidebar.style.width = "85px";
-                sidebarIcons[i].classList.add("disabl-hover");
-                sidebarButtons[i].classList.add("disable-hover");
-                
-            } else {
-                icon.classList.remove("disabl-hover");
-                button.classList.remove("disable-hover");
+            //sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
+            sidebar.style.width = sidebar.style.width === "270px" ? "50px" : "270px";
+
+            // Cache ou affiche le texte des boutons en fonction de la largeur de la barre latérale
+            for (var i = 0; i < sidebarSpan.length; i++) {
+                var button = sidebarSpan[i];
+                button.style.display = sidebar.style.width === "270px" ? "inline" : "none";
             }
+
+            for (var i = 0; i < sidebarIcons.length; i++) {
+                var icon = sidebarIcons[i];
+                var button = sidebarButtons[i];
+
+                if (sidebar.style.width === "50px") {
+                    sidebar.style.width = "85px";
+                    sidebarIcons[i].classList.add("disabl-hover");
+                    sidebarButtons[i].classList.add("disable-hover");
+
+                } else {
+                    icon.classList.remove("disabl-hover");
+                    button.classList.remove("disable-hover");
+                }
+            }
+
+            // Réduire la taille de la police en fonction de la largeur de la barre latérale
         }
-    
-        // Réduire la taille de la police en fonction de la largeur de la barre latérale
-    }
-    
-    
-
-      function filterResults() {
-        var searchValue = document
-          .querySelector(".search input")
-          .value.toLowerCase();
-        var contentItems = document.querySelectorAll(".contentt div:nth-child(1) "); // Sélectionne tous les div à l'intérieur de la section de contenu
-
-        contentItems.forEach(function (item) {
-          var textContent = item.textContent.toLowerCase();
-          if (textContent.includes(searchValue)) {
-            item.style.display = "block";
-          } else {
-            item.style.display = "none";
-          }
-        });
-      }
 
 
-      
+
+        var suggestions = document.querySelector(".suggestions");
+
+        var suggestionsList = document.querySelector(".suggestions-list");
+        function showSuggestions() {
+            var searchInput = document.querySelector(".search input");
+            var searchValue = searchInput.value.trim().toLowerCase();
+            var contentItems = document.querySelectorAll(".contentt *");
+
+            // Vérifier si le champ de recherche n'est pas vide
+            if (searchValue === '') {
+                // Réinitialiser la liste des suggestions et masquer la liste si le champ est vide
+                suggestionsList.innerHTML = '';
+                suggestions.style.display = 'none';
+                suggestionsList.style.display = 'none';
+                return;
+            }
+
+            // Réinitialiser la liste des suggestions
+            suggestionsList.innerHTML = '';
+            contentItems.forEach(function (item) {
+                var textContent = item.textContent.toLowerCase();
+
+                if (textContent.includes(searchValue)) {
+                    // Ajouter la suggestion à la liste
+                    var suggestionItem = document.createElement('li');
+                    suggestionItem.textContent = textContent;
+                    suggestionItem.onclick = function () {
+                        searchInput.value = textContent;
+                        filterResults();
+                    };
+                    suggestionsList.appendChild(suggestionItem);
+
+                }
+            });
+
+            // Afficher la liste des suggestions
+            suggestionsList.style.display = 'block';
+
+            // Appliquer le style aux suggestions flottantes
+            suggestionsList.style.position = "absolute";
+            suggestionsList.style.display = "flex";
+            suggestionsList.style.padding = "5px"; // Marge intérieure
+            suggestionsList.style.listStyleType = "none"; // Supprimer les puces de liste
+            suggestionsList.style.backgroundColor = 'white';
+            suggestions.style.display = 'flex';
+        }
+        suggestions.style.display = 'none';
+
+        function filterResults() {
+            var searchValue = document.querySelector(".search input").value.trim().toLowerCase();
+
+            // Vérifier si la valeur de recherche est vide
+            if (searchValue === '') {
+                suggestions.style.display = 'none';
+                suggestionsList.style.display = 'none';
+                return; // Ne rien faire si la valeur de recherche est vide
+            }
+
+            var contentItems = document.querySelectorAll(".contentt *");
+            suggestions.style.display = 'none';
+            suggestionsList.style.display = 'none';
+            suggestionsList.innerHTML = ''; // Réinitialiser la liste des suggestions
+            contentItems.forEach(function (item) {
+                var textContent = item.textContent.toLowerCase();
+                var displayStyle = textContent.includes(searchValue) ? "block" : "none";
+                item.style.display = displayStyle;
+            });
+        }
+
+
+
     </script>
-    <script
-      src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
-      integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
-      crossorigin="anonymous"
-    ></script>
-  </body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+        crossorigin="anonymous"></script>
+</body>
+
 </html>

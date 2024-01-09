@@ -3,47 +3,48 @@
 {% load static %} {% block css %}
 <link rel="stylesheet" href="{% static 'styles/styles_notes.css' %}" />
 {% endblock %} {% block content %}
-<h3 class="tete">< Notes</h3>
-{% if user_info %}
-<!-- <p>
+<h3 class="tete">
+    < Notes</h3>
+        {% if user_info %}
+        <!-- <p>
   Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{ user_info.email }})
 </p> -->
-{% if user_info.matricule %}
-<!-- <p>Matricule Etudiant : {{ user_info.matricule }}</p> -->
-{% endif %} {% else %}
-<p>Informations utilisateur non disponibles.</p>
-{% endif %}
+        {% if user_info.matricule %}
+        <!-- <p>Matricule Etudiant : {{ user_info.matricule }}</p> -->
+        {% endif %} {% else %}
+        <p>Informations utilisateur non disponibles.</p>
+        {% endif %}
 
-    <table class="notes-table">
-        <thead>
-            <tr>
-                <th>Code UE</th>
-                <th>Nom UE</th>
-                <th>CC (/20)</th>
-                <th>TP (/30)</th>
-                <th>Examen (/50)</th>
-                <th>Note (/100)</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for unite, data in notes_data.items %}
+        <table class="notes-table">
+            <thead>
+                <tr>
+                    <th>Code UE</th>
+                    <th>Nom UE</th>
+                    <th>CC (/20)</th>
+                    <th>TP (/30)</th>
+                    <th>Examen (/50)</th>
+                    <th>Note (/100)</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for unite, data in notes_data.items %}
                 <tr>
                     <td>{{ unite }}</td>
                     <td>{{ data.nom }}</td>
                     {% for exam in exams %}
-                        <td>
-                            {% for note in data.notes %}
-                                {% if note.examen == exam %}
-                                    {{ note.valeur }}
-                                {% endif %}
-                            {% endfor %}
-                        </td>
+                    <td>
+                        {% for note in data.notes %}
+                        {% if note.examen == exam %}
+                        {{ note.valeur }}
+                        {% endif %}
+                        {% endfor %}
+                    </td>
                     {% endfor %}
                     <td>{{ data.total }}</td>
                 </tr>
-            {% endfor %}
-        </tbody>
-        
-        
-    </table>
-{% endblock %}
+                {% endfor %}
+            </tbody>
+
+
+        </table>
+        {% endblock %}

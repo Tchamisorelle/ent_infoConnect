@@ -99,7 +99,32 @@ button > a:hover {
   color: white;
   border-radius: 10px;
 }
+.suggestions{
+  background-color: white;
+  margin-top: 50px;
+  margin-left: 105px;
+  position: fixed;
+  cursor: pointer;
+  width: 20% !important;
+  max-width: 20% !important;
+  max-height: 50% !important;
+  height: 70% !important;
+  display: flex;
+ overflow-y: scroll !important;
+  z-index: 1;
+  color: #686868;
+  font-weight: 500;
+  border: none;
+}
+ul{
+  border: none;
+  
+}
+.suggestions li:hover{
+  color: blue;
 
+
+}
 .contentt {
   margin: 50px;
   padding: 1px;
