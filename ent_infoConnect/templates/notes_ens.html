@@ -3,110 +3,119 @@
 <link rel="stylesheet" href="{% static 'styles/styles_notes_ens.css' %}" />
 {% endblock %} {% block content %}
 
-<h3 class="tete"> < Notes</h3>
+<h3 class="tete">
+  < Notes</h3>
 
-{% if user_info %}
-<!-- <p>
+    {% if user_info %}
+    <!-- <p>
   Bienvenue, {{ user_info.first_name }} {{ user_info.last_name }} ({{user_info.email }})
 </p> -->
-{% if user_info.matricule_en %}
-<p class="te"><span class="ma"> </span></p>
-{% endif %} {% else %}
-<p>Informations utilisateur non disponibles.</p>
-{% endif %} {% if form.errors %}
-<div class="alert alert-danger">
-  <strong>Erreur(s) dans le formulaire :</strong>
-  <ul>
-    {% for error in form.errors %}
-    <li>{{ error }}</li>
-    {% endfor %}
-  </ul>
-</div>
-{% endif %}
+    {% if user_info.matricule_en %}
+    <p class="te"><span class="ma"> </span></p>
+    {% endif %} {% else %}
+    <p>Informations utilisateur non disponibles.</p>
+    {% endif %} {% if form.errors %}
+    <div class="alert alert-danger">
+      <strong>Erreur(s) dans le formulaire :</strong>
+      <ul>
+        {% for error in form.errors %}
+        <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
 
-<div class="accordion" id="accordionForm">
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="headingOne">
-      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm" aria-expanded="true" aria-controls="collapseForm">
-        Importation des notes
-      </button>
-    </h2>
-    <div id="collapseForm" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionForm">
-      <div class="accordion-body">
-        <form method="post" class="for" enctype="multipart/form-data" action="{% url 'import_notes' %}">
-          {% csrf_token %}
+    <div class="accordion" id="accordionForm">
+      <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseForm"
+            aria-expanded="true" aria-controls="collapseForm">
+            Importation des notes
+          </button>
+        </h2>
+        <div id="collapseForm" class="accordion-collapse collapse" aria-labelledby="headingOne"
+          data-bs-parent="#accordionForm">
+          <div class="accordion-body">
+            <form method="post" class="for" enctype="multipart/form-data" action="{% url 'import_notes' %}">
+              {% csrf_token %}
 
-          <div class="mb-3">
-            <label for="file" class="form-label">Importer un fichier Excel</label>
-            <input type="file" class="form-control" id="file" name="file" accept=".xls, .xlsx" required />
+              <div class="mb-3">
+                <label for="file" class="form-label">Importer un fichier Excel</label>
+                <input type="file" class="form-control" id="file" name="file" accept=".xls, .xlsx" required />
+              </div>
+
+              <div class="mb-3">
+                <label for="ue_code" class="form-label">Choisir l'UE</label>
+                {{ form.ue_code }}
+              </div>
+              <button type="submit" class="btn btn-primary">Envoyer</button>
+            </form>
           </div>
-
-          <div class="mb-3">
-            <label for="ue_code" class="form-label">Choisir l'UE</label>
-            {{ form.ue_code }}
-          </div>
-          <button type="submit" class="btn btn-primary">Envoyer</button>
-        </form>
+        </div>
       </div>
     </div>
-  </div>
-</div>
 
 
 
     {% for ue_code, ue_stats in stats.items %}
 
 
-        <p class="note-heading">Statistiques pour l'UE {{ ue_code }}</p>
+    <p class="note-heading">Statistiques pour l'UE {{ ue_code }}</p>
 
-        <table class="table notes-stats">
-          <thead>
-              <tr>
-                  <th rowspan="2">CRITERE SUR LA NOTE(%)</th>
-                  <th colspan="3">EFFECTIF</th>
-                  <th colspan="3">POURCENTAGE</th>
-              </tr>
-              <tr>
-                  <th>CC</th>
-                  <th>TP</th>
-                  <th>EXAMEN</th>
-                  <th>CC</th>
-                  <th>TP</th>
-                  <th>EXAMEN</th>
-              </tr>
-          </thead>
-          <tbody>
-              <tr>
-                  <td>[0 - 25[</td>
-                  <td>{{ ue_stats.cc.0.effectif_0_25 }}</td>
-                  <td>{{ ue_stats.tps.0.effectif_0_25 }}</td>
-                  <td>{{ ue_stats.examen.0.effectif_0_25 }}</td>
-                  <td>{{ ue_stats.cc.1.range_0_25 }}%</td>
-                  <td>{{ ue_stats.tps.1.range_0_25 }}%</td>
-                  <td>{{ ue_stats.examen.1.range_0_25 }}%</td>
-              </tr>
-              <tr>
-                  <td>[25 - 50[</td>
-                  <td>{{ ue_stats.cc.0.effectif_25_50 }}</td>
-                  <td>{{ ue_stats.tps.0.effectif_25_50 }}</td>
-                  <td>{{ ue_stats.examen.0.effectif_25_50 }}</td>
-                  <td>{{ ue_stats.cc.1.range_25_50 }}% </td> <td> {{ ue_stats.tps.1.range_25_50 }}% </td>  <td>{{ ue_stats.examen.1.range_25_50 }}%</td>
-              </tr>
-              <tr>
-                  <td>[50 - 75[</td>
-                  <td>{{ ue_stats.cc.0.effectif_50_75 }}</td>
-                  <td>{{ ue_stats.tps.0.effectif_50_75 }}</td>
-                  <td>{{ ue_stats.examen.0.effectif_50_75 }}</td>
-                  <td>{{ ue_stats.cc.1.range_50_75 }}% </td> <td>{{ ue_stats.tps.1.range_50_75 }}% </td> <td>{{ ue_stats.examen.1.range_50_75 }}%</td>
-              </tr>
-              <tr>
-                  <td>[75 - 100[</td>
-                  <td>{{ ue_stats.cc.0.effectif_75_100 }}</td>
-                  <td>{{ ue_stats.tps.0.effectif_75_100 }}</td>
-                  <td>{{ ue_stats.examen.0.effectif_75_100 }}</td>
-                  <td>{{ ue_stats.cc.1.range_75_100 }}% </td> <td> {{ ue_stats.tps.1.range_75_100 }}% </td> <td> {{ ue_stats.examen.1.range_75_100 }}%</td>          
-          </tbody>
-      </table>
-      
+    <table class="table notes-stats">
+      <thead>
+        <tr>
+          <th rowspan="2">CRITERE SUR LA NOTE(%)</th>
+          <th colspan="3">EFFECTIF</th>
+          <th colspan="3">POURCENTAGE</th>
+        </tr>
+        <tr>
+          <th>CC</th>
+          <th>TP</th>
+          <th>EXAMEN</th>
+          <th>CC</th>
+          <th>TP</th>
+          <th>EXAMEN</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>[0 - 25[</td>
+          <td>{{ ue_stats.cc.0.effectif_0_25 }}</td>
+          <td>{{ ue_stats.tps.0.effectif_0_25 }}</td>
+          <td>{{ ue_stats.examen.0.effectif_0_25 }}</td>
+          <td>{{ ue_stats.cc.1.range_0_25 }}%</td>
+          <td>{{ ue_stats.tps.1.range_0_25 }}%</td>
+          <td>{{ ue_stats.examen.1.range_0_25 }}%</td>
+        </tr>
+        <tr>
+          <td>[25 - 50[</td>
+          <td>{{ ue_stats.cc.0.effectif_25_50 }}</td>
+          <td>{{ ue_stats.tps.0.effectif_25_50 }}</td>
+          <td>{{ ue_stats.examen.0.effectif_25_50 }}</td>
+          <td>{{ ue_stats.cc.1.range_25_50 }}% </td>
+          <td> {{ ue_stats.tps.1.range_25_50 }}% </td>
+          <td>{{ ue_stats.examen.1.range_25_50 }}%</td>
+        </tr>
+        <tr>
+          <td>[50 - 75[</td>
+          <td>{{ ue_stats.cc.0.effectif_50_75 }}</td>
+          <td>{{ ue_stats.tps.0.effectif_50_75 }}</td>
+          <td>{{ ue_stats.examen.0.effectif_50_75 }}</td>
+          <td>{{ ue_stats.cc.1.range_50_75 }}% </td>
+          <td>{{ ue_stats.tps.1.range_50_75 }}% </td>
+          <td>{{ ue_stats.examen.1.range_50_75 }}%</td>
+        </tr>
+        <tr>
+          <td>[75 - 100[</td>
+          <td>{{ ue_stats.cc.0.effectif_75_100 }}</td>
+          <td>{{ ue_stats.tps.0.effectif_75_100 }}</td>
+          <td>{{ ue_stats.examen.0.effectif_75_100 }}</td>
+          <td>{{ ue_stats.cc.1.range_75_100 }}% </td>
+          <td> {{ ue_stats.tps.1.range_75_100 }}% </td>
+          <td> {{ ue_stats.examen.1.range_75_100 }}%</td>
+      </tbody>
+    </table>
+
     {% endfor %}
-{% endblock %}
+    {% endblock %}

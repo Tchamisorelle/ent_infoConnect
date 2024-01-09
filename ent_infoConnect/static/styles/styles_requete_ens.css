@@ -1,0 +1,305 @@
+
+  .tete {
+    font-size: 30px;
+    color: blue;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  .tete2 > span {
+    color: #686868;
+    font-weight: bold;
+    text-align: center;
+    text-justify: center;
+  }
+  .sidebar button .requete {
+    background-color: blue; /* Exemple de style */
+    text-decoration: none; /* Pour enlever le soulignement du lien */
+    color: white;
+  }
+  
+  .requete.active {
+    /* Styles spécifiques lorsque le lien est actif */
+    font-weight: bold;
+    /* Ajoutez d'autres styles si nécessaire */
+  }
+  .contentt, .container-fluid{
+    width: 300% !important;
+    height: 80% !important;
+  }
+
+.containts{
+    overflow-y: scroll;
+    max-height: 100% !important;
+    height: 85% !important;
+    width: 100%!important;
+    position: relative;
+
+}
+.text-sm{
+  color: rgb(212, 212, 212);
+}
+.notes-table {
+    margin-left: 40px;
+    border-collapse: collapse;
+    position: relative!important;
+    margin-top: 20px;
+    font-size: 16px;
+    
+
+  }
+  
+  .notes-table th,
+  .notes-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    border: none;
+  }
+  
+  .notes-table th {
+    background-color: #f2f2f2;
+    z-index: 1000;
+  }
+  
+  .notes-table tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+  }
+  
+  .notes-table tbody tr:hover {
+    background-color: #c1c9fa;
+    color: white;
+  }
+  .add-button {
+    padding: 17px;
+    width: 180px;
+    height: 60px;
+    background-color: white;
+    position: absolute;
+   margin-top: 10%;
+    left: 4%;
+    justify-content: center;
+    text-align: center;
+    border-radius: 5px;
+    animation: borderColorChange 8s infinite;
+  border: 2px solid blue; 
+}
+@keyframes borderColorChange {
+  0% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+12.5% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+}
+25% {
+    border-left-color: lightblue;
+    border-top-color: blue;
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+37.5% {
+    border-right-color: rgb(252, 156, 156);
+    border-bottom-color: rgb(252, 186, 88);
+}
+50% {
+    border-left-color: rgb(252, 156, 156);
+    border-top-color: lightblue;
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: blue;
+}
+62.5% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+}
+75% {
+    border-left-color: rgb(252, 186, 88);
+    border-top-color: blue;
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+87.5% {
+    border-right-color: lightblue;
+    border-bottom-color: rgb(252, 156, 156);
+}
+100% {
+    border-left-color: blue;
+    border-top-color: rgb(252, 156, 156);
+    border-right-color: rgb(252, 186, 88);
+    border-bottom-color: lightblue;
+}
+}
+  .add-button:hover {
+    
+  background-color: white;
+    
+    display: flex;
+    border-radius: 5px;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .add-button:hover .add {
+    color: blue;
+    font-size: 24px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  .add {
+    font-size: 24px;
+    font-weight: bold;
+    text-align: justify;
+    text-align: center;
+    color: rgba(0, 0, 0, 0.39);
+  background-color: white;
+  }
+
+  /* Style pour les labels */
+  .modal-body label {
+    font-weight: bold;
+    color: #007bff; /* Couleur bleue, vous pouvez ajuster selon votre thème */
+  }
+
+  /* Style pour les champs de saisie */
+  .modal-body input,
+  .modal-body select,
+  .modal-body textarea {
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 0.25rem;
+  }
+
+  #file-upload-button {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #007bff; /* Couleur bleue, vous pouvez ajuster selon votre thème */
+    color: #fff;
+    border-radius: 0.25rem;
+  }
+  .modal-header .close {
+    font-size:36px;
+    border: none;
+    background-color: white;
+    color: #007bff; /* Couleur bleue, vous pouvez ajuster selon votre thème */
+  }
+  .modal-header .close:hover {
+    color: red;
+    font-size: 36px;
+  }
+  .modal-body .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+  }
+
+  /* Style pour le bouton "Envoyer" */
+  .modal-footer .btn-primary {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+  }
+
+  /* Style pour le bouton "Annuler" */
+  .modal-footer .btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+    border: 1px solid #6c757d;
+  }
+
+  /* Media Query pour écrans jusqu'à 600 pixels de large */
+  @media only screen and (max-width: 425px) {
+    .messages,
+    .alert {
+      font-size: 9px;
+      margin: 0;
+      position: absolute;
+      width: 300px;
+      height: 20px;
+      background-color: none;
+      margin-left: 0px;
+    }
+    .tete {
+      font-size: 10px;
+    }
+    #sidebar {
+      display: none;
+    }
+    
+  }
+
+  /* Media Query pour écrans entre 601 et 1024 pixels de large */
+  @media only screen and (min-width: 768px) {
+    .col-10 {
+      display: flex;
+      width: 70%;
+      margin-left: 100px;
+      height: 60% !important;
+    }
+    .messages,
+    .alert {
+      font-size: 9px;
+      margin: 0;
+      position: absolute;
+      width: 300px;
+      height: 20px;
+      background-color: none;
+      margin-left: 0px;
+    }
+    .tete {
+      font-size: 30px;
+      color: blue;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .notes-table {
+      margin-left: 40px;
+      border-collapse: collapse;
+      position: relative!important;
+      margin-top: 20px;
+      width: 70%;
+    }
+    
+  }
+  
+  /* Media Query pour écrans de 1025 pixels de large et plus */
+  @media only screen and (min-width: 1025px) {
+   
+
+    
+    .sidebar button .requete {
+      background-color: blue; /* Exemple de style */
+      text-decoration: none; /* Pour enlever le soulignement du lien */
+      color: white;
+    }
+  
+    .requete.active {
+      /* Styles spécifiques lorsque le lien est actif */
+      font-weight: bold;
+      /* Ajoutez d'autres styles si nécessaire */
+    }
+    .messages,
+    .alert {
+      font-size: 14px;
+      margin: 0;
+      position: absolute;
+      width: 600px;
+      height: 50px;
+      background-color: none;
+      margin-left: 190px;
+    }
+  }
+  @media only screen and (min-width: 1440px) {
+  }
+  

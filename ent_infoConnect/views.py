@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document
+from .models import Enseignant, Etudiant, ResetLink, Note, Ue, Document, Requete
 from .utils import MGP, normalisationNotes, calculate_stats, stat, selection
 from django.db.models import F
 from django.contrib.auth.hashers import make_password
@@ -12,7 +12,8 @@ import pandas as pd
 from datetime import datetime, timedelta
 from django.db import IntegrityError
 from django.db.models import Count
-
+from django.core.serializers.json import DjangoJSONEncoder
+from django.forms.models import model_to_dict
 from django import forms
 from .until import send_notification_email
 from decouple import config
@@ -114,6 +115,22 @@ def preinscri(request):
 def annonce(request):
     return render(request, 'connexion.html')
 
+def requete_ens(request):
+    user_info = request.session.get('user_info', {})
+    matricule_ens = user_info.get('matricule_en', None)
+    form = ImportRequetForm(user_info=user_info)
+    if matricule_ens:
+        requetes = Requete.objects.filter(matricule_en=matricule_ens)
+        requet_data = []
+        for requete in requetes:
+            code_ue = requete.code_ue.code_ue
+            statut = requete.statut
+            requet_data.append({'code_ue': code_ue, 'statut': statut})
+        return render(request, 'requete_ens.html', {'form': form, 'requete_data': requet_data, 'user_info': user_info})
+    else:
+        messages.error(request, 'Matricule enseignant non trouvé.')
+        return render(request, 'requete_ens.html', {'form': form, 'user_info': user_info})
+
 
 
 def notes(request):
@@ -154,16 +171,21 @@ def import_notes_logic(request, form):
         prenoms = None
         cc = None
         tps = None
-        examen = None                    
+        examen = None     
+        #print(notes_data)               
         for note_data in notes_data:
             matricule_et, nom, prenoms, cc, tps, examen = note_data
+            
             matricule_et = matricule_et.lower()
             try:
                 etudiant = Etudiant.objects.get(matricule=matricule_et)
+                
             except Etudiant.DoesNotExist:
                 email = f"{nom.lower()}.{prenoms.lower()}@facsciences-uy1.cm"
                 password = make_password('Gsuite@uy1')
                 etudiant = Etudiant.objects.create(matricule=matricule_et, nom=nom, prenom=prenoms, mot_de_passe=password, email=email)
+                message = "<html><body>&nbsp; &nbsp; <strong> Etudiant: </strong>" + nom + "&nbsp;" + prenoms + "<br/>" + "<br/> &nbsp; &nbsp; <strong> Matricule </strong>" + matricule_et+ "<br/> <br/> Notes(s): <br/>" + "<strong>" + ", cc" + cc +",Tp" + tps + ", examen" + examen + "</strong>" + "<p>Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>"  # Convertir la liste en une chaîne
+                
 
             date_deb = datetime.now().date()
             date_fin = date_deb + timedelta(days=7)
@@ -181,6 +203,21 @@ def import_notes_logic(request, form):
                 Note.objects.create(examen='cc', valeur=cc, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
                 Note.objects.create(examen='tps', valeur=tps, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
                 Note.objects.create(examen='examen', valeur=examen, date_deb=date_deb, date_fin=date_fin, matricule=etudiant, matricule_en=enseignant, code_ue=ue_code)
+            try:
+                message = "<html><body>&nbsp; &nbsp; <strong> Etudiant: </strong>" + nom + "&nbsp;" + prenoms + "<br/>" + "<br/> &nbsp; &nbsp; <strong> Matricule </strong>" + matricule_et+ "<br/> <br/> Notes(s): <br/>" + "<strong>" + " cc: " + str(cc) + ",<br/>Tp: " + str(tps) + ",  <br/> examen: " + str(examen) + "</strong>" + "<p>Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>"  # Convertir la liste en une chaîne
+                objet = f"Note de l'UE {ue_code}"
+                mail = Etudiant.objects.filter(matricule=matricule_et).values_list('email', flat=True).first()
+                # print(mail)
+                send_mail(
+                    objet,
+                    message,
+                    "infoConnect <pharma.prjt.yde@gmail.com>", #expediteur
+                    [mail], #destinataire
+                    fail_silently=False,
+                    html_message=message
+                    )
+            except Exception as e:
+                print(f"Erreur lors de l'envoi d'e-mail : {e}")
 
         messages.success(request, 'Les notes ont été importées avec succès.')
         return redirect('notes_ens')
@@ -229,13 +266,46 @@ def notes_ens(request):
 
     return render(request, 'notes_ens.html', {'form': form, 'user_info': user_info, 'stats': stats})
 
+class ImportRequetForm(forms.Form):
+    ue_code = forms.ModelChoiceField(queryset=Ue.objects.none())
+    file = forms.FileField()
+    statut = forms.ChoiceField(choices=[('traiter', 'Traiter'), ('non_traiter', 'Non Traiter')])
 
+    def __init__(self, *args, user_info=None, **kwargs):
+        super(ImportRequetForm, self).__init__(*args, **kwargs)
+
+        if user_info:
+            self.fields['ue_code'].queryset = Ue.objects.filter(matricule_en=user_info.get('matricule_en'))
+
+def correct_requet(request):
+    
+    form = ImportRequetForm(request.POST, request.FILES, user_info=request.session.get('user_info'))
+
+    if form.is_valid():
+        code_ue = form.cleaned_data['ue_code']
+        statut = form.cleaned_data['statut']
+
+        try:
+            requete = Requete.objects.filter(code_ue=code_ue)
+            for requet in requete:
+                requet.statut = statut
+                requet.save()
+                
+                result = import_notes_logic(request, form)
+
+            if result is not None:
+                return result
+        except Requete.DoesNotExist:
+            messages.error(request, 'L\'objet Requete avec le code UE spécifié n\'existe pas.')
+    else:
+        messages.error(request, 'Le formulaire n\'est pas valide. Veuillez corriger les erreurs.')
+    
+    return render(request, 'requete_ens.html', {'form': form})
 
 def requete(request):
     user_info = request.session.get('user_info', {})
     return render(request, 'requete.html', {'user_info': user_info})
-def requete_ens(request):
-    return render(request, 'requete_ens.html')
+
 def agenda(request):
     return render(request, 'connexion.html')
 def document(request):
@@ -271,16 +341,7 @@ def list_note(request):
             'date_fin',
             'examen'
         ).distinct()
-        # notes_data.extend(notes_for_ue)
-        # Ajouter les données au dictionnaire final
-        # for note in notes_for_ue:
-        #     notes_data.append({
-        #         'examen': code_ue,
-        #         'date_deb': note['date_deb'],
-        #         'date_fin': note['date_fin'],
-        #         'typ_exam': note['examen'],
-        #     })
-        # Agréger les valeurs pour le code_ue actuel
+        
         aggregated_data = {
             'examen': code_ue,
             'dates': [{'date_deb': note['date_deb'], 'date_fin': note['date_fin'], 'typ_exam': note['examen']} for note in notes_for_ue],
@@ -294,65 +355,58 @@ def list_note(request):
 
 def req_note(request):
     if request.method == 'POST':
-        examens= request.POST.get('examens')
-        qualifications = request.POST.getlist('qualification')
+        examens = request.POST.get('examens')
         if examens is None:
             # Champ 'examens' non présent dans la requête, faites quelque chose en conséquence
             messages.error(request, 'Veuillez sélectionner un examen.')
             return redirect('requete')
-        examens.lower() 
-        
-        with connection.cursor() as cursor1:
-            cursor1.execute('''
-                SELECT
-                    e.email,
-                    e.matricule_en,
-                    et.matricule,
-                    n.code_ue,
-                    et.email, et.nom, et.prenom
-                FROM
-                    Enseignant e
-                LEFT JOIN note n ON e.matricule_en = n.matricule_en
-                LEFT JOIN Etudiant et ON et.matricule = n.matricule
-                WHERE
-                    n.code_ue = %s
-            ''', [examens])
+
+        ue = Ue.objects.get(code_ue=examens)
+        user_info = request.session.get('user_info', {})
+        email = user_info['email']
+        if ue:
+            statut = 'Non Traiter'
+            matricule_en = ue.matricule_en
+
+            # Création d'une instance de Requete dans la base de données
+            inst_re = Requete.objects.create(
+                code_ue=ue,
+                statut=statut,
+                matricule_en=matricule_en
+            )
+            inst_re.save()
+            requete_ens(request)
+            qualifications = request.POST.getlist('qualification')
+            # Reste du code ici
+            examens.lower() 
+            objet = f"Requete sur les notes {examens}"
+            message = "<html><body>&nbsp; &nbsp; <strong> Etudiant: </strong>" + user_info['first_name'] + "&nbsp;" + user_info['last_name'] + "<br/>" + "<br/> &nbsp; &nbsp; <strong> Matricule </strong>" + user_info['matricule']+ "<br/> <br/> Probleme(s): <br/>" + "<strong>" + ", ".join(qualifications) +"</strong>" + "<p>Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>"  # Convertir la liste en une chaîne
+            email_enseignant = Enseignant.objects.filter(ue__code_ue=ue).values_list('email', flat=True).first()
             
-            results = cursor1.fetchall()
-            print('resulat', results)
+            if qualifications and objet and message:
 
-        objet = f"Requete sur les notes {examens}"
-        message = "&nbsp; &nbsp; <strong> Etudiant: </strong>" + results[0][5] + "&nbsp;" + results[0][6] + "<br/>" + "<br/> &nbsp; &nbsp; <strong> Matricule </strong>" + results[0][2]+ "<br/> <br/> Probleme(s): <br/>" + "<strong>" + ", ".join(qualifications) +"</strong>" + "<p>Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer>"  # Convertir la liste en une chaîne
-
-        if qualifications and objet and message and results:
-            
-            email_enseignant = results[0][0]
-            # print(email_enseignant)
-            email_etud = results[0][4]  # Utilisez la bonne colonne pour l'e-mail de l'étudiant
-
-            try:
+                try:
                     send_mail(
                         objet,
                         message,
-                        f"infoConnect <{email_etud}>", #expediteur
+                        f"infoConnect <{email}>", #expediteur
                         [email_enseignant], #destinataire
                         fail_silently=False,
                         html_message=message
-                    )
+                        )
                     send_mail(
                         objet,
                         message,
-                        "infoConnect <pharma.prjt.yde@gmail.com>",  # Utilisez la bonne adresse e-mail
-                        [email_etud],
+                        "infoConnect <pharma.prjt.yde@gmail.com>",  
+                        [email],
                         fail_silently=False,
-                        html_message='<html><body style="background-color:  #f0f8f9;"> <p style="padding: 10px;"> Merci,<br/> nous vous remercions pour l\'interet que vous portez a cette plateforme!</p> <p style="padding-left: 10px;">Votre requete a été transmise. <br> A bientot!! </p><p style="padding: 10px;">Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>'
-              
-                    )
+                        html_message='<html><body style="background-color:  #f0f8f9;"> <p style="padding: 10px;"> Merci,<br/> Nous vous remercions pour l\'interet que vous portez a cette plateforme!</p> <p style="padding-left: 10px;">Votre requete a été transmise. <br> A bientot!! </p><p style="padding: 10px;">Cordialement,<br>L\'équipe infoConnect</p><footer><center>&copy; 2023 infoConnect</center></footer></body></html>'
+                        )
                     messages.success(
-                        request, 'Votre requete a été envoyée avec succès.')
-            except Exception as e:
-                    messages.error(
-                        request, 'Une erreur s\'est produite lors de l\'envoi de la suggestion.')
+                    request, 'Votre requete a été envoyée avec succès.')
+                except Exception as e:
+                        messages.error(
+                            request, 'Une erreur s\'est produite lors de l\'envoi de la suggestion.')
         else:
             messages.error(
                 request, 'erreur.')
@@ -363,7 +417,6 @@ def list_docu(request):
     documents = Document.objects.values('id_doc','titre', 'file', 'date_doc', 'description')
     document_data = []
     for doc in documents:
-        # Utilisez un autre nom (par exemple, doc_data) pour le dictionnaire individuel
         doc_data = {
             'id_doc': doc['id_doc'],
             'titre': doc['titre'],
@@ -373,8 +426,24 @@ def list_docu(request):
         }
         document_data.append(doc_data)
 
-    # Utilisez JsonResponse avec safe=True pour envoyer une liste de dictionnaires
     return JsonResponse(document_data, safe=False)
+
+def list_docu_ens(request):
+    user_info = request.session.get('user_info', {})
+    documents = Document.objects.filter(matricule_en=user_info['matricule_en'])
+    documents = documents.values('id_doc', 'titre', 'file', 'date_doc', 'description')
+    document_data = []
+    for doc in documents:
+        doc_data = {
+            'id_doc': doc['id_doc'],
+            'titre': doc['titre'],
+            'file': doc['file'],
+            'date_doc': doc['date_doc'],
+            'description': doc['description'],
+        }
+        document_data.append(doc_data)
+
+    return JsonResponse(document_data,encoder=DjangoJSONEncoder, safe=False)
 
 
 @require_POST
@@ -406,17 +475,15 @@ def stock_docu(request):
                 new_document.save()
 
                 response_data = {"success": True, "message": "Document stocké avec succès."}
-                return redirect('document')
+                return redirect('document_ens')
             except Exception as e:
                 return JsonResponse({'success': False, 'message': 'Erreur lors de l\'enregistrement du document.', 'error': str(e)})
         else:
             # L'utilisateur n'est pas un enseignant, renvoyer un message d'erreur
             error_message = "Vous n'êtes pas autorisé à effectuer cette action."
-            return redirect('document')
+            return redirect('document_ens')
     else:
-        # Gérer la méthode GET si nécessaire
-        # ...
-
+      
         return redirect('connexion')
 class DownloadDocumentView(View):
     def get(self, request, id_doc):
@@ -467,7 +534,7 @@ def reset_password_request(request):
             })
 
             # Afficher les valeurs pour vérification
-            print("Reset URL:", reset_url)
+            # print("Reset URL:", reset_url)
             mail_subject = "Réinitialisation de mot de passe"
             html_content = render_to_string(
                 "reset_password_email.html",
@@ -626,11 +693,11 @@ def new_utilisateur(request):
                     matricul = row["matricule"].lower()
                     if  mail == email.lower() and  matricul == matricule.lower():
                         email_exists = True
-                        print("Adresse e-mail trouvée dans le fichier Excel")
+                        # print("Adresse e-mail trouvée dans le fichier Excel")
                         break
             except Exception as e:
                 error_message = 'Une erreur s\'est produite lors de la vérification de l\'e-mail.'
-                print("Erreur lors de l'ouverture du fichier Excel:", str(e))
+                # print("Erreur lors de l'ouverture du fichier Excel:", str(e))
 
             if not email_exists:
                 error_message = 'Cet e-mail ne correspond pas à un étudiant de l\'université.'
@@ -684,11 +751,11 @@ def new_utilisateur_ensei(request):
                         
                         if mail == email.lower() and matricule == matricule_en.lower():
                             email_exists = True
-                            print("Adresse e-mail trouvée dans le fichier Excel")
+                            # print("Adresse e-mail trouvée dans le fichier Excel")
                             break
             except Exception as e:
                 error_message = 'Une erreur s\'est produite lors de la vérification de l\'e-mail.'
-                print("Erreur lors de l'ouverture du fichier Excel:", str(e))
+                # print("Erreur lors de l'ouverture du fichier Excel:", str(e))
 
             if not email_exists:
                     error_message = 'Cet e-mail ne correspond pas à un enseignant de l\'université.'

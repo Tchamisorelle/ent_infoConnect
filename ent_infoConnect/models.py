@@ -199,3 +199,16 @@ class ResetLink(models.Model):
 
     def is_valid(self):
         return timezone.now() <= self.expiration_time
+class Requete(models.Model):
+    code_ue = models.ForeignKey('Ue', db_column='code_ue', blank=True, null=True, on_delete=models.CASCADE)
+    STATUT_CHOICES = [
+        ('traiter', 'Traiter'),
+        ('non_traiter', 'Non Traiter'),
+    ]
+
+    statut = models.CharField(max_length=30, choices=STATUT_CHOICES, blank=True, null=True)
+
+    matricule_en = models.ForeignKey('Enseignant', db_column='matricule_en', blank=True, null=True, on_delete=models.CASCADE)
+    class Meta:
+        managed = True
+        db_table = 'requete'
